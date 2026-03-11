@@ -1,4 +1,5 @@
 import { html, nothing } from "lit";
+import { t } from "../../i18n/index.ts";
 import type {
   DevicePairingList,
   DeviceTokenSummary,
@@ -56,18 +57,18 @@ export function renderNodes(props: NodesProps) {
     <section class="card">
       <div class="row" style="justify-content: space-between;">
         <div>
-          <div class="card-title">Nodes</div>
-          <div class="card-sub">Paired devices and live links.</div>
+          <div class="card-title">${t("nodesView.title")}</div>
+          <div class="card-sub">${t("nodesView.subtitle")}</div>
         </div>
         <button class="btn" ?disabled=${props.loading} @click=${props.onRefresh}>
-          ${props.loading ? "Loading…" : "Refresh"}
+          ${props.loading ? t("nodesView.loading") : t("nodesView.refresh")}
         </button>
       </div>
       <div class="list" style="margin-top: 16px;">
         ${
           props.nodes.length === 0
             ? html`
-                <div class="muted">No nodes found.</div>
+                <div class="muted">${t("nodesView.noNodes")}</div>
               `
             : props.nodes.map((n) => renderNode(n))
         }
@@ -84,11 +85,11 @@ function renderDevices(props: NodesProps) {
     <section class="card">
       <div class="row" style="justify-content: space-between;">
         <div>
-          <div class="card-title">Devices</div>
-          <div class="card-sub">Pairing requests + role tokens.</div>
+          <div class="card-title">${t("nodesView.devices")}</div>
+          <div class="card-sub">${t("nodesView.devicesSubtitle")}</div>
         </div>
         <button class="btn" ?disabled=${props.devicesLoading} @click=${props.onDevicesRefresh}>
-          ${props.devicesLoading ? "Loading…" : "Refresh"}
+          ${props.devicesLoading ? t("nodesView.loading") : t("nodesView.refresh")}
         </button>
       </div>
       ${
@@ -100,7 +101,7 @@ function renderDevices(props: NodesProps) {
         ${
           pending.length > 0
             ? html`
-              <div class="muted" style="margin-bottom: 8px;">Pending</div>
+              <div class="muted" style="margin-bottom: 8px;">${t("nodesView.pending")}</div>
               ${pending.map((req) => renderPendingDevice(req, props))}
             `
             : nothing
@@ -108,7 +109,7 @@ function renderDevices(props: NodesProps) {
         ${
           paired.length > 0
             ? html`
-              <div class="muted" style="margin-top: 12px; margin-bottom: 8px;">Paired</div>
+              <div class="muted" style="margin-top: 12px; margin-bottom: 8px;">${t("nodesView.paired")}</div>
               ${paired.map((device) => renderPairedDevice(device, props))}
             `
             : nothing
@@ -116,7 +117,7 @@ function renderDevices(props: NodesProps) {
         ${
           pending.length === 0 && paired.length === 0
             ? html`
-                <div class="muted">No paired devices.</div>
+                <div class="muted">${t("nodesView.noPairedDevices")}</div>
               `
             : nothing
         }
@@ -143,10 +144,10 @@ function renderPendingDevice(req: PendingDevice, props: NodesProps) {
       <div class="list-meta">
         <div class="row" style="justify-content: flex-end; gap: 8px; flex-wrap: wrap;">
           <button class="btn btn--sm primary" @click=${() => props.onDeviceApprove(req.requestId)}>
-            Approve
+            ${t("nodesView.approve")}
           </button>
           <button class="btn btn--sm" @click=${() => props.onDeviceReject(req.requestId)}>
-            Reject
+            ${t("nodesView.reject")}
           </button>
         </div>
       </div>
@@ -197,7 +198,7 @@ function renderTokenRow(deviceId: string, token: DeviceTokenSummary, props: Node
           class="btn btn--sm"
           @click=${() => props.onDeviceRotate(deviceId, token.role, token.scopes)}
         >
-          Rotate
+          ${t("nodesView.rotate")}
         </button>
         ${
           token.revokedAtMs
@@ -207,7 +208,7 @@ function renderTokenRow(deviceId: string, token: DeviceTokenSummary, props: Node
                 class="btn btn--sm danger"
                 @click=${() => props.onDeviceRevoke(deviceId, token.role)}
               >
-                Revoke
+                ${t("nodesView.revoke")}
               </button>
             `
         }

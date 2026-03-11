@@ -62,7 +62,7 @@ export function renderOverview(props: OverviewProps) {
             href="https://docs.openclaw.ai/web/control-ui#device-pairing-first-connection"
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
-            title="Device pairing docs (opens in new tab)"
+            title=${t("overviewView.devicePairingDocs")}
             >Docs: Device pairing</a
           >
         </div>
@@ -119,7 +119,7 @@ export function renderOverview(props: OverviewProps) {
               href="https://docs.openclaw.ai/web/dashboard"
               target=${EXTERNAL_LINK_TARGET}
               rel=${buildExternalLinkRel()}
-              title="Control UI auth docs (opens in new tab)"
+              title=${t("overviewView.controlUiAuthDocs")}
               >Docs: Control UI auth</a
             >
           </div>
@@ -174,7 +174,7 @@ export function renderOverview(props: OverviewProps) {
             href="https://docs.openclaw.ai/gateway/tailscale"
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
-            title="Tailscale Serve docs (opens in new tab)"
+            title=${t("overviewView.tailscaleDocs")}
             >Docs: Tailscale Serve</a
           >
           <span class="muted"> · </span>
@@ -183,7 +183,7 @@ export function renderOverview(props: OverviewProps) {
             href="https://docs.openclaw.ai/web/control-ui#insecure-http"
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
-            title="Insecure HTTP docs (opens in new tab)"
+            title=${t("overviewView.insecureHttpDocs")}
             >Docs: Insecure HTTP</a
           >
         </div>

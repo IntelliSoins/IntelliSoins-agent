@@ -1,5 +1,6 @@
 import { html, nothing } from "lit";
 import { normalizeToolName } from "../../../../src/agents/tool-policy-shared.js";
+import { t } from "../../i18n/index.ts";
 import type { SkillStatusEntry, SkillStatusReport, ToolsCatalogResult } from "../types.ts";
 import {
   isAllowedByPolicy,
@@ -126,21 +127,21 @@ export function renderAgentTools(params: {
     <section class="card">
       <div class="row" style="justify-content: space-between;">
         <div>
-          <div class="card-title">Tool Access</div>
+          <div class="card-title">${t("agentsView.toolAccess")}</div>
           <div class="card-sub">
-            Profile + per-tool overrides for this agent.
+            ${t("agentsView.toolAccessSubtitle")}
             <span class="mono">${enabledCount}/${toolIds.length}</span> enabled.
           </div>
         </div>
         <div class="row" style="gap: 8px;">
           <button class="btn btn--sm" ?disabled=${!editable} @click=${() => updateAll(true)}>
-            Enable All
+            ${t("agentsView.enableAll")}
           </button>
           <button class="btn btn--sm" ?disabled=${!editable} @click=${() => updateAll(false)}>
-            Disable All
+            ${t("agentsView.disableAll")}
           </button>
           <button class="btn btn--sm" ?disabled=${params.configLoading} @click=${params.onConfigReload}>
-            Reload Config
+            ${t("agentsView.reloadConfig")}
           </button>
           <button
             class="btn btn--sm primary"
@@ -429,7 +430,7 @@ export function renderAgentSkills(params: {
           <input
             .value=${params.filter}
             @input=${(e: Event) => params.onFilterChange((e.target as HTMLInputElement).value)}
-            placeholder="Search skills"
+            placeholder=${t("searchCommon.skills")}
           />
         </label>
         <div class="muted">${filtered.length} shown</div>

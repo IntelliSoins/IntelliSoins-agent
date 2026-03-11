@@ -1,4 +1,5 @@
 import { html, nothing } from "lit";
+import { t } from "../../i18n/index.ts";
 import { formatRelativeTimestamp } from "../format.ts";
 import { pathForTab } from "../navigation.ts";
 import { formatSessionTokens } from "../presenter.ts";
@@ -113,17 +114,17 @@ export function renderSessions(props: SessionsProps) {
     <section class="card">
       <div class="row" style="justify-content: space-between;">
         <div>
-          <div class="card-title">Sessions</div>
-          <div class="card-sub">Active session keys and per-session overrides.</div>
+          <div class="card-title">${t("sessionsView.title")}</div>
+          <div class="card-sub">${t("sessionsView.subtitle")}</div>
         </div>
         <button class="btn" ?disabled=${props.loading} @click=${props.onRefresh}>
-          ${props.loading ? "Loading…" : "Refresh"}
+          ${props.loading ? t("sessionsView.loading") : t("sessionsView.refresh")}
         </button>
       </div>
 
       <div class="filters" style="margin-top: 14px;">
         <label class="field">
-          <span>Active within (minutes)</span>
+          <span>${t("sessionsView.activeWithin")}</span>
           <input
             .value=${props.activeMinutes}
             @input=${(e: Event) =>
@@ -136,7 +137,7 @@ export function renderSessions(props: SessionsProps) {
           />
         </label>
         <label class="field">
-          <span>Limit</span>
+          <span>${t("sessionsView.limit")}</span>
           <input
             .value=${props.limit}
             @input=${(e: Event) =>
@@ -149,7 +150,7 @@ export function renderSessions(props: SessionsProps) {
           />
         </label>
         <label class="field checkbox">
-          <span>Include global</span>
+          <span>${t("sessionsView.includeGlobal")}</span>
           <input
             type="checkbox"
             .checked=${props.includeGlobal}
@@ -163,7 +164,7 @@ export function renderSessions(props: SessionsProps) {
           />
         </label>
         <label class="field checkbox">
-          <span>Include unknown</span>
+          <span>${t("sessionsView.includeUnknown")}</span>
           <input
             type="checkbox"
             .checked=${props.includeUnknown}
@@ -203,7 +204,7 @@ export function renderSessions(props: SessionsProps) {
         ${
           rows.length === 0
             ? html`
-                <div class="muted">No sessions found.</div>
+                <div class="muted">${t("sessionsView.noSessions")}</div>
               `
             : rows.map((row) =>
                 renderRow(row, props.basePath, props.onPatch, props.onDelete, props.loading),
@@ -313,7 +314,7 @@ function renderRow(
       </div>
       <div>
         <button class="btn danger" ?disabled=${disabled} @click=${() => onDelete(row.key)}>
-          Delete
+          ${t("sessionsView.delete")}
         </button>
       </div>
     </div>
