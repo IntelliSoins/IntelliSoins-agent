@@ -1,4 +1,5 @@
 import { loadConfig } from "../config/config.js";
+import { initI18n, t } from "../i18n/index.js";
 import { resolveCommitHash } from "../infra/git-commit.js";
 import { visibleWidth } from "../terminal/ansi.js";
 import { isRich, theme } from "../terminal/theme.js";
@@ -59,7 +60,7 @@ function resolveTaglineMode(options: BannerOptions): TaglineMode | undefined {
 export function formatCliBannerLine(version: string, options: BannerOptions = {}): string {
   const commit =
     options.commit ?? resolveCommitHash({ env: options.env, moduleUrl: import.meta.url });
-  const commitLabel = commit ?? "unknown";
+  const commitLabel = commit ?? t("cli.banner.unknown_commit");
   const tagline = pickTagline({ ...options, mode: resolveTaglineMode(options) });
   const rich = options.richTty ?? isRich();
   const title = "🦞 OpenClaw";
@@ -155,6 +156,8 @@ export function emitCliBanner(version: string, options: BannerOptions = {}) {
   if (hasVersionFlag(argv)) {
     return;
   }
+  // Initialize i18n before first CLI output.
+  initI18n();
   const line = formatCliBannerLine(version, options);
   process.stdout.write(`\n${line}\n\n`);
   bannerEmitted = true;

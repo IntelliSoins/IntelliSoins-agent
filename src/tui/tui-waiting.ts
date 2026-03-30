@@ -1,10 +1,12 @@
+import { t } from "../i18n/index.js";
+
 type MinimalTheme = {
   dim: (s: string) => string;
   bold: (s: string) => string;
   accentSoft: (s: string) => string;
 };
 
-export const defaultWaitingPhrases = [
+const FALLBACK_PHRASES = [
   "flibbertigibbeting",
   "kerfuffling",
   "dillydallying",
@@ -16,6 +18,21 @@ export const defaultWaitingPhrases = [
   "pondering",
   "conjuring",
 ];
+
+/** Build waiting phrases from i18n, falling back to English defaults. */
+export function getLocalizedWaitingPhrases(): string[] {
+  const phrases: string[] = [];
+  for (let i = 0; i < 10; i++) {
+    const key = `tui.waiting.${i}`;
+    const value = t(key);
+    if (value !== key) {
+      phrases.push(value);
+    }
+  }
+  return phrases.length > 0 ? phrases : FALLBACK_PHRASES;
+}
+
+export const defaultWaitingPhrases = FALLBACK_PHRASES;
 
 export function pickWaitingPhrase(tick: number, phrases = defaultWaitingPhrases) {
   const idx = Math.floor(tick / 10) % phrases.length;
@@ -45,7 +62,8 @@ export function buildWaitingStatusMessage(params: {
   connectionStatus: string;
   phrases?: string[];
 }) {
-  const phrase = pickWaitingPhrase(params.tick, params.phrases);
+  const phrases = params.phrases ?? getLocalizedWaitingPhrases();
+  const phrase = pickWaitingPhrase(params.tick, phrases);
   const cute = shimmerText(params.theme, `${phrase}…`, params.tick);
   return `${cute} • ${params.elapsed} | ${params.connectionStatus}`;
 }

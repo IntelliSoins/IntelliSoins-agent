@@ -12,6 +12,7 @@ import {
 } from "../../config/config.js";
 import { formatConfigIssueLines } from "../../config/issue-format.js";
 import { resolveGatewayService } from "../../daemon/service.js";
+import { t } from "../../i18n/index.js";
 import {
   channelToNpmTag,
   DEFAULT_GIT_CHANNEL,
@@ -68,31 +69,11 @@ import { suppressDeprecations } from "./suppress-deprecations.js";
 const CLI_NAME = resolveCliName();
 const SERVICE_REFRESH_TIMEOUT_MS = 60_000;
 
-const UPDATE_QUIPS = [
-  "Leveled up! New skills unlocked. You're welcome.",
-  "Fresh code, same lobster. Miss me?",
-  "Back and better. Did you even notice I was gone?",
-  "Update complete. I learned some new tricks while I was out.",
-  "Upgraded! Now with 23% more sass.",
-  "I've evolved. Try to keep up.",
-  "New version, who dis? Oh right, still me but shinier.",
-  "Patched, polished, and ready to pinch. Let's go.",
-  "The lobster has molted. Harder shell, sharper claws.",
-  "Update done! Check the changelog or just trust me, it's good.",
-  "Reborn from the boiling waters of npm. Stronger now.",
-  "I went away and came back smarter. You should try it sometime.",
-  "Update complete. The bugs feared me, so they left.",
-  "New version installed. Old version sends its regards.",
-  "Firmware fresh. Brain wrinkles: increased.",
-  "I've seen things you wouldn't believe. Anyway, I'm updated.",
-  "Back online. The changelog is long but our friendship is longer.",
-  "Upgraded! Peter fixed stuff. Blame him if it breaks.",
-  "Molting complete. Please don't look at my soft shell phase.",
-  "Version bump! Same chaos energy, fewer crashes (probably).",
-];
+const UPDATE_QUIP_COUNT = 20;
 
 function pickUpdateQuip(): string {
-  return UPDATE_QUIPS[Math.floor(Math.random() * UPDATE_QUIPS.length)] ?? "Update complete.";
+  const idx = Math.floor(Math.random() * UPDATE_QUIP_COUNT);
+  return t(`cli.update.quip.${idx}`);
 }
 
 function resolveGatewayInstallEntrypointCandidates(root?: string): string[] {

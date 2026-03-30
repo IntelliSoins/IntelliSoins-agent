@@ -1,5 +1,21 @@
+import { t } from "../i18n/index.js";
+
 const DEFAULT_TAGLINE = "All your chats, one OpenClaw.";
 export type TaglineMode = "random" | "default" | "off";
+
+/** Map from holiday key name to its i18n translation key. */
+const HOLIDAY_I18N_KEYS: Record<string, string> = {
+  newYear: "cli.holiday.newYear",
+  lunarNewYear: "cli.holiday.lunarNewYear",
+  christmas: "cli.holiday.christmas",
+  eid: "cli.holiday.eid",
+  diwali: "cli.holiday.diwali",
+  easter: "cli.holiday.easter",
+  hanukkah: "cli.holiday.hanukkah",
+  halloween: "cli.holiday.halloween",
+  thanksgiving: "cli.holiday.thanksgiving",
+  valentines: "cli.holiday.valentines",
+};
 
 const HOLIDAY_TAGLINES = {
   newYear:
@@ -261,12 +277,41 @@ export function activeTaglines(options: TaglineOptions = {}): string[] {
   return filtered.length > 0 ? filtered : TAGLINES;
 }
 
+/**
+ * Translate a picked English tagline to the active locale.
+ * Falls back to the original English string if no translation is found.
+ */
+function localizeTagline(picked: string): string {
+  // Check if it's the default tagline.
+  if (picked === DEFAULT_TAGLINE) {
+    return t("cli.tagline.default");
+  }
+
+  // Check if it's a holiday tagline.
+  for (const [key, value] of Object.entries(HOLIDAY_TAGLINES)) {
+    if (picked === value) {
+      const i18nKey = HOLIDAY_I18N_KEYS[key];
+      if (i18nKey) {
+        return t(i18nKey);
+      }
+    }
+  }
+
+  // Look up by index in the TAGLINES array.
+  const idx = TAGLINES.indexOf(picked);
+  if (idx >= 0) {
+    return t(`cli.tagline.${idx}`);
+  }
+
+  return picked;
+}
+
 export function pickTagline(options: TaglineOptions = {}): string {
   if (options.mode === "off") {
     return "";
   }
   if (options.mode === "default") {
-    return DEFAULT_TAGLINE;
+    return localizeTagline(DEFAULT_TAGLINE);
   }
   const env = options.env ?? process.env;
   const override = env?.OPENCLAW_TAGLINE_INDEX;
@@ -274,13 +319,13 @@ export function pickTagline(options: TaglineOptions = {}): string {
     const parsed = Number.parseInt(override, 10);
     if (!Number.isNaN(parsed) && parsed >= 0) {
       const pool = TAGLINES.length > 0 ? TAGLINES : [DEFAULT_TAGLINE];
-      return pool[parsed % pool.length];
+      return localizeTagline(pool[parsed % pool.length]);
     }
   }
   const pool = activeTaglines(options);
   const rand = options.random ?? Math.random;
   const index = Math.floor(rand() * pool.length) % pool.length;
-  return pool[index];
+  return localizeTagline(pool[index]);
 }
 
 export { TAGLINES, HOLIDAY_RULES, DEFAULT_TAGLINE };
