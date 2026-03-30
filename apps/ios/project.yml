@@ -49,7 +49,7 @@ targets:
         embed: true
       - target: OpenClawActivityWidget
         embed: true
-      - target: OpenClawWatchApp
+      # - target: OpenClawWatchApp  # Disabled: no Apple Watch
       - package: OpenClawKit
       - package: OpenClawKit
         product: OpenClawChatUI
