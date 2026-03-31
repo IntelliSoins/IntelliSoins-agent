@@ -1,4 +1,4 @@
-import { resolveChannelConfigWrites } from "../../channels/plugins/config-writes.js";
+import { resolveConfigWriteTargetFromPath } from "../../channels/plugins/config-writes.js";
 import { normalizeChannelId } from "../../channels/registry.js";
 import {
   getConfigValueAtPath,
@@ -17,13 +17,16 @@ import {
   setConfigOverride,
   unsetConfigOverride,
 } from "../../config/runtime-overrides.js";
+import { isInternalMessageChannel } from "../../utils/message-channel.js";
 import {
+  rejectNonOwnerCommand,
   rejectUnauthorizedCommand,
   requireCommandFlagEnabled,
   requireGatewayClientScopeForInternalChannel,
 } from "./command-gates.js";
 import type { CommandHandler } from "./commands-types.js";
 import { parseConfigCommand } from "./config-commands.js";
+import { resolveConfigWriteDeniedText } from "./config-write-authorization.js";
 import { parseDebugCommand } from "./debug-commands.js";
 
 export const handleConfigCommand: CommandHandler = async (params, allowTextCommands) => {
@@ -37,6 +40,12 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
   const unauthorized = rejectUnauthorizedCommand(params, "/config");
   if (unauthorized) {
     return unauthorized;
+  }
+  const allowInternalReadOnlyShow =
+    configCommand.action === "show" && isInternalMessageChannel(params.command.channel);
+  const nonOwner = allowInternalReadOnlyShow ? null : rejectNonOwnerCommand(params, "/config");
+  if (nonOwner) {
+    return nonOwner;
   }
   const disabled = requireCommandFlagEnabled(params.cfg, {
     label: "/config",
@@ -52,6 +61,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
     };
   }
 
+  let parsedWritePath: string[] | undefined;
   if (configCommand.action === "set" || configCommand.action === "unset") {
     const missingAdminScope = requireGatewayClientScopeForInternalChannel(params, {
       label: "/config write",
@@ -61,21 +71,28 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
     if (missingAdminScope) {
       return missingAdminScope;
     }
+    const parsedPath = parseConfigPath(configCommand.path);
+    if (!parsedPath.ok || !parsedPath.path) {
+      return {
+        shouldContinue: false,
+        reply: { text: `⚠️ ${parsedPath.error ?? "Invalid path."}` },
+      };
+    }
+    parsedWritePath = parsedPath.path;
     const channelId = params.command.channelId ?? normalizeChannelId(params.command.channel);
-    const allowWrites = resolveChannelConfigWrites({
+    const deniedText = resolveConfigWriteDeniedText({
       cfg: params.cfg,
+      channel: params.command.channel,
       channelId,
       accountId: params.ctx.AccountId,
+      gatewayClientScopes: params.ctx.GatewayClientScopes,
+      target: resolveConfigWriteTargetFromPath(parsedWritePath),
     });
-    if (!allowWrites) {
-      const channelLabel = channelId ?? "this channel";
-      const hint = channelId
-        ? `channels.${channelId}.configWrites=true`
-        : "channels.<channel>.configWrites=true";
+    if (deniedText) {
       return {
         shouldContinue: false,
         reply: {
-          text: `⚠️ L'écriture de config est désactivée pour ${channelLabel}. Définir ${hint} pour activer.`,
+          text: deniedText,
         },
       };
     }
@@ -86,7 +103,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
     return {
       shouldContinue: false,
       reply: {
-        text: "⚠️ Le fichier de config est invalide; corrigez-le avant d'utiliser /config.",
+        text: "⚠️ Config file is invalid; fix it before using /config.",
       },
     };
   }
@@ -107,30 +124,23 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
       return {
         shouldContinue: false,
         reply: {
-          text: `⚙️ Config ${pathRaw} :\n\`\`\`json\n${rendered}\n\`\`\``,
+          text: `⚙️ Config ${pathRaw}:\n\`\`\`json\n${rendered}\n\`\`\``,
         },
       };
     }
     const json = JSON.stringify(parsedBase, null, 2);
     return {
       shouldContinue: false,
-      reply: { text: `⚙️ Config (brut) :\n\`\`\`json\n${json}\n\`\`\`` },
+      reply: { text: `⚙️ Config (raw):\n\`\`\`json\n${json}\n\`\`\`` },
     };
   }
 
   if (configCommand.action === "unset") {
-    const parsedPath = parseConfigPath(configCommand.path);
-    if (!parsedPath.ok || !parsedPath.path) {
-      return {
-        shouldContinue: false,
-        reply: { text: `⚠️ ${parsedPath.error ?? "Invalid path."}` },
-      };
-    }
-    const removed = unsetConfigValueAtPath(parsedBase, parsedPath.path);
+    const removed = unsetConfigValueAtPath(parsedBase, parsedWritePath ?? []);
     if (!removed) {
       return {
         shouldContinue: false,
-        reply: { text: `⚙️ Aucune valeur de config trouvée pour ${configCommand.path}.` },
+        reply: { text: `⚙️ No config value found for ${configCommand.path}.` },
       };
     }
     const validated = validateConfigObjectWithPlugins(parsedBase);
@@ -139,33 +149,26 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
       return {
         shouldContinue: false,
         reply: {
-          text: `⚠️ Config invalide après suppression (${issue.path}: ${issue.message}).`,
+          text: `⚠️ Config invalid after unset (${issue.path}: ${issue.message}).`,
         },
       };
     }
     await writeConfigFile(validated.config);
     return {
       shouldContinue: false,
-      reply: { text: `⚙️ Config mise à jour : ${configCommand.path} supprimé.` },
+      reply: { text: `⚙️ Config updated: ${configCommand.path} removed.` },
     };
   }
 
   if (configCommand.action === "set") {
-    const parsedPath = parseConfigPath(configCommand.path);
-    if (!parsedPath.ok || !parsedPath.path) {
-      return {
-        shouldContinue: false,
-        reply: { text: `⚠️ ${parsedPath.error ?? "Invalid path."}` },
-      };
-    }
-    setConfigValueAtPath(parsedBase, parsedPath.path, configCommand.value);
+    setConfigValueAtPath(parsedBase, parsedWritePath ?? [], configCommand.value);
     const validated = validateConfigObjectWithPlugins(parsedBase);
     if (!validated.ok) {
       const issue = validated.issues[0];
       return {
         shouldContinue: false,
         reply: {
-          text: `⚠️ Config invalide après modification (${issue.path}: ${issue.message}).`,
+          text: `⚠️ Config invalid after set (${issue.path}: ${issue.message}).`,
         },
       };
     }
@@ -177,7 +180,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
     return {
       shouldContinue: false,
       reply: {
-        text: `⚙️ Config mise à jour : ${configCommand.path}=${valueLabel ?? "null"}`,
+        text: `⚙️ Config updated: ${configCommand.path}=${valueLabel ?? "null"}`,
       },
     };
   }
@@ -196,6 +199,10 @@ export const handleDebugCommand: CommandHandler = async (params, allowTextComman
   const unauthorized = rejectUnauthorizedCommand(params, "/debug");
   if (unauthorized) {
     return unauthorized;
+  }
+  const nonOwner = rejectNonOwnerCommand(params, "/debug");
+  if (nonOwner) {
+    return nonOwner;
   }
   const disabled = requireCommandFlagEnabled(params.cfg, {
     label: "/debug",
@@ -216,14 +223,14 @@ export const handleDebugCommand: CommandHandler = async (params, allowTextComman
     if (!hasOverrides) {
       return {
         shouldContinue: false,
-        reply: { text: "⚙️ Surcharges debug : (aucune)" },
+        reply: { text: "⚙️ Debug overrides: (none)" },
       };
     }
     const json = JSON.stringify(overrides, null, 2);
     return {
       shouldContinue: false,
       reply: {
-        text: `⚙️ Surcharges debug (mémoire seule) :\n\`\`\`json\n${json}\n\`\`\``,
+        text: `⚙️ Debug overrides (memory-only):\n\`\`\`json\n${json}\n\`\`\``,
       },
     };
   }
@@ -231,7 +238,7 @@ export const handleDebugCommand: CommandHandler = async (params, allowTextComman
     resetConfigOverrides();
     return {
       shouldContinue: false,
-      reply: { text: "⚙️ Surcharges debug supprimées; utilisation de la config sur disque." },
+      reply: { text: "⚙️ Debug overrides cleared; using config on disk." },
     };
   }
   if (debugCommand.action === "unset") {
@@ -246,13 +253,13 @@ export const handleDebugCommand: CommandHandler = async (params, allowTextComman
       return {
         shouldContinue: false,
         reply: {
-          text: `⚙️ Aucune surcharge debug trouvée pour ${debugCommand.path}.`,
+          text: `⚙️ No debug override found for ${debugCommand.path}.`,
         },
       };
     }
     return {
       shouldContinue: false,
-      reply: { text: `⚙️ Surcharge debug supprimée pour ${debugCommand.path}.` },
+      reply: { text: `⚙️ Debug override removed for ${debugCommand.path}.` },
     };
   }
   if (debugCommand.action === "set") {
@@ -270,7 +277,7 @@ export const handleDebugCommand: CommandHandler = async (params, allowTextComman
     return {
       shouldContinue: false,
       reply: {
-        text: `⚙️ Surcharge debug définie : ${debugCommand.path}=${valueLabel ?? "null"}`,
+        text: `⚙️ Debug override set: ${debugCommand.path}=${valueLabel ?? "null"}`,
       },
     };
   }

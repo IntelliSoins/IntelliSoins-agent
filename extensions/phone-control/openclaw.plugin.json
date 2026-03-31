@@ -1,5 +1,6 @@
 {
   "id": "phone-control",
+  "enabledByDefault": true,
   "name": "Phone Control",
   "description": "Armer/désarmer les commandes à haut risque du téléphone (caméra/écran/écritures) avec expiration automatique optionnelle.",
   "configSchema": {

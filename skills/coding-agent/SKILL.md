@@ -3,7 +3,28 @@ name: coding-agent
 description: 'Déléguer des tâches de code à Codex, Claude Code ou des agents Pi en arrière-plan. Utiliser pour : (1) créer de nouvelles fonctionnalités ou apps, (2) réviser des PRs (spawn dans un répertoire temporaire), (3) refactorer de gros codebases, (4) du code itératif nécessitant l''exploration de fichiers. PAS pour : les corrections simples (utiliser edit), lire du code (utiliser read), les requêtes ACP liées à un thread (utiliser sessions_spawn avec runtime:"acp"), ou tout travail dans ~/clawd workspace.'
 metadata:
   {
-    "openclaw": { "emoji": "🧩", "requires": { "anyBins": ["claude", "codex", "opencode", "pi"] } },
+    "openclaw":
+      {
+        "emoji": "🧩",
+        "requires": { "anyBins": ["claude", "codex", "opencode", "pi"] },
+        "install":
+          [
+            {
+              "id": "node-claude",
+              "kind": "node",
+              "package": "@anthropic-ai/claude-code",
+              "bins": ["claude"],
+              "label": "Install Claude Code CLI (npm)",
+            },
+            {
+              "id": "node-codex",
+              "kind": "node",
+              "package": "@openai/codex",
+              "bins": ["codex"],
+              "label": "Install Codex CLI (npm)",
+            },
+          ],
+      },
   }
 ---
 
@@ -242,7 +263,7 @@ git worktree remove /tmp/issue-99
 5. **--full-auto for building** - auto-approves changes
 6. **vanilla for reviewing** - no special flags needed
 7. **Parallel is OK** - run many Codex processes at once for batch work
-8. **NEVER start Codex in ~/.openclaw/** - it'll read your soul docs and get weird ideas about the org chart!
+8. **NEVER start Codex inside your OpenClaw state directory** (`$OPENCLAW_STATE_DIR`, default `~/.openclaw`) - it'll read your soul docs and get weird ideas about the org chart!
 9. **NEVER checkout branches in ~/Projects/openclaw/** - that's the LIVE OpenClaw instance!
 
 ---

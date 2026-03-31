@@ -2,7 +2,24 @@
 name: weather
 description: "Obtenir la météo actuelle et les prévisions via wttr.in ou Open-Meteo. Utiliser quand on demande la météo, température ou prévisions pour un lieu. PAS pour : données météo historiques, alertes météo graves ou analyse météorologique détaillée. Aucune clé API requise."
 homepage: https://wttr.in/:help
-metadata: { "openclaw": { "emoji": "🌤️", "requires": { "bins": ["curl"] } } }
+metadata:
+  {
+    "openclaw":
+      {
+        "emoji": "☔",
+        "requires": { "bins": ["curl"] },
+        "install":
+          [
+            {
+              "id": "brew",
+              "kind": "brew",
+              "formula": "curl",
+              "bins": ["curl"],
+              "label": "Install curl (brew)",
+            },
+          ],
+      },
+  }
 ---
 
 # Weather Skill

@@ -2,7 +2,24 @@
 name: tmux
 description: "Contrôler à distance des sessions tmux pour des CLIs interactifs en envoyant des frappes et récupérant la sortie des panneaux."
 metadata:
-  { "openclaw": { "emoji": "🧵", "os": ["darwin", "linux"], "requires": { "bins": ["tmux"] } } }
+  {
+    "openclaw":
+      {
+        "emoji": "🧵",
+        "os": ["darwin", "linux"],
+        "requires": { "bins": ["tmux"] },
+        "install":
+          [
+            {
+              "id": "brew",
+              "kind": "brew",
+              "formula": "tmux",
+              "bins": ["tmux"],
+              "label": "Install tmux (brew)",
+            },
+          ],
+      },
+  }
 ---
 
 # tmux Session Control

@@ -1,5 +1,4 @@
 import { html, nothing } from "lit";
-import { t } from "../../i18n/index.ts";
 import type { EventLogEntry } from "../app-events.ts";
 import { formatEventPayload } from "../presenter.ts";
 
@@ -32,70 +31,61 @@ export function renderDebug(props: DebugProps) {
   const info = securitySummary?.info ?? 0;
   const securityTone = critical > 0 ? "danger" : warn > 0 ? "warn" : "success";
   const securityLabel =
-    critical > 0
-      ? `${critical} critique(s)`
-      : warn > 0
-        ? `${warn} avertissement(s)`
-        : "Aucun problème critique";
+    critical > 0 ? `${critical} critical` : warn > 0 ? `${warn} warnings` : "No critical issues";
 
   return html`
-    <section class="grid grid-cols-2">
+    <section class="grid">
       <div class="card">
         <div class="row" style="justify-content: space-between;">
           <div>
-            <div class="card-title">${t("debugView.title")}</div>
-            <div class="card-sub">${t("debugView.subtitle")}</div>
+            <div class="card-title">Snapshots</div>
+            <div class="card-sub">Status, health, and heartbeat data.</div>
           </div>
           <button class="btn" ?disabled=${props.loading} @click=${props.onRefresh}>
-            ${props.loading ? t("debugView.refreshing") : t("debugView.refresh")}
+            ${props.loading ? "Refreshing…" : "Refresh"}
           </button>
         </div>
         <div class="stack" style="margin-top: 12px;">
           <div>
-            <div class="muted">${t("debugView.status")}</div>
-            ${
-              securitySummary
-                ? html`<div class="callout ${securityTone}" style="margin-top: 8px;">
-                  Audit de sécurité : ${securityLabel}${info > 0 ? ` · ${info} info` : ""}. Exécuter
-                  <span class="mono">openclaw security audit --deep</span> pour les détails.
+            <div class="muted">Status</div>
+            ${securitySummary
+              ? html`<div class="callout ${securityTone}" style="margin-top: 8px;">
+                  Security audit: ${securityLabel}${info > 0 ? ` · ${info} info` : ""}. Run
+                  <span class="mono">openclaw security audit --deep</span> for details.
                 </div>`
-                : nothing
-            }
+              : nothing}
             <pre class="code-block">${JSON.stringify(props.status ?? {}, null, 2)}</pre>
           </div>
           <div>
-            <div class="muted">${t("debugView.health")}</div>
+            <div class="muted">Health</div>
             <pre class="code-block">${JSON.stringify(props.health ?? {}, null, 2)}</pre>
           </div>
           <div>
-            <div class="muted">${t("debugView.lastHeartbeat")}</div>
+            <div class="muted">Last heartbeat</div>
             <pre class="code-block">${JSON.stringify(props.heartbeat ?? {}, null, 2)}</pre>
           </div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">${t("debugView.manualRpc")}</div>
-        <div class="card-sub">${t("debugView.manualRpcSubtitle")}</div>
+        <div class="card-title">Manual RPC</div>
+        <div class="card-sub">Send a raw gateway method with JSON params.</div>
         <div class="stack" style="margin-top: 16px;">
           <label class="field">
-            <span>${t("debugView.method")}</span>
+            <span>Method</span>
             <select
               .value=${props.callMethod}
-              @change=${(e: Event) => props.onCallMethodChange((e.target as HTMLSelectElement).value)}
+              @change=${(e: Event) =>
+                props.onCallMethodChange((e.target as HTMLSelectElement).value)}
             >
-              ${
-                !props.callMethod
-                  ? html`
-                      <option value="" disabled>${t("debugView.selectMethod")}</option>
-                    `
-                  : nothing
-              }
+              ${!props.callMethod
+                ? html` <option value="" disabled>Select a method…</option> `
+                : nothing}
               ${props.methods.map((m) => html`<option value=${m}>${m}</option>`)}
             </select>
           </label>
           <label class="field">
-            <span>${t("debugView.params")}</span>
+            <span>Params (JSON)</span>
             <textarea
               .value=${props.callParams}
               @input=${(e: Event) =>
@@ -105,42 +95,31 @@ export function renderDebug(props: DebugProps) {
           </label>
         </div>
         <div class="row" style="margin-top: 12px;">
-          <button class="btn primary" @click=${props.onCall}>${t("debugView.call")}</button>
+          <button class="btn primary" @click=${props.onCall}>Call</button>
         </div>
-        ${
-          props.callError
-            ? html`<div class="callout danger" style="margin-top: 12px;">
-              ${props.callError}
-            </div>`
-            : nothing
-        }
-        ${
-          props.callResult
-            ? html`<pre class="code-block" style="margin-top: 12px;">${props.callResult}</pre>`
-            : nothing
-        }
+        ${props.callError
+          ? html`<div class="callout danger" style="margin-top: 12px;">${props.callError}</div>`
+          : nothing}
+        ${props.callResult
+          ? html`<pre class="code-block" style="margin-top: 12px;">${props.callResult}</pre>`
+          : nothing}
       </div>
     </section>
 
     <section class="card" style="margin-top: 18px;">
-      <div class="card-title">${t("debugView.models")}</div>
-      <div class="card-sub">${t("debugView.modelsSubtitle")}</div>
-      <pre class="code-block" style="margin-top: 12px;">${JSON.stringify(
-        props.models ?? [],
-        null,
-        2,
-      )}</pre>
+      <div class="card-title">Models</div>
+      <div class="card-sub">Catalog from models.list.</div>
+      <pre class="code-block" style="margin-top: 12px;">
+${JSON.stringify(props.models ?? [], null, 2)}</pre
+      >
     </section>
 
     <section class="card" style="margin-top: 18px;">
-      <div class="card-title">${t("debugView.eventLog")}</div>
-      <div class="card-sub">${t("debugView.eventLogSubtitle")}</div>
-      ${
-        props.eventLog.length === 0
-          ? html`
-              <div class="muted" style="margin-top: 12px">${t("debugView.noEvents")}</div>
-            `
-          : html`
+      <div class="card-title">Event Log</div>
+      <div class="card-sub">Latest gateway events.</div>
+      ${props.eventLog.length === 0
+        ? html` <div class="muted" style="margin-top: 12px">No events yet.</div> `
+        : html`
             <div class="list debug-event-log" style="margin-top: 12px;">
               ${props.eventLog.map(
                 (evt) => html`
@@ -150,16 +129,15 @@ export function renderDebug(props: DebugProps) {
                       <div class="list-sub">${new Date(evt.ts).toLocaleTimeString()}</div>
                     </div>
                     <div class="list-meta debug-event-log__meta">
-                      <pre class="code-block debug-event-log__payload">${formatEventPayload(
-                        evt.payload,
-                      )}</pre>
+                      <pre class="code-block debug-event-log__payload">
+${formatEventPayload(evt.payload)}</pre
+                      >
                     </div>
                   </div>
                 `,
               )}
             </div>
-          `
-      }
+          `}
     </section>
   `;
 }

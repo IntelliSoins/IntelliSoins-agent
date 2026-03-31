@@ -1,5 +1,6 @@
 {
   "id": "device-pair",
+  "enabledByDefault": true,
   "name": "Device Pairing",
   "description": "Générer des codes de configuration et approuver les demandes de jumelage d'appareils.",
   "configSchema": {

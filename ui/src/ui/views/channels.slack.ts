@@ -2,6 +2,11 @@ import { html, nothing } from "lit";
 import { formatRelativeTimestamp } from "../format.ts";
 import type { SlackStatus } from "../types.ts";
 import { renderChannelConfigSection } from "./channels.config.ts";
+import {
+  formatNullableBoolean,
+  renderSingleAccountChannelCard,
+  resolveChannelConfigured,
+} from "./channels.shared.ts";
 import type { ChannelsProps } from "./channels.types.ts";
 
 export function renderSlackCard(params: {
@@ -10,56 +15,34 @@ export function renderSlackCard(params: {
   accountCountLabel: unknown;
 }) {
   const { props, slack, accountCountLabel } = params;
+  const configured = resolveChannelConfigured("slack", props);
 
-  return html`
-    <div class="card">
-      <div class="card-title">Slack</div>
-      <div class="card-sub">État du mode socket et configuration du canal.</div>
-      ${accountCountLabel}
-
-      <div class="status-list" style="margin-top: 16px;">
-        <div>
-          <span class="label">Configuré</span>
-          <span>${slack?.configured ? "Oui" : "Non"}</span>
-        </div>
-        <div>
-          <span class="label">En cours</span>
-          <span>${slack?.running ? "Oui" : "Non"}</span>
-        </div>
-        <div>
-          <span class="label">Dernier démarrage</span>
-          <span>${slack?.lastStartAt ? formatRelativeTimestamp(slack.lastStartAt) : "n/d"}</span>
-        </div>
-        <div>
-          <span class="label">Dernière vérification</span>
-          <span>${slack?.lastProbeAt ? formatRelativeTimestamp(slack.lastProbeAt) : "n/d"}</span>
-        </div>
-      </div>
-
-      ${
-        slack?.lastError
-          ? html`<div class="callout danger" style="margin-top: 12px;">
-            ${slack.lastError}
-          </div>`
-          : nothing
-      }
-
-      ${
-        slack?.probe
-          ? html`<div class="callout" style="margin-top: 12px;">
-            Probe ${slack.probe.ok ? "ok" : "failed"} ·
-            ${slack.probe.status ?? ""} ${slack.probe.error ?? ""}
-          </div>`
-          : nothing
-      }
-
-      ${renderChannelConfigSection({ channelId: "slack", props })}
-
-      <div class="row" style="margin-top: 12px;">
-        <button class="btn" @click=${() => props.onRefresh(true)}>
-          Vérifier
-        </button>
-      </div>
-    </div>
-  `;
+  return renderSingleAccountChannelCard({
+    title: "Slack",
+    subtitle: "Socket mode status and channel configuration.",
+    accountCountLabel,
+    statusRows: [
+      { label: "Configured", value: formatNullableBoolean(configured) },
+      { label: "Running", value: slack?.running ? "Yes" : "No" },
+      {
+        label: "Last start",
+        value: slack?.lastStartAt ? formatRelativeTimestamp(slack.lastStartAt) : "n/a",
+      },
+      {
+        label: "Last probe",
+        value: slack?.lastProbeAt ? formatRelativeTimestamp(slack.lastProbeAt) : "n/a",
+      },
+    ],
+    lastError: slack?.lastError,
+    secondaryCallout: slack?.probe
+      ? html`<div class="callout" style="margin-top: 12px;">
+          Probe ${slack.probe.ok ? "ok" : "failed"} · ${slack.probe.status ?? ""}
+          ${slack.probe.error ?? ""}
+        </div>`
+      : nothing,
+    configSection: renderChannelConfigSection({ channelId: "slack", props }),
+    footer: html`<div class="row" style="margin-top: 12px;">
+      <button class="btn" @click=${() => props.onRefresh(true)}>Probe</button>
+    </div>`,
+  });
 }
