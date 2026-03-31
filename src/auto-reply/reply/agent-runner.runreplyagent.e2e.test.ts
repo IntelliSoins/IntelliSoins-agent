@@ -599,7 +599,7 @@ describe("runReplyAgent typing (heartbeat)", () => {
     const onToolResult = vi.fn();
     state.runEmbeddedPiAgentMock.mockImplementationOnce(async (params: AgentRunParams) => {
       await params.onToolResult?.({
-        text: "Approval required.\n\n```txt\n/approve 117ba06d allow-once\n```",
+        text: "Approbation requise.\n\n```txt\n/approve 117ba06d allow-once\n```",
         channelData: {
           execApproval: {
             approvalId: "117ba06d-1111-2222-3333-444444444444",
@@ -618,7 +618,7 @@ describe("runReplyAgent typing (heartbeat)", () => {
     await run();
 
     expect(onToolResult).toHaveBeenCalledWith({
-      text: "Approval required.\n\n```txt\n/approve 117ba06d allow-once\n```",
+      text: "Approbation requise.\n\n```txt\n/approve 117ba06d allow-once\n```",
       channelData: {
         execApproval: {
           approvalId: "117ba06d-1111-2222-3333-444444444444",
@@ -731,7 +731,7 @@ describe("runReplyAgent typing (heartbeat)", () => {
       const res = await run();
       expect(Array.isArray(res)).toBe(true);
       const payloads = res as { text?: string }[];
-      expect(payloads[0]?.text).toContain("Auto-compaction complete");
+      expect(payloads[0]?.text).toContain("Auto-compaction terminée");
       expect(payloads[0]?.text).toContain("count 1");
       expect(sessionStore.main.compactionCount).toBe(1);
     });
@@ -1188,7 +1188,7 @@ describe("runReplyAgent typing (heartbeat)", () => {
       expect(state.runEmbeddedPiAgentMock).toHaveBeenCalledTimes(1);
       const payload = Array.isArray(res) ? res[0] : res;
       expect(payload).toMatchObject({
-        text: expect.stringContaining("Context limit exceeded during compaction"),
+        text: expect.stringContaining("Limite de contexte dépassée pendant la compaction"),
       });
       if (!payload) {
         throw new Error("expected payload");
@@ -1242,7 +1242,7 @@ describe("runReplyAgent typing (heartbeat)", () => {
       expect(state.runEmbeddedPiAgentMock).toHaveBeenCalledTimes(1);
       const payload = Array.isArray(res) ? res[0] : res;
       expect(payload).toMatchObject({
-        text: expect.stringContaining("Context limit exceeded"),
+        text: expect.stringContaining("Limite de contexte dépassée"),
       });
       if (!payload) {
         throw new Error("expected payload");
@@ -1317,7 +1317,7 @@ describe("runReplyAgent typing (heartbeat)", () => {
       await fs.writeFile(transcriptPath, "ok", "utf-8");
 
       state.runEmbeddedPiAgentMock.mockImplementationOnce(async () => ({
-        payloads: [{ text: "Message ordering conflict - please try again.", isError: true }],
+        payloads: [{ text: "Conflit d'ordre des messages — veuillez réessayer.", isError: true }],
         meta: {
           durationMs: 1,
           error: {

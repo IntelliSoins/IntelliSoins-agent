@@ -367,7 +367,7 @@ describe("registerTelegramNativeCommands — session metadata", () => {
       async ({ dispatcherOptions }: DispatchReplyWithBufferedBlockDispatcherParams) => {
         await dispatcherOptions.deliver(
           {
-            text: "Approval required.\n\n```txt\n/approve 7f423fdc allow-once\n```",
+            text: "Approbation requise.\n\n```txt\n/approve 7f423fdc allow-once\n```",
             channelData: {
               execApproval: {
                 approvalId: "7f423fdc-1111-2222-3333-444444444444",

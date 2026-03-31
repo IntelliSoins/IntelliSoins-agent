@@ -1,7 +1,7 @@
 {
   "id": "phone-control",
   "name": "Phone Control",
-  "description": "Arm/disarm high-risk phone node commands (camera/screen/writes) with an optional auto-expiry.",
+  "description": "Armer/désarmer les commandes à haut risque du téléphone (caméra/écran/écritures) avec expiration automatique optionnelle.",
   "configSchema": {
     "type": "object",
     "additionalProperties": false,

@@ -313,7 +313,7 @@ export async function runPreparedReply(
     logVerbose("Inbound body empty after normalization; skipping agent run");
     typing.cleanup();
     return {
-      text: "I didn't receive any text in your message. Please resend or add a caption.",
+      text: "Je n'ai reçu aucun texte dans votre message. Veuillez renvoyer ou ajouter une légende.",
     };
   }
   // When the user sends media without text, provide a minimal body so the agent
@@ -394,7 +394,7 @@ export async function runPreparedReply(
     if (explicitThink) {
       typing.cleanup();
       return {
-        text: `Thinking level "xhigh" is only supported for ${formatXHighModelHint()}. Use /think high or switch to one of those models.`,
+        text: `Le niveau de réflexion "xhigh" n'est supporté que pour ${formatXHighModelHint()}. Utilisez /think high ou changez pour un de ces modèles.`,
       };
     }
     resolvedThinkLevel = "high";

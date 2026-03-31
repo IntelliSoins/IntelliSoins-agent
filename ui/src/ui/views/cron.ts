@@ -283,8 +283,8 @@ function fieldLabelForKey(
     payloadThinking: t("cron.form.thinking"),
     timeoutSeconds: t("cron.form.timeoutSeconds"),
     deliveryTo: t("cron.form.to"),
-    failureAlertAfter: "Failure alert after",
-    failureAlertCooldownSeconds: "Failure alert cooldown",
+    failureAlertAfter: "Alerter après les échecs",
+    failureAlertCooldownSeconds: "Intervalle entre alertes d'échec",
   };
   return labels[key];
 }
@@ -1039,7 +1039,7 @@ export function renderCron(props: CronProps) {
                 <div class="cron-help">${t("cron.form.clearAgentHelp")}</div>
               </label>
               <label class="field cron-span-2">
-                ${renderFieldLabel("Session key")}
+                ${renderFieldLabel("Clé de session")}
                 <input
                   id="cron-session-key"
                   .value=${props.form.sessionKey}
@@ -1050,7 +1050,7 @@ export function renderCron(props: CronProps) {
                   placeholder="agent:main:main"
                 />
                 <div class="cron-help">
-                  Optional routing key for job delivery and wake routing.
+                  Clé de routage optionnelle pour la livraison et le réveil des tâches.
                 </div>
               </label>
               ${
@@ -1115,7 +1115,7 @@ export function renderCron(props: CronProps) {
                 isAgentTurn
                   ? html`
                       <label class="field cron-span-2">
-                        ${renderFieldLabel("Account ID")}
+                        ${renderFieldLabel("ID du compte")}
                         <input
                           id="cron-delivery-account-id"
                           .value=${props.form.deliveryAccountId}
@@ -1128,7 +1128,7 @@ export function renderCron(props: CronProps) {
                           placeholder="default"
                         />
                         <div class="cron-help">
-                          Optional channel account ID for multi-account setups.
+                          ID du compte canal optionnel pour les configurations multi-comptes.
                         </div>
                       </label>
                       <label class="field checkbox cron-checkbox cron-span-2">
@@ -1140,9 +1140,9 @@ export function renderCron(props: CronProps) {
                               payloadLightContext: (e.target as HTMLInputElement).checked,
                             })}
                         />
-                        <span class="field-checkbox__label">Light context</span>
+                        <span class="field-checkbox__label">Contexte léger</span>
                         <div class="cron-help">
-                          Use lightweight bootstrap context for this agent job.
+                          Utiliser un contexte de démarrage léger pour cette tâche d'agent.
                         </div>
                       </label>
                       <label class="field">
@@ -1180,7 +1180,7 @@ export function renderCron(props: CronProps) {
                 isAgentTurn
                   ? html`
                       <label class="field cron-span-2">
-                        ${renderFieldLabel("Failure alerts")}
+                        ${renderFieldLabel("Alertes d'échec")}
                         <select
                           .value=${props.form.failureAlertMode}
                           @change=${(e: Event) =>
@@ -1189,19 +1189,19 @@ export function renderCron(props: CronProps) {
                                 .value as CronFormState["failureAlertMode"],
                             })}
                         >
-                          <option value="inherit">Inherit global setting</option>
-                          <option value="disabled">Disable for this job</option>
-                          <option value="custom">Custom per-job settings</option>
+                          <option value="inherit">Hériter du réglage global</option>
+                          <option value="disabled">Désactiver pour cette tâche</option>
+                          <option value="custom">Réglages personnalisés par tâche</option>
                         </select>
                         <div class="cron-help">
-                          Control when this job sends repeated-failure alerts.
+                          Contrôler quand cette tâche envoie des alertes d'échecs répétés.
                         </div>
                       </label>
                       ${
                         props.form.failureAlertMode === "custom"
                           ? html`
                               <label class="field">
-                                ${renderFieldLabel("Alert after")}
+                                ${renderFieldLabel("Alerter après")}
                                 <input
                                   id="cron-failure-alert-after"
                                   .value=${props.form.failureAlertAfter}
@@ -1217,14 +1217,14 @@ export function renderCron(props: CronProps) {
                                     })}
                                   placeholder="2"
                                 />
-                                <div class="cron-help">Consecutive errors before alerting.</div>
+                                <div class="cron-help">Erreurs consécutives avant l'alerte.</div>
                                 ${renderFieldError(
                                   props.fieldErrors.failureAlertAfter,
                                   errorIdForField("failureAlertAfter"),
                                 )}
                               </label>
                               <label class="field">
-                                ${renderFieldLabel("Cooldown (seconds)")}
+                                ${renderFieldLabel("Intervalle (secondes)")}
                                 <input
                                   id="cron-failure-alert-cooldown-seconds"
                                   .value=${props.form.failureAlertCooldownSeconds}
@@ -1241,14 +1241,14 @@ export function renderCron(props: CronProps) {
                                     })}
                                   placeholder="3600"
                                 />
-                                <div class="cron-help">Minimum seconds between alerts.</div>
+                                <div class="cron-help">Secondes minimum entre les alertes.</div>
                                 ${renderFieldError(
                                   props.fieldErrors.failureAlertCooldownSeconds,
                                   errorIdForField("failureAlertCooldownSeconds"),
                                 )}
                               </label>
                               <label class="field">
-                                ${renderFieldLabel("Alert channel")}
+                                ${renderFieldLabel("Canal d'alerte")}
                                 <select
                                   .value=${props.form.failureAlertChannel || "last"}
                                   @change=${(e: Event) =>
@@ -1265,7 +1265,7 @@ export function renderCron(props: CronProps) {
                                 </select>
                               </label>
                               <label class="field">
-                                ${renderFieldLabel("Alert to")}
+                                ${renderFieldLabel("Alerter vers")}
                                 <input
                                   .value=${props.form.failureAlertTo}
                                   list="cron-delivery-to-suggestions"
@@ -1273,14 +1273,14 @@ export function renderCron(props: CronProps) {
                                     props.onFormChange({
                                       failureAlertTo: (e.target as HTMLInputElement).value,
                                     })}
-                                  placeholder="+1555... or chat id"
+                                  placeholder="+1555... ou ID de chat"
                                 />
                                 <div class="cron-help">
-                                  Optional recipient override for failure alerts.
+                                  Destinataire optionnel pour les alertes d'échec.
                                 </div>
                               </label>
                               <label class="field">
-                                ${renderFieldLabel("Alert mode")}
+                                ${renderFieldLabel("Mode d'alerte")}
                                 <select
                                   .value=${props.form.failureAlertDeliveryMode || "announce"}
                                   @change=${(e: Event) =>
@@ -1289,19 +1289,19 @@ export function renderCron(props: CronProps) {
                                         .value as CronFormState["failureAlertDeliveryMode"],
                                     })}
                                 >
-                                  <option value="announce">Announce (via channel)</option>
+                                  <option value="announce">Annonce (via canal)</option>
                                   <option value="webhook">Webhook (HTTP POST)</option>
                                 </select>
                               </label>
                               <label class="field">
-                                ${renderFieldLabel("Alert account ID")}
+                                ${renderFieldLabel("ID du compte d'alerte")}
                                 <input
                                   .value=${props.form.failureAlertAccountId}
                                   @input=${(e: Event) =>
                                     props.onFormChange({
                                       failureAlertAccountId: (e.target as HTMLInputElement).value,
                                     })}
-                                  placeholder="Account ID for multi-account setups"
+                                  placeholder="ID du compte pour configurations multi-comptes"
                                 />
                               </label>
                             `

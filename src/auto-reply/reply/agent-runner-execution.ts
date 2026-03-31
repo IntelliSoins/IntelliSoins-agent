@@ -495,7 +495,7 @@ export async function runAgentTurnWithFallback(params: {
         return {
           kind: "final",
           payload: {
-            text: "⚠️ Context limit exceeded. I've reset our conversation to start fresh - please try again.\n\nTo prevent this, increase your compaction buffer by setting `agents.defaults.compaction.reserveTokensFloor` to 20000 or higher in your config.",
+            text: "⚠️ Limite de contexte dépassée. J'ai réinitialisé la conversation — veuillez réessayer.\n\nPour éviter cela, augmentez le tampon de compaction en définissant `agents.defaults.compaction.reserveTokensFloor` à 20000 ou plus dans votre config.",
           },
         };
       }
@@ -505,7 +505,7 @@ export async function runAgentTurnWithFallback(params: {
           return {
             kind: "final",
             payload: {
-              text: "⚠️ Message ordering conflict. I've reset the conversation - please try again.",
+              text: "⚠️ Conflit d'ordre des messages. J'ai réinitialisé la conversation — veuillez réessayer.",
             },
           };
         }
@@ -529,7 +529,7 @@ export async function runAgentTurnWithFallback(params: {
         return {
           kind: "final",
           payload: {
-            text: "⚠️ Context limit exceeded during compaction. I've reset our conversation to start fresh - please try again.\n\nTo prevent this, increase your compaction buffer by setting `agents.defaults.compaction.reserveTokensFloor` to 20000 or higher in your config.",
+            text: "⚠️ Limite de contexte dépassée pendant la compaction. J'ai réinitialisé la conversation — veuillez réessayer.\n\nPour éviter cela, augmentez le tampon de compaction en définissant `agents.defaults.compaction.reserveTokensFloor` à 20000 ou plus dans votre config.",
           },
         };
       }
@@ -539,7 +539,7 @@ export async function runAgentTurnWithFallback(params: {
           return {
             kind: "final",
             payload: {
-              text: "⚠️ Message ordering conflict. I've reset the conversation - please try again.",
+              text: "⚠️ Conflit d'ordre des messages. J'ai réinitialisé la conversation — veuillez réessayer.",
             },
           };
         }
@@ -585,7 +585,7 @@ export async function runAgentTurnWithFallback(params: {
         return {
           kind: "final",
           payload: {
-            text: "⚠️ Session history was corrupted. I've reset the conversation - please try again!",
+            text: "⚠️ L'historique de session était corrompu. J'ai réinitialisé la conversation — veuillez réessayer!",
           },
         };
       }
@@ -636,7 +636,7 @@ export async function runAgentTurnWithFallback(params: {
     return {
       kind: "final",
       payload: {
-        text: "⚠️ Context overflow — this conversation is too large for the model. Use /new to start a fresh session.",
+        text: "⚠️ Dépassement de contexte — cette conversation est trop longue pour le modèle. Utilisez /new pour une nouvelle session.",
       },
     };
   }

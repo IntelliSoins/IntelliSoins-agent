@@ -113,10 +113,10 @@ export function renderAgents(props: AgentsProps) {
         <div class="row" style="justify-content: space-between;">
           <div>
             <div class="card-title">Agents</div>
-            <div class="card-sub">${agents.length} configured.</div>
+            <div class="card-sub">${agents.length} configuré(s).</div>
           </div>
           <button class="btn btn--sm" ?disabled=${props.loading} @click=${props.onRefresh}>
-            ${props.loading ? "Loading…" : "Refresh"}
+            ${props.loading ? "Chargement…" : "Actualiser"}
           </button>
         </div>
         ${
@@ -128,7 +128,7 @@ export function renderAgents(props: AgentsProps) {
           ${
             agents.length === 0
               ? html`
-                  <div class="muted">No agents found.</div>
+                  <div class="muted">Aucun agent trouvé.</div>
                 `
               : agents.map((agent) => {
                   const badge = agentBadgeText(agent.id, defaultId);
@@ -156,8 +156,8 @@ export function renderAgents(props: AgentsProps) {
           !selectedAgent
             ? html`
                 <div class="card">
-                  <div class="card-title">Select an agent</div>
-                  <div class="card-sub">Pick an agent to inspect its workspace and tools.</div>
+                  <div class="card-title">Sélectionner un agent</div>
+                  <div class="card-sub">Choisir un agent pour inspecter son espace de travail et ses outils.</div>
                 </div>
               `
             : html`
@@ -299,7 +299,7 @@ function renderAgentHeader(
 ) {
   const badge = agentBadgeText(agent.id, defaultId);
   const displayName = normalizeAgentLabel(agent);
-  const subtitle = agent.identity?.theme?.trim() || "Agent workspace and routing.";
+  const subtitle = agent.identity?.theme?.trim() || "Espace de travail et routage de l'agent.";
   const emoji = resolveAgentEmoji(agent, agentIdentity);
   return html`
     <section class="card agent-header">
@@ -320,12 +320,12 @@ function renderAgentHeader(
 
 function renderAgentTabs(active: AgentsPanel, onSelect: (panel: AgentsPanel) => void) {
   const tabs: Array<{ id: AgentsPanel; label: string }> = [
-    { id: "overview", label: "Overview" },
-    { id: "files", label: "Files" },
-    { id: "tools", label: "Tools" },
+    { id: "overview", label: "Aperçu" },
+    { id: "files", label: "Fichiers" },
+    { id: "tools", label: "Outils" },
     { id: "skills", label: "Skills" },
-    { id: "channels", label: "Channels" },
-    { id: "cron", label: "Cron Jobs" },
+    { id: "channels", label: "Canaux" },
+    { id: "cron", label: "Tâches cron" },
   ];
   return html`
     <div class="agent-tabs">
@@ -406,49 +406,49 @@ function renderAgentOverview(params: {
   const skillFilter = Array.isArray(config.entry?.skills) ? config.entry?.skills : null;
   const skillCount = skillFilter?.length ?? null;
   const identityStatus = agentIdentityLoading
-    ? "Loading…"
+    ? "Chargement…"
     : agentIdentityError
-      ? "Unavailable"
+      ? "Indisponible"
       : "";
   const isDefault = Boolean(params.defaultId && agent.id === params.defaultId);
 
   return html`
     <section class="card">
-      <div class="card-title">Overview</div>
-      <div class="card-sub">Workspace paths and identity metadata.</div>
+      <div class="card-title">Aperçu</div>
+      <div class="card-sub">Chemins de l'espace de travail et métadonnées d'identité.</div>
       <div class="agents-overview-grid" style="margin-top: 16px;">
         <div class="agent-kv">
-          <div class="label">Workspace</div>
+          <div class="label">Espace de travail</div>
           <div class="mono">${workspace}</div>
         </div>
         <div class="agent-kv">
-          <div class="label">Primary Model</div>
+          <div class="label">Modèle principal</div>
           <div class="mono">${model}</div>
         </div>
         <div class="agent-kv">
-          <div class="label">Identity Name</div>
+          <div class="label">Nom d'identité</div>
           <div>${identityName}</div>
           ${identityStatus ? html`<div class="agent-kv-sub muted">${identityStatus}</div>` : nothing}
         </div>
         <div class="agent-kv">
-          <div class="label">Default</div>
-          <div>${isDefault ? "yes" : "no"}</div>
+          <div class="label">Par défaut</div>
+          <div>${isDefault ? "oui" : "non"}</div>
         </div>
         <div class="agent-kv">
-          <div class="label">Identity Emoji</div>
+          <div class="label">Émoji d'identité</div>
           <div>${identityEmoji}</div>
         </div>
         <div class="agent-kv">
-          <div class="label">Skills Filter</div>
-          <div>${skillFilter ? `${skillCount} selected` : "all skills"}</div>
+          <div class="label">Filtre de Skills</div>
+          <div>${skillFilter ? `${skillCount} sélectionné(s)` : "tous les Skills"}</div>
         </div>
       </div>
 
       <div class="agent-model-select" style="margin-top: 20px;">
-        <div class="label">Model Selection</div>
+        <div class="label">Sélection du modèle</div>
         <div class="row" style="gap: 12px; flex-wrap: wrap;">
           <label class="field" style="min-width: 260px; flex: 1;">
-            <span>Primary model${isDefault ? " (default)" : ""}</span>
+            <span>Modèle principal${isDefault ? " (par défaut)" : ""}</span>
             <select
               .value=${effectivePrimary ?? ""}
               ?disabled=${!configForm || configLoading || configSaving}
@@ -460,7 +460,7 @@ function renderAgentOverview(params: {
                   ? nothing
                   : html`
                       <option value="">
-                        ${defaultPrimary ? `Inherit default (${defaultPrimary})` : "Inherit default"}
+                        ${defaultPrimary ? `Hériter du défaut (${defaultPrimary})` : "Hériter du défaut"}
                       </option>
                     `
               }
@@ -468,7 +468,7 @@ function renderAgentOverview(params: {
             </select>
           </label>
           <label class="field" style="min-width: 260px; flex: 1;">
-            <span>Fallbacks (comma-separated)</span>
+            <span>Modèles de secours (séparés par des virgules)</span>
             <input
               .value=${fallbackText}
               ?disabled=${!configForm || configLoading || configSaving}
@@ -483,14 +483,14 @@ function renderAgentOverview(params: {
         </div>
         <div class="row" style="justify-content: flex-end; gap: 8px;">
           <button class="btn btn--sm" ?disabled=${configLoading} @click=${onConfigReload}>
-            Reload Config
+            Recharger la config
           </button>
           <button
             class="btn btn--sm primary"
             ?disabled=${configSaving || !configDirty}
             @click=${onConfigSave}
           >
-            ${configSaving ? "Saving…" : "Save"}
+            ${configSaving ? "Enregistrement…" : "Enregistrer"}
           </button>
         </div>
       </div>

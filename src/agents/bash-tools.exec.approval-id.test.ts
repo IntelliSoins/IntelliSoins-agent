@@ -647,7 +647,7 @@ describe("exec approvals", () => {
 
     expect(result.details.status).toBe("approval-unavailable");
     const text = result.content.find((part) => part.type === "text")?.text ?? "";
-    expect(text).toContain("Approval required. I sent the allowed approvers DMs.");
+    expect(text).toContain("Approbation requise. J'ai envoyé des DMs aux approbateurs autorisés.");
     expect(text).not.toContain("/approve");
     expect(text).not.toContain("npm view diver name version description");
     expect(text).not.toContain("Pending command:");

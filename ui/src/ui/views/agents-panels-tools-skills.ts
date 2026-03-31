@@ -37,10 +37,10 @@ export function renderAgentTools(params: {
   const globalTools = config.globalTools ?? {};
   const profile = agentTools.profile ?? globalTools.profile ?? "full";
   const profileSource = agentTools.profile
-    ? "agent override"
+    ? "surcharge agent"
     : globalTools.profile
-      ? "global default"
-      : "default";
+      ? "défaut global"
+      : "défaut";
   const hasAgentAllow = Array.isArray(agentTools.allow) && agentTools.allow.length > 0;
   const hasGlobalAllow = Array.isArray(globalTools.allow) && globalTools.allow.length > 0;
   const editable =
@@ -130,7 +130,7 @@ export function renderAgentTools(params: {
           <div class="card-title">${t("agentsView.toolAccess")}</div>
           <div class="card-sub">
             ${t("agentsView.toolAccessSubtitle")}
-            <span class="mono">${enabledCount}/${toolIds.length}</span> enabled.
+            <span class="mono">${enabledCount}/${toolIds.length}</span> activé(s).
           </div>
         </div>
         <div class="row" style="gap: 8px;">
@@ -148,7 +148,7 @@ export function renderAgentTools(params: {
             ?disabled=${params.configSaving || !params.configDirty}
             @click=${params.onConfigSave}
           >
-            ${params.configSaving ? "Saving…" : "Save"}
+            ${params.configSaving ? "Enregistrement…" : "Enregistrer"}
           </button>
         </div>
       </div>
@@ -157,7 +157,7 @@ export function renderAgentTools(params: {
         params.toolsCatalogError
           ? html`
               <div class="callout warn" style="margin-top: 12px">
-                Could not load runtime tool catalog. Showing fallback list.
+                Impossible de charger le catalogue d'outils. Affichage de la liste de secours.
               </div>
             `
           : nothing
@@ -166,7 +166,7 @@ export function renderAgentTools(params: {
         !params.configForm
           ? html`
               <div class="callout info" style="margin-top: 12px">
-                Load the gateway config to adjust tool profiles.
+                Charger la config du Gateway pour ajuster les profils d'outils.
               </div>
             `
           : nothing
@@ -175,7 +175,8 @@ export function renderAgentTools(params: {
         hasAgentAllow
           ? html`
               <div class="callout info" style="margin-top: 12px">
-                This agent is using an explicit allowlist in config. Tool overrides are managed in the Config tab.
+                Cet agent utilise une liste autorisée explicite. Les surcharges d'outils sont gérées dans l'onglet
+                Config.
               </div>
             `
           : nothing
@@ -184,7 +185,8 @@ export function renderAgentTools(params: {
         hasGlobalAllow
           ? html`
               <div class="callout info" style="margin-top: 12px">
-                Global tools.allow is set. Agent overrides cannot enable tools that are globally blocked.
+                tools.allow global est défini. Les surcharges d'agent ne peuvent pas activer les outils bloqués
+                globalement.
               </div>
             `
           : nothing
@@ -192,7 +194,7 @@ export function renderAgentTools(params: {
 
       <div class="agent-tools-meta" style="margin-top: 16px;">
         <div class="agent-kv">
-          <div class="label">Profile</div>
+          <div class="label">Profil</div>
           <div class="mono">${profile}</div>
         </div>
         <div class="agent-kv">
@@ -203,8 +205,8 @@ export function renderAgentTools(params: {
           params.configDirty
             ? html`
                 <div class="agent-kv">
-                  <div class="label">Status</div>
-                  <div class="mono">unsaved</div>
+                  <div class="label">Statut</div>
+                  <div class="mono">non enregistré</div>
                 </div>
               `
             : nothing
@@ -212,7 +214,7 @@ export function renderAgentTools(params: {
       </div>
 
       <div class="agent-tools-presets" style="margin-top: 16px;">
-        <div class="label">Quick Presets</div>
+        <div class="label">Préréglages rapides</div>
         <div class="agent-tools-buttons">
           ${profileOptions.map(
             (option) => html`
@@ -230,7 +232,7 @@ export function renderAgentTools(params: {
             ?disabled=${!editable}
             @click=${() => params.onProfileChange(params.agentId, null, false)}
           >
-            Inherit
+            Hériter
           </button>
         </div>
       </div>
@@ -302,7 +304,7 @@ export function renderAgentTools(params: {
       ${
         params.toolsCatalogLoading
           ? html`
-              <div class="card-sub" style="margin-top: 10px">Refreshing tool catalog…</div>
+              <div class="card-sub" style="margin-top: 10px">Actualisation du catalogue d'outils…</div>
             `
           : nothing
       }
@@ -354,7 +356,7 @@ export function renderAgentSkills(params: {
         <div>
           <div class="card-title">Skills</div>
           <div class="card-sub">
-            Per-agent skill allowlist and workspace skills.
+            Liste de Skills autorisés par agent et Skills de l'espace de travail.
             ${
               totalCount > 0
                 ? html`<span class="mono">${enabledCount}/${totalCount}</span>`
@@ -364,27 +366,27 @@ export function renderAgentSkills(params: {
         </div>
         <div class="row" style="gap: 8px;">
           <button class="btn btn--sm" ?disabled=${!editable} @click=${() => params.onClear(params.agentId)}>
-            Use All
+            Tout activer
           </button>
           <button
             class="btn btn--sm"
             ?disabled=${!editable}
             @click=${() => params.onDisableAll(params.agentId)}
           >
-            Disable All
+            Tout désactiver
           </button>
           <button class="btn btn--sm" ?disabled=${params.configLoading} @click=${params.onConfigReload}>
-            Reload Config
+            Recharger la config
           </button>
           <button class="btn btn--sm" ?disabled=${params.loading} @click=${params.onRefresh}>
-            ${params.loading ? "Loading…" : "Refresh"}
+            ${params.loading ? "Chargement…" : "Actualiser"}
           </button>
           <button
             class="btn btn--sm primary"
             ?disabled=${params.configSaving || !params.configDirty}
             @click=${params.onConfigSave}
           >
-            ${params.configSaving ? "Saving…" : "Save"}
+            ${params.configSaving ? "Enregistrement…" : "Enregistrer"}
           </button>
         </div>
       </div>
@@ -393,7 +395,7 @@ export function renderAgentSkills(params: {
         !params.configForm
           ? html`
               <div class="callout info" style="margin-top: 12px">
-                Load the gateway config to set per-agent skills.
+                Charger la config du Gateway pour définir les Skills par agent.
               </div>
             `
           : nothing
@@ -401,11 +403,13 @@ export function renderAgentSkills(params: {
       ${
         usingAllowlist
           ? html`
-              <div class="callout info" style="margin-top: 12px">This agent uses a custom skill allowlist.</div>
+              <div class="callout info" style="margin-top: 12px">
+                Cet agent utilise une liste de Skills personnalisée.
+              </div>
             `
           : html`
               <div class="callout info" style="margin-top: 12px">
-                All skills are enabled. Disabling any skill will create a per-agent allowlist.
+                Tous les Skills sont activés. En désactiver un créera une liste par agent.
               </div>
             `
       }
@@ -413,7 +417,7 @@ export function renderAgentSkills(params: {
         !reportReady && !params.loading
           ? html`
               <div class="callout info" style="margin-top: 12px">
-                Load skills for this agent to view workspace-specific entries.
+                Charger les Skills de cet agent pour voir les entrées spécifiques.
               </div>
             `
           : nothing
@@ -426,20 +430,20 @@ export function renderAgentSkills(params: {
 
       <div class="filters" style="margin-top: 14px;">
         <label class="field" style="flex: 1;">
-          <span>Filter</span>
+          <span>Filtrer</span>
           <input
             .value=${params.filter}
             @input=${(e: Event) => params.onFilterChange((e.target as HTMLInputElement).value)}
             placeholder=${t("searchCommon.skills")}
           />
         </label>
-        <div class="muted">${filtered.length} shown</div>
+        <div class="muted">${filtered.length} affichés</div>
       </div>
 
       ${
         filtered.length === 0
           ? html`
-              <div class="muted" style="margin-top: 16px">No skills found.</div>
+              <div class="muted" style="margin-top: 16px">Aucun Skill trouvé.</div>
             `
           : html`
               <div class="agent-skills-groups" style="margin-top: 16px;">
@@ -512,12 +516,12 @@ function renderAgentSkillRow(
         ${renderSkillStatusChips({ skill })}
         ${
           missing.length > 0
-            ? html`<div class="muted" style="margin-top: 6px;">Missing: ${missing.join(", ")}</div>`
+            ? html`<div class="muted" style="margin-top: 6px;">Manquant : ${missing.join(", ")}</div>`
             : nothing
         }
         ${
           reasons.length > 0
-            ? html`<div class="muted" style="margin-top: 6px;">Reason: ${reasons.join(", ")}</div>`
+            ? html`<div class="muted" style="margin-top: 6px;">Raison : ${reasons.join(", ")}</div>`
             : nothing
         }
       </div>

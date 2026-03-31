@@ -293,7 +293,7 @@ describe("telegramPlugin duplicate token guard", () => {
       to: "12345",
       text: "",
       payload: {
-        text: "Approval required",
+        text: "Approbation requise",
         channelData: {
           telegram: {
             buttons: [[{ text: "Allow Once", callback_data: "/approve abc allow-once" }]],
@@ -305,7 +305,7 @@ describe("telegramPlugin duplicate token guard", () => {
 
     expect(sendMessageTelegram).toHaveBeenCalledWith(
       "12345",
-      "Approval required",
+      "Approbation requise",
       expect.objectContaining({
         buttons: [[{ text: "Allow Once", callback_data: "/approve abc allow-once" }]],
       }),

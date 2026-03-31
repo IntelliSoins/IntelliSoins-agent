@@ -1,6 +1,6 @@
 ---
 name: sherpa-onnx-tts
-description: Local text-to-speech via sherpa-onnx (offline, no cloud)
+description: Synthèse vocale locale via sherpa-onnx (hors-ligne, sans cloud).
 metadata:
   {
     "openclaw":

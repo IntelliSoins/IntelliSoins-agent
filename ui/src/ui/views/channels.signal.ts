@@ -14,29 +14,29 @@ export function renderSignalCard(params: {
   return html`
     <div class="card">
       <div class="card-title">Signal</div>
-      <div class="card-sub">signal-cli status and channel configuration.</div>
+      <div class="card-sub">État de signal-cli et configuration du canal.</div>
       ${accountCountLabel}
 
       <div class="status-list" style="margin-top: 16px;">
         <div>
-          <span class="label">Configured</span>
-          <span>${signal?.configured ? "Yes" : "No"}</span>
+          <span class="label">Configuré</span>
+          <span>${signal?.configured ? "Oui" : "Non"}</span>
         </div>
         <div>
-          <span class="label">Running</span>
-          <span>${signal?.running ? "Yes" : "No"}</span>
+          <span class="label">En cours</span>
+          <span>${signal?.running ? "Oui" : "Non"}</span>
         </div>
         <div>
-          <span class="label">Base URL</span>
-          <span>${signal?.baseUrl ?? "n/a"}</span>
+          <span class="label">URL de base</span>
+          <span>${signal?.baseUrl ?? "n/d"}</span>
         </div>
         <div>
-          <span class="label">Last start</span>
-          <span>${signal?.lastStartAt ? formatRelativeTimestamp(signal.lastStartAt) : "n/a"}</span>
+          <span class="label">Dernier démarrage</span>
+          <span>${signal?.lastStartAt ? formatRelativeTimestamp(signal.lastStartAt) : "n/d"}</span>
         </div>
         <div>
-          <span class="label">Last probe</span>
-          <span>${signal?.lastProbeAt ? formatRelativeTimestamp(signal.lastProbeAt) : "n/a"}</span>
+          <span class="label">Dernière vérification</span>
+          <span>${signal?.lastProbeAt ? formatRelativeTimestamp(signal.lastProbeAt) : "n/d"}</span>
         </div>
       </div>
 
@@ -61,7 +61,7 @@ export function renderSignalCard(params: {
 
       <div class="row" style="margin-top: 12px;">
         <button class="btn" @click=${() => props.onRefresh(true)}>
-          Probe
+          Vérifier
         </button>
       </div>
     </div>

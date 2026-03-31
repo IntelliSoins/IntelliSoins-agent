@@ -96,7 +96,7 @@ export function buildCommandsPaginationKeyboard(
 
   if (currentPage > 1) {
     buttons.push({
-      text: "◀ Prev",
+      text: "◀ Préc.",
       callback_data: `commands_page_${currentPage - 1}${suffix}`,
     });
   }
@@ -108,7 +108,7 @@ export function buildCommandsPaginationKeyboard(
 
   if (currentPage < totalPages) {
     buttons.push({
-      text: "Next ▶",
+      text: "Suiv. ▶",
       callback_data: `commands_page_${currentPage + 1}${suffix}`,
     });
   }

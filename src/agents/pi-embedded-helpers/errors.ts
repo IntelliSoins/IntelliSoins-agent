@@ -32,16 +32,17 @@ export function formatBillingErrorMessage(provider?: string, model?: string): st
   const providerLabel =
     providerName && modelName ? `${providerName} (${modelName})` : providerName || undefined;
   if (providerLabel) {
-    return `⚠️ ${providerLabel} returned a billing error — your API key has run out of credits or has an insufficient balance. Check your ${providerName} billing dashboard and top up or switch to a different API key.`;
+    return `⚠️ ${providerLabel} a retourné une erreur de facturation — votre clé API n'a plus de crédits ou le solde est insuffisant. Vérifiez le tableau de bord de facturation ${providerName} et rechargez ou utilisez une autre clé API.`;
   }
-  return "⚠️ API provider returned a billing error — your API key has run out of credits or has an insufficient balance. Check your provider's billing dashboard and top up or switch to a different API key.";
+  return "⚠️ Le fournisseur API a retourné une erreur de facturation — votre clé API n'a plus de crédits ou le solde est insuffisant. Vérifiez le tableau de bord de facturation de votre fournisseur et rechargez ou utilisez une autre clé API.";
 }
 
 export const BILLING_ERROR_USER_MESSAGE = formatBillingErrorMessage();
 
-const RATE_LIMIT_ERROR_USER_MESSAGE = "⚠️ API rate limit reached. Please try again later.";
+const RATE_LIMIT_ERROR_USER_MESSAGE =
+  "⚠️ Limite de requêtes API atteinte. Veuillez réessayer plus tard.";
 const OVERLOADED_ERROR_USER_MESSAGE =
-  "The AI service is temporarily overloaded. Please try again in a moment.";
+  "Le service IA est temporairement surchargé. Veuillez réessayer dans un moment.";
 
 function formatRateLimitOrOverloadedErrorCopy(raw: string): string | undefined {
   if (isRateLimitErrorMessage(raw)) {
@@ -600,12 +601,12 @@ export function parseApiErrorInfo(raw?: string): ApiErrorInfo | null {
 export function formatRawAssistantErrorForUi(raw?: string): string {
   const trimmed = (raw ?? "").trim();
   if (!trimmed) {
-    return "LLM request failed with an unknown error.";
+    return "La requête LLM a échoué avec une erreur inconnue.";
   }
 
   const leadingStatus = extractLeadingHttpStatus(trimmed);
   if (leadingStatus && isCloudflareOrHtmlErrorPage(trimmed)) {
-    return `The AI service is temporarily unavailable (HTTP ${leadingStatus.code}). Please try again in a moment.`;
+    return `Le service IA est temporairement indisponible (HTTP ${leadingStatus.code}). Veuillez réessayer dans un moment.`;
   }
 
   const httpMatch = trimmed.match(HTTP_STATUS_PREFIX_RE);
@@ -637,7 +638,7 @@ export function formatAssistantErrorText(
     return undefined;
   }
   if (!raw) {
-    return "LLM request failed with an unknown error.";
+    return "La requête LLM a échoué avec une erreur inconnue.";
   }
 
   const unknownTool =
@@ -656,15 +657,15 @@ export function formatAssistantErrorText(
 
   if (isContextOverflowError(raw)) {
     return (
-      "Context overflow: prompt too large for the model. " +
-      "Try /reset (or /new) to start a fresh session, or use a larger-context model."
+      "Dépassement de contexte : prompt trop long pour le modèle. " +
+      "Essayez /reset (ou /new) pour une nouvelle session, ou utilisez un modèle avec plus de contexte."
     );
   }
 
   if (isReasoningConstraintErrorMessage(raw)) {
     return (
-      "Reasoning is required for this model endpoint. " +
-      "Use /think minimal (or any non-off level) and try again."
+      "Le raisonnement est requis pour ce modèle. " +
+      "Utilisez /think minimal (ou tout niveau autre que off) et réessayez."
     );
   }
 
@@ -675,22 +676,22 @@ export function formatAssistantErrorText(
     )
   ) {
     return (
-      "Message ordering conflict - please try again. " +
-      "If this persists, use /new to start a fresh session."
+      "Conflit d'ordre des messages — veuillez réessayer. " +
+      "Si le problème persiste, utilisez /new pour une nouvelle session."
     );
   }
 
   if (isMissingToolCallInputError(raw)) {
     return (
-      "Session history looks corrupted (tool call input missing). " +
-      "Use /new to start a fresh session. " +
-      "If this keeps happening, reset the session or delete the corrupted session transcript."
+      "L'historique de session semble corrompu (entrée d'appel d'outil manquante). " +
+      "Utilisez /new pour une nouvelle session. " +
+      "Si le problème persiste, réinitialisez la session ou supprimez le transcript corrompu."
     );
   }
 
   const invalidRequest = raw.match(/"type":"invalid_request_error".*?"message":"([^"]+)"/);
   if (invalidRequest?.[1]) {
-    return `LLM request rejected: ${invalidRequest[1]}`;
+    return `Requête LLM rejetée : ${invalidRequest[1]}`;
   }
 
   const transientCopy = formatRateLimitOrOverloadedErrorCopy(raw);
@@ -699,7 +700,7 @@ export function formatAssistantErrorText(
   }
 
   if (isTimeoutErrorMessage(raw)) {
-    return "LLM request timed out.";
+    return "La requête LLM a expiré.";
   }
 
   if (isBillingErrorMessage(raw)) {
@@ -733,15 +734,15 @@ export function sanitizeUserFacingText(text: string, opts?: { errorContext?: boo
   if (errorContext) {
     if (/incorrect role information|roles must alternate/i.test(trimmed)) {
       return (
-        "Message ordering conflict - please try again. " +
-        "If this persists, use /new to start a fresh session."
+        "Conflit d'ordre des messages — veuillez réessayer. " +
+        "Si le problème persiste, utilisez /new pour une nouvelle session."
       );
     }
 
     if (shouldRewriteContextOverflowText(trimmed)) {
       return (
-        "Context overflow: prompt too large for the model. " +
-        "Try /reset (or /new) to start a fresh session, or use a larger-context model."
+        "Dépassement de contexte : prompt trop long pour le modèle. " +
+        "Essayez /reset (ou /new) pour une nouvelle session, ou utilisez un modèle avec plus de contexte."
       );
     }
 
@@ -759,7 +760,7 @@ export function sanitizeUserFacingText(text: string, opts?: { errorContext?: boo
         return prefixedCopy;
       }
       if (isTimeoutErrorMessage(trimmed)) {
-        return "LLM request timed out.";
+        return "La requête LLM a expiré.";
       }
       return formatRawAssistantErrorForUi(trimmed);
     }

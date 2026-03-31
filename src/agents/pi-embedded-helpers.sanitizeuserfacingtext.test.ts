@@ -24,7 +24,7 @@ describe("sanitizeUserFacingText", () => {
 
   it("sanitizes role ordering errors", () => {
     const result = sanitizeUserFacingText("400 Incorrect role information", { errorContext: true });
-    expect(result).toContain("Message ordering conflict");
+    expect(result).toContain("Conflit d'ordre des messages");
   });
 
   it("sanitizes HTTP status errors with error hints", () => {
@@ -38,7 +38,7 @@ describe("sanitizeUserFacingText", () => {
     "Request size exceeds model context window",
   ])("sanitizes direct context-overflow error: %s", (text) => {
     expect(sanitizeUserFacingText(text, { errorContext: true })).toContain(
-      "Context overflow: prompt too large for the model.",
+      "Dépassement de contexte : prompt trop long pour le modèle.",
     );
   });
 

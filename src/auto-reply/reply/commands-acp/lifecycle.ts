@@ -73,7 +73,7 @@ async function bindSpawnedAcpSessionToThread(params: {
   if (!channel) {
     return {
       ok: false,
-      error: "ACP thread binding requires a channel context.",
+      error: "La liaison de thread ACP nécessite un contexte de canal.",
     };
   }
 
@@ -113,13 +113,13 @@ async function bindSpawnedAcpSessionToThread(params: {
   if (!capabilities.adapterAvailable) {
     return {
       ok: false,
-      error: `Thread bindings are unavailable for ${channel}.`,
+      error: `Les liaisons de threads sont indisponibles pour ${channel}.`,
     };
   }
   if (!capabilities.bindSupported) {
     return {
       ok: false,
-      error: `Thread bindings are unavailable for ${channel}.`,
+      error: `Les liaisons de threads sont indisponibles pour ${channel}.`,
     };
   }
 
@@ -133,7 +133,7 @@ async function bindSpawnedAcpSessionToThread(params: {
   ) {
     return {
       ok: false,
-      error: `--thread here requires running /acp spawn inside an active ${channel} thread/conversation.`,
+      error: `--thread here nécessite d'exécuter /acp spawn dans un thread/conversation ${channel} actif.`,
     };
   }
 
@@ -141,13 +141,13 @@ async function bindSpawnedAcpSessionToThread(params: {
   if (!capabilities.placements.includes(placement)) {
     return {
       ok: false,
-      error: `Thread bindings do not support ${placement} placement for ${channel}.`,
+      error: `Les liaisons de threads ne supportent pas le placement ${placement} pour ${channel}.`,
     };
   }
   if (!currentConversationId) {
     return {
       ok: false,
-      error: `Could not resolve a ${channel} conversation for ACP thread spawn.`,
+      error: `Impossible de résoudre une conversation ${channel} pour le spawn de thread ACP.`,
     };
   }
 
@@ -165,7 +165,7 @@ async function bindSpawnedAcpSessionToThread(params: {
     if (existingBinding && boundBy && boundBy !== "system" && senderId && senderId !== boundBy) {
       return {
         ok: false,
-        error: `Only ${boundBy} can rebind this ${channel === "telegram" ? "conversation" : "thread"}.`,
+        error: `Seul ${boundBy} peut relier ce ${channel === "telegram" ? "conversation" : "thread"}.`,
       };
     }
   }

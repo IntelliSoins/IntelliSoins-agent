@@ -14,42 +14,42 @@ export function renderWhatsAppCard(params: {
   return html`
     <div class="card">
       <div class="card-title">WhatsApp</div>
-      <div class="card-sub">Link WhatsApp Web and monitor connection health.</div>
+      <div class="card-sub">Lier WhatsApp Web et surveiller l'état de la connexion.</div>
       ${accountCountLabel}
 
       <div class="status-list" style="margin-top: 16px;">
         <div>
-          <span class="label">Configured</span>
-          <span>${whatsapp?.configured ? "Yes" : "No"}</span>
+          <span class="label">Configuré</span>
+          <span>${whatsapp?.configured ? "Oui" : "Non"}</span>
         </div>
         <div>
-          <span class="label">Linked</span>
-          <span>${whatsapp?.linked ? "Yes" : "No"}</span>
+          <span class="label">Lié</span>
+          <span>${whatsapp?.linked ? "Oui" : "Non"}</span>
         </div>
         <div>
-          <span class="label">Running</span>
-          <span>${whatsapp?.running ? "Yes" : "No"}</span>
+          <span class="label">En cours</span>
+          <span>${whatsapp?.running ? "Oui" : "Non"}</span>
         </div>
         <div>
-          <span class="label">Connected</span>
-          <span>${whatsapp?.connected ? "Yes" : "No"}</span>
+          <span class="label">Connecté</span>
+          <span>${whatsapp?.connected ? "Oui" : "Non"}</span>
         </div>
         <div>
-          <span class="label">Last connect</span>
+          <span class="label">Dernière connexion</span>
           <span>
-            ${whatsapp?.lastConnectedAt ? formatRelativeTimestamp(whatsapp.lastConnectedAt) : "n/a"}
+            ${whatsapp?.lastConnectedAt ? formatRelativeTimestamp(whatsapp.lastConnectedAt) : "n/d"}
           </span>
         </div>
         <div>
-          <span class="label">Last message</span>
+          <span class="label">Dernier message</span>
           <span>
-            ${whatsapp?.lastMessageAt ? formatRelativeTimestamp(whatsapp.lastMessageAt) : "n/a"}
+            ${whatsapp?.lastMessageAt ? formatRelativeTimestamp(whatsapp.lastMessageAt) : "n/d"}
           </span>
         </div>
         <div>
-          <span class="label">Auth age</span>
+          <span class="label">Âge de l'auth</span>
           <span>
-            ${whatsapp?.authAgeMs != null ? formatDurationHuman(whatsapp.authAgeMs) : "n/a"}
+            ${whatsapp?.authAgeMs != null ? formatDurationHuman(whatsapp.authAgeMs) : "n/d"}
           </span>
         </div>
       </div>
@@ -84,31 +84,31 @@ export function renderWhatsAppCard(params: {
           ?disabled=${props.whatsappBusy}
           @click=${() => props.onWhatsAppStart(false)}
         >
-          ${props.whatsappBusy ? "Working…" : "Show QR"}
+          ${props.whatsappBusy ? "En cours..." : "Afficher QR"}
         </button>
         <button
           class="btn"
           ?disabled=${props.whatsappBusy}
           @click=${() => props.onWhatsAppStart(true)}
         >
-          Relink
+          Relier
         </button>
         <button
           class="btn"
           ?disabled=${props.whatsappBusy}
           @click=${() => props.onWhatsAppWait()}
         >
-          Wait for scan
+          Attendre le scan
         </button>
         <button
           class="btn danger"
           ?disabled=${props.whatsappBusy}
           @click=${() => props.onWhatsAppLogout()}
         >
-          Logout
+          Déconnexion
         </button>
         <button class="btn" @click=${() => props.onRefresh(true)}>
-          Refresh
+          Actualiser
         </button>
       </div>
 

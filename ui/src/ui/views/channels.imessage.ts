@@ -14,25 +14,25 @@ export function renderIMessageCard(params: {
   return html`
     <div class="card">
       <div class="card-title">iMessage</div>
-      <div class="card-sub">macOS bridge status and channel configuration.</div>
+      <div class="card-sub">État du pont macOS et configuration du canal.</div>
       ${accountCountLabel}
 
       <div class="status-list" style="margin-top: 16px;">
         <div>
-          <span class="label">Configured</span>
-          <span>${imessage?.configured ? "Yes" : "No"}</span>
+          <span class="label">Configuré</span>
+          <span>${imessage?.configured ? "Oui" : "Non"}</span>
         </div>
         <div>
-          <span class="label">Running</span>
-          <span>${imessage?.running ? "Yes" : "No"}</span>
+          <span class="label">En cours</span>
+          <span>${imessage?.running ? "Oui" : "Non"}</span>
         </div>
         <div>
-          <span class="label">Last start</span>
-          <span>${imessage?.lastStartAt ? formatRelativeTimestamp(imessage.lastStartAt) : "n/a"}</span>
+          <span class="label">Dernier démarrage</span>
+          <span>${imessage?.lastStartAt ? formatRelativeTimestamp(imessage.lastStartAt) : "n/d"}</span>
         </div>
         <div>
-          <span class="label">Last probe</span>
-          <span>${imessage?.lastProbeAt ? formatRelativeTimestamp(imessage.lastProbeAt) : "n/a"}</span>
+          <span class="label">Dernière vérification</span>
+          <span>${imessage?.lastProbeAt ? formatRelativeTimestamp(imessage.lastProbeAt) : "n/d"}</span>
         </div>
       </div>
 
@@ -57,7 +57,7 @@ export function renderIMessageCard(params: {
 
       <div class="row" style="margin-top: 12px;">
         <button class="btn" @click=${() => props.onRefresh(true)}>
-          Probe
+          Vérifier
         </button>
       </div>
     </div>

@@ -98,7 +98,7 @@ function renderSessionSummary(
     toolItems = baseTools.map((tool) => ({
       label: tool.name,
       value: `${toolCounts.get(tool.name) ?? 0}`,
-      sub: "calls",
+      sub: "appels",
     }));
     toolCallCount = [...toolCounts.values()].reduce((sum, c) => sum + c, 0);
     uniqueToolCount = toolCounts.size;
@@ -106,14 +106,14 @@ function renderSessionSummary(
     toolItems = baseTools.map((tool) => ({
       label: tool.name,
       value: `${tool.count}`,
-      sub: "calls",
+      sub: "appels",
     }));
     toolCallCount = usage.toolUsage?.totalCalls ?? 0;
     uniqueToolCount = usage.toolUsage?.uniqueTools ?? 0;
   }
   const modelItems =
     usage.modelUsage?.slice(0, 6).map((entry) => ({
-      label: entry.model ?? "unknown",
+      label: entry.model ?? "inconnu",
       value: formatCost(entry.totals.totalCost),
       sub: formatTokens(entry.totals.totalTokens),
     })) ?? [];
@@ -539,10 +539,10 @@ function renderTimeSeriesCompact(
               `${formatTokens(val)} ${t("usageView.tokens")}`,
             ];
             if (breakdownByType) {
-              tooltipLines.push(`Out ${formatTokens(p.output)}`);
-              tooltipLines.push(`In ${formatTokens(p.input)}`);
-              tooltipLines.push(`CW ${formatTokens(p.cacheWrite)}`);
-              tooltipLines.push(`CR ${formatTokens(p.cacheRead)}`);
+              tooltipLines.push(`Sort. ${formatTokens(p.output)}`);
+              tooltipLines.push(`Entr. ${formatTokens(p.input)}`);
+              tooltipLines.push(`ÉC ${formatTokens(p.cacheWrite)}`);
+              tooltipLines.push(`LC ${formatTokens(p.cacheRead)}`);
             }
             const tooltip = tooltipLines.join(" · ");
             const isOutside = hasSelection && (i < rangeStartIdx || i >= rangeEndIdx);

@@ -322,13 +322,13 @@ export function renderApp(state: AppViewState) {
         ${
           availableUpdate
             ? html`<div class="update-banner callout danger" role="alert">
-              <strong>Update available:</strong> v${availableUpdate.latestVersion}
+              <strong>Mise à jour disponible :</strong> v${availableUpdate.latestVersion}
               (running v${availableUpdate.currentVersion}).
               <button
                 class="btn btn--sm update-banner__btn"
                 ?disabled=${state.updateRunning || !state.connected}
                 @click=${() => runUpdate(state)}
-              >${state.updateRunning ? "Updating…" : "Update now"}</button>
+              >${state.updateRunning ? "Mise à jour…" : "Mettre à jour"}</button>
             </div>`
             : nothing
         }

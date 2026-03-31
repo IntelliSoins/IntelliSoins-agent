@@ -14,25 +14,25 @@ export function renderSlackCard(params: {
   return html`
     <div class="card">
       <div class="card-title">Slack</div>
-      <div class="card-sub">Socket mode status and channel configuration.</div>
+      <div class="card-sub">État du mode socket et configuration du canal.</div>
       ${accountCountLabel}
 
       <div class="status-list" style="margin-top: 16px;">
         <div>
-          <span class="label">Configured</span>
-          <span>${slack?.configured ? "Yes" : "No"}</span>
+          <span class="label">Configuré</span>
+          <span>${slack?.configured ? "Oui" : "Non"}</span>
         </div>
         <div>
-          <span class="label">Running</span>
-          <span>${slack?.running ? "Yes" : "No"}</span>
+          <span class="label">En cours</span>
+          <span>${slack?.running ? "Oui" : "Non"}</span>
         </div>
         <div>
-          <span class="label">Last start</span>
-          <span>${slack?.lastStartAt ? formatRelativeTimestamp(slack.lastStartAt) : "n/a"}</span>
+          <span class="label">Dernier démarrage</span>
+          <span>${slack?.lastStartAt ? formatRelativeTimestamp(slack.lastStartAt) : "n/d"}</span>
         </div>
         <div>
-          <span class="label">Last probe</span>
-          <span>${slack?.lastProbeAt ? formatRelativeTimestamp(slack.lastProbeAt) : "n/a"}</span>
+          <span class="label">Dernière vérification</span>
+          <span>${slack?.lastProbeAt ? formatRelativeTimestamp(slack.lastProbeAt) : "n/d"}</span>
         </div>
       </div>
 
@@ -57,7 +57,7 @@ export function renderSlackCard(params: {
 
       <div class="row" style="margin-top: 12px;">
         <button class="btn" @click=${() => props.onRefresh(true)}>
-          Probe
+          Vérifier
         </button>
       </div>
     </div>

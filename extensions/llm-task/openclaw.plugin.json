@@ -1,7 +1,7 @@
 {
   "id": "llm-task",
   "name": "LLM Task",
-  "description": "Generic JSON-only LLM tool for structured tasks callable from workflows.",
+  "description": "Outil LLM générique JSON uniquement pour les tâches structurées appelables depuis les workflows.",
   "configSchema": {
     "type": "object",
     "additionalProperties": false,

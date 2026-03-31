@@ -603,7 +603,7 @@ export async function runReplyAgent(params: {
     const verboseNotices: ReplyPayload[] = [];
 
     if (verboseEnabled && activeIsNewSession) {
-      verboseNotices.push({ text: `🧭 New session: ${followupRun.run.sessionId}` });
+      verboseNotices.push({ text: `🧭 Nouvelle session : ${followupRun.run.sessionId}` });
     }
 
     if (fallbackTransition.fallbackTransitioned) {
@@ -686,7 +686,7 @@ export async function runReplyAgent(params: {
 
       if (verboseEnabled) {
         const suffix = typeof count === "number" ? ` (count ${count})` : "";
-        verboseNotices.push({ text: `🧹 Auto-compaction complete${suffix}.` });
+        verboseNotices.push({ text: `🧹 Auto-compaction terminée${suffix}.` });
       }
     }
     if (verboseNotices.length > 0) {

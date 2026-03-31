@@ -1,6 +1,6 @@
 ---
 name: notion
-description: Notion API for creating and managing pages, databases, and blocks.
+description: API Notion pour créer et gérer des pages, bases de données et blocs.
 homepage: https://developers.notion.com
 metadata:
   {

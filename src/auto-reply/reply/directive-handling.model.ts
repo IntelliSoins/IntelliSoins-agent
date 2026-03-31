@@ -216,7 +216,7 @@ export async function maybeHandleModelDirectiveInfo(params: {
   }
 
   if (params.directives.rawModelProfile) {
-    return { text: "Auth profile override requires a model selection." };
+    return { text: "La surcharge de profil d'auth nécessite une sélection de modèle." };
   }
 
   const pickerCatalog = buildModelPickerCatalog({
@@ -232,7 +232,7 @@ export async function maybeHandleModelDirectiveInfo(params: {
       cfg: params.cfg,
       commandBodyNormalized: "/models",
     });
-    return reply ?? { text: "No models available." };
+    return reply ?? { text: "Aucun modèle disponible." };
   }
 
   if (wantsSummary) {
@@ -282,7 +282,7 @@ export async function maybeHandleModelDirectiveInfo(params: {
   const formatPath = (value: string) => shortenHomePath(value);
   const authMode: ModelAuthDetailMode = "verbose";
   if (pickerCatalog.length === 0) {
-    return { text: "No models available." };
+    return { text: "Aucun modèle disponible." };
   }
 
   const authByProvider = new Map<string, string>();
@@ -370,7 +370,7 @@ export function resolveModelSelectionFromDirective(params: {
 } {
   if (!params.directives.hasModelDirective || !params.directives.rawModelDirective) {
     if (params.directives.rawModelProfile) {
-      return { errorText: "Auth profile override requires a model selection." };
+      return { errorText: "La surcharge de profil d'auth nécessite une sélection de modèle." };
     }
     return {};
   }

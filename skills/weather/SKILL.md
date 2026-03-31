@@ -1,6 +1,6 @@
 ---
 name: weather
-description: "Get current weather and forecasts via wttr.in or Open-Meteo. Use when: user asks about weather, temperature, or forecasts for any location. NOT for: historical weather data, severe weather alerts, or detailed meteorological analysis. No API key needed."
+description: "Obtenir la météo actuelle et les prévisions via wttr.in ou Open-Meteo. Utiliser quand on demande la météo, température ou prévisions pour un lieu. PAS pour : données météo historiques, alertes météo graves ou analyse météorologique détaillée. Aucune clé API requise."
 homepage: https://wttr.in/:help
 metadata: { "openclaw": { "emoji": "🌤️", "requires": { "bins": ["curl"] } } }
 ---

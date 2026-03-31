@@ -14,25 +14,25 @@ export function renderDiscordCard(params: {
   return html`
     <div class="card">
       <div class="card-title">Discord</div>
-      <div class="card-sub">Bot status and channel configuration.</div>
+      <div class="card-sub">État du bot et configuration du canal.</div>
       ${accountCountLabel}
 
       <div class="status-list" style="margin-top: 16px;">
         <div>
-          <span class="label">Configured</span>
-          <span>${discord?.configured ? "Yes" : "No"}</span>
+          <span class="label">Configuré</span>
+          <span>${discord?.configured ? "Oui" : "Non"}</span>
         </div>
         <div>
-          <span class="label">Running</span>
-          <span>${discord?.running ? "Yes" : "No"}</span>
+          <span class="label">En cours</span>
+          <span>${discord?.running ? "Oui" : "Non"}</span>
         </div>
         <div>
-          <span class="label">Last start</span>
-          <span>${discord?.lastStartAt ? formatRelativeTimestamp(discord.lastStartAt) : "n/a"}</span>
+          <span class="label">Dernier démarrage</span>
+          <span>${discord?.lastStartAt ? formatRelativeTimestamp(discord.lastStartAt) : "n/d"}</span>
         </div>
         <div>
-          <span class="label">Last probe</span>
-          <span>${discord?.lastProbeAt ? formatRelativeTimestamp(discord.lastProbeAt) : "n/a"}</span>
+          <span class="label">Dernière vérification</span>
+          <span>${discord?.lastProbeAt ? formatRelativeTimestamp(discord.lastProbeAt) : "n/d"}</span>
         </div>
       </div>
 
@@ -57,7 +57,7 @@ export function renderDiscordCard(params: {
 
       <div class="row" style="margin-top: 12px;">
         <button class="btn" @click=${() => props.onRefresh(true)}>
-          Probe
+          Vérifier
         </button>
       </div>
     </div>

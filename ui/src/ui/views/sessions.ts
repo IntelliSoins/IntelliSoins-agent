@@ -191,14 +191,14 @@ export function renderSessions(props: SessionsProps) {
 
       <div class="table" style="margin-top: 16px;">
         <div class="table-head">
-          <div>Key</div>
-          <div>Label</div>
-          <div>Kind</div>
-          <div>Updated</div>
+          <div>Clé</div>
+          <div>Libellé</div>
+          <div>Type</div>
+          <div>Mis à jour</div>
           <div>Tokens</div>
-          <div>Thinking</div>
-          <div>Verbose</div>
-          <div>Reasoning</div>
+          <div>Réflexion</div>
+          <div>Verbeux</div>
+          <div>Raisonnement</div>
           <div>Actions</div>
         </div>
         ${
@@ -222,7 +222,7 @@ function renderRow(
   onDelete: SessionsProps["onDelete"],
   disabled: boolean,
 ) {
-  const updated = row.updatedAt ? formatRelativeTimestamp(row.updatedAt) : "n/a";
+  const updated = row.updatedAt ? formatRelativeTimestamp(row.updatedAt) : "n/d";
   const rawThinking = row.thinkingLevel ?? "";
   const isBinaryThinking = isBinaryThinkingProvider(row.modelProvider);
   const thinking = resolveThinkLevelDisplay(rawThinking, isBinaryThinking);
@@ -252,7 +252,7 @@ function renderRow(
         <input
           .value=${row.label ?? ""}
           ?disabled=${disabled}
-          placeholder="(optional)"
+          placeholder="(optionnel)"
           @change=${(e: Event) => {
             const value = (e.target as HTMLInputElement).value.trim();
             onPatch(row.key, { label: value || null });

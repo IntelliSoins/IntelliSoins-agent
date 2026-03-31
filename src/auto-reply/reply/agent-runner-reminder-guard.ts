@@ -2,7 +2,7 @@ import { loadCronStore, resolveCronStorePath } from "../../cron/store.js";
 import type { ReplyPayload } from "../types.js";
 
 export const UNSCHEDULED_REMINDER_NOTE =
-  "Note: I did not schedule a reminder in this turn, so this will not trigger automatically.";
+  "Note : Je n'ai pas planifié de rappel dans ce tour, donc cela ne se déclenchera pas automatiquement.";
 
 const REMINDER_COMMITMENT_PATTERNS: RegExp[] = [
   /\b(?:i\s*['’]?ll|i will)\s+(?:make sure to\s+)?(?:remember|remind|ping|follow up|follow-up|check back|circle back)\b/i,

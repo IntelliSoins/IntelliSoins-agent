@@ -1,7 +1,7 @@
 {
   "id": "device-pair",
   "name": "Device Pairing",
-  "description": "Generate setup codes and approve device pairing requests.",
+  "description": "Générer des codes de configuration et approuver les demandes de jumelage d'appareils.",
   "configSchema": {
     "type": "object",
     "additionalProperties": false,

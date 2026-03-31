@@ -170,7 +170,7 @@ function renderPairedDevice(device: PairedDevice, props: NodesProps) {
         ${
           tokens.length === 0
             ? html`
-                <div class="muted" style="margin-top: 6px">Tokens: none</div>
+                <div class="muted" style="margin-top: 6px">Tokens : aucun</div>
               `
             : html`
               <div class="muted" style="margin-top: 10px;">Tokens</div>
@@ -273,9 +273,9 @@ function renderBindings(state: BindingState) {
     <section class="card">
       <div class="row" style="justify-content: space-between; align-items: center;">
         <div>
-          <div class="card-title">Exec node binding</div>
+          <div class="card-title">Liaison de nœud exec</div>
           <div class="card-sub">
-            Pin agents to a specific node when using <span class="mono">exec host=node</span>.
+            Épingler les agents à un nœud spécifique avec <span class="mono">exec host=node</span>.
           </div>
         </div>
         <button
@@ -283,7 +283,7 @@ function renderBindings(state: BindingState) {
           ?disabled=${state.disabled || !state.configDirty}
           @click=${state.onSave}
         >
-          ${state.configSaving ? "Saving…" : "Save"}
+          ${state.configSaving ? "Enregistrement…" : "Enregistrer"}
         </button>
       </div>
 
@@ -291,7 +291,7 @@ function renderBindings(state: BindingState) {
         state.formMode === "raw"
           ? html`
               <div class="callout warn" style="margin-top: 12px">
-                Switch the Config tab to <strong>Form</strong> mode to edit bindings here.
+                Passer l'onglet Config en mode <strong>formulaire</strong> pour modifier les liaisons ici.
               </div>
             `
           : nothing
@@ -300,21 +300,21 @@ function renderBindings(state: BindingState) {
       ${
         !state.ready
           ? html`<div class="row" style="margin-top: 12px; gap: 12px;">
-            <div class="muted">Load config to edit bindings.</div>
+            <div class="muted">Charger la config pour modifier les liaisons.</div>
             <button class="btn" ?disabled=${state.configLoading} @click=${state.onLoadConfig}>
-              ${state.configLoading ? "Loading…" : "Load config"}
+              ${state.configLoading ? "Chargement…" : "Charger la config"}
             </button>
           </div>`
           : html`
             <div class="list" style="margin-top: 16px;">
               <div class="list-item">
                 <div class="list-main">
-                  <div class="list-title">Default binding</div>
-                  <div class="list-sub">Used when agents do not override a node binding.</div>
+                  <div class="list-title">Liaison par défaut</div>
+                  <div class="list-sub">Utilisée quand les agents ne surchargent pas la liaison de nœud.</div>
                 </div>
                 <div class="list-meta">
                   <label class="field">
-                    <span>Node</span>
+                    <span>Nœud</span>
                     <select
                       ?disabled=${state.disabled || !supportsBinding}
                       @change=${(event: Event) => {
@@ -323,7 +323,7 @@ function renderBindings(state: BindingState) {
                         state.onBindDefault(value ? value : null);
                       }}
                     >
-                      <option value="" ?selected=${defaultValue === ""}>Any node</option>
+                      <option value="" ?selected=${defaultValue === ""}>N'importe quel nœud</option>
                       ${state.nodes.map(
                         (node) =>
                           html`<option
@@ -338,7 +338,7 @@ function renderBindings(state: BindingState) {
                   ${
                     !supportsBinding
                       ? html`
-                          <div class="muted">No nodes with system.run available.</div>
+                          <div class="muted">Aucun nœud avec system.run disponible.</div>
                         `
                       : nothing
                   }
@@ -348,7 +348,7 @@ function renderBindings(state: BindingState) {
               ${
                 state.agents.length === 0
                   ? html`
-                      <div class="muted">No agents found.</div>
+                      <div class="muted">Aucun agent trouvé.</div>
                     `
                   : state.agents.map((agent) => renderAgentBinding(agent, state))
               }
@@ -368,17 +368,17 @@ function renderAgentBinding(agent: BindingAgent, state: BindingState) {
       <div class="list-main">
         <div class="list-title">${label}</div>
         <div class="list-sub">
-          ${agent.isDefault ? "default agent" : "agent"} ·
+          ${agent.isDefault ? "agent par défaut" : "agent"} ·
           ${
             bindingValue === "__default__"
-              ? `uses default (${state.defaultBinding ?? "any"})`
-              : `override: ${agent.binding}`
+              ? `utilise le défaut (${state.defaultBinding ?? "any"})`
+              : `surcharge : ${agent.binding}`
           }
         </div>
       </div>
       <div class="list-meta">
         <label class="field">
-          <span>Binding</span>
+          <span>Liaison</span>
           <select
             ?disabled=${state.disabled || !supportsBinding}
             @change=${(event: Event) => {
@@ -388,7 +388,7 @@ function renderAgentBinding(agent: BindingAgent, state: BindingState) {
             }}
           >
             <option value="__default__" ?selected=${bindingValue === "__default__"}>
-              Use default
+              Utiliser le défaut
             </option>
             ${state.nodes.map(
               (node) =>

@@ -98,7 +98,9 @@ export const handleApproveCommand: CommandHandler = async (params, allowTextComm
     ) {
       return {
         shouldContinue: false,
-        reply: { text: "❌ Telegram exec approvals are not enabled for this bot account." },
+        reply: {
+          text: "❌ Les approbations exec Telegram ne sont pas activées pour ce compte bot.",
+        },
       };
     }
     if (
@@ -110,7 +112,7 @@ export const handleApproveCommand: CommandHandler = async (params, allowTextComm
     ) {
       return {
         shouldContinue: false,
-        reply: { text: "❌ You are not authorized to approve exec requests on Telegram." },
+        reply: { text: "❌ Vous n'êtes pas autorisé à approuver les requêtes exec sur Telegram." },
       };
     }
   }
@@ -137,13 +139,13 @@ export const handleApproveCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: `❌ Failed to submit approval: ${String(err)}`,
+        text: `❌ Échec de soumission de l'approbation : ${String(err)}`,
       },
     };
   }
 
   return {
     shouldContinue: false,
-    reply: { text: `✅ Exec approval ${parsed.decision} submitted for ${parsed.id}.` },
+    reply: { text: `✅ Approbation exec ${parsed.decision} soumise pour ${parsed.id}.` },
   };
 };

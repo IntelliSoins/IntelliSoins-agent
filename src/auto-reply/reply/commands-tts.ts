@@ -95,12 +95,12 @@ export const handleTtsCommands: CommandHandler = async (params, allowTextCommand
 
   if (action === "on") {
     setTtsEnabled(prefsPath, true);
-    return { shouldContinue: false, reply: { text: "🔊 TTS enabled." } };
+    return { shouldContinue: false, reply: { text: "🔊 TTS activé." } };
   }
 
   if (action === "off") {
     setTtsEnabled(prefsPath, false);
-    return { shouldContinue: false, reply: { text: "🔇 TTS disabled." } };
+    return { shouldContinue: false, reply: { text: "🔇 TTS désactivé." } };
   }
 
   if (action === "audio") {
@@ -152,7 +152,7 @@ export const handleTtsCommands: CommandHandler = async (params, allowTextCommand
     });
     return {
       shouldContinue: false,
-      reply: { text: `❌ Error generating audio: ${result.error ?? "unknown error"}` },
+      reply: { text: `❌ Erreur de génération audio : ${result.error ?? "erreur inconnue"}` },
     };
   }
 
@@ -184,7 +184,7 @@ export const handleTtsCommands: CommandHandler = async (params, allowTextCommand
     setTtsProvider(prefsPath, requested);
     return {
       shouldContinue: false,
-      reply: { text: `✅ TTS provider set to ${requested}.` },
+      reply: { text: `✅ Fournisseur TTS défini à ${requested}.` },
     };
   }
 
@@ -207,13 +207,13 @@ export const handleTtsCommands: CommandHandler = async (params, allowTextCommand
     if (!Number.isFinite(next) || next < 100 || next > 4096) {
       return {
         shouldContinue: false,
-        reply: { text: "❌ Limit must be between 100 and 4096 characters." },
+        reply: { text: "❌ La limite doit être entre 100 et 4096 caractères." },
       };
     }
     setTtsMaxLength(prefsPath, next);
     return {
       shouldContinue: false,
-      reply: { text: `✅ TTS limit set to ${next} characters.` },
+      reply: { text: `✅ Limite TTS définie à ${next} caractères.` },
     };
   }
 

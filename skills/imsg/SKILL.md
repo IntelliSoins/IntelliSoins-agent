@@ -1,6 +1,6 @@
 ---
 name: imsg
-description: iMessage/SMS CLI for listing chats, history, and sending messages via Messages.app.
+description: CLI iMessage/SMS pour lister les conversations, l'historique et envoyer des messages via Messages.app.
 homepage: https://imsg.to
 metadata:
   {

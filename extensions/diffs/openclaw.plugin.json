@@ -1,7 +1,7 @@
 {
   "id": "diffs",
   "name": "Diffs",
-  "description": "Read-only diff viewer and file renderer for agents.",
+  "description": "Visionneuse de diffs et rendu de fichiers en lecture seule pour les agents.",
   "skills": ["./skills"],
   "uiHints": {
     "defaults.fontFamily": {

@@ -205,16 +205,16 @@ function renderDailyChartCompact(
               dailyChartMode === "by-type"
                 ? isTokenMode
                   ? [
-                      `Output ${formatTokens(d.output)}`,
-                      `Input ${formatTokens(d.input)}`,
-                      `Cache write ${formatTokens(d.cacheWrite)}`,
-                      `Cache read ${formatTokens(d.cacheRead)}`,
+                      `Sortie ${formatTokens(d.output)}`,
+                      `Entrée ${formatTokens(d.input)}`,
+                      `Écriture cache ${formatTokens(d.cacheWrite)}`,
+                      `Lecture cache ${formatTokens(d.cacheRead)}`,
                     ]
                   : [
-                      `Output ${formatCost(d.outputCost ?? 0)}`,
-                      `Input ${formatCost(d.inputCost ?? 0)}`,
-                      `Cache write ${formatCost(d.cacheWriteCost ?? 0)}`,
-                      `Cache read ${formatCost(d.cacheReadCost ?? 0)}`,
+                      `Sortie ${formatCost(d.outputCost ?? 0)}`,
+                      `Entrée ${formatCost(d.inputCost ?? 0)}`,
+                      `Écriture cache ${formatCost(d.cacheWriteCost ?? 0)}`,
+                      `Lecture cache ${formatCost(d.cacheReadCost ?? 0)}`,
                     ]
                 : [];
             const totalLabel = isTokenMode ? formatTokens(d.totalTokens) : formatCost(d.totalCost);
@@ -398,13 +398,15 @@ function renderUsageInsights(
     stats.durationCount > 0
       ? (formatDurationCompact(stats.avgDurationMs, { spaced: true }) ?? "—")
       : "—";
-  const cacheHint = "Cache hit rate = cache read / (input + cache read). Higher is better.";
-  const errorHint = "Error rate = errors / total messages. Lower is better.";
-  const throughputHint = "Throughput shows tokens per minute over active time. Higher is better.";
-  const tokensHint = "Average tokens per message in this range.";
+  const cacheHint =
+    "Taux de cache = lecture cache / (entrée + lecture cache). Plus c'est élevé, mieux c'est.";
+  const errorHint = "Taux d'erreur = erreurs / total messages. Plus c'est bas, mieux c'est.";
+  const throughputHint =
+    "Débit montre les tokens par minute en temps actif. Plus c'est élevé, mieux c'est.";
+  const tokensHint = "Tokens moyens par message dans cette plage.";
   const costHint = showCostHint
-    ? "Average cost per message when providers report costs. Cost data is missing for some or all sessions in this range."
-    : "Average cost per message when providers report costs.";
+    ? "Coût moyen par message quand les fournisseurs rapportent les coûts. Données de coût manquantes pour certaines sessions."
+    : "Coût moyen par message quand les fournisseurs rapportent les coûts.";
 
   const errorDays = aggregates.daily
     .filter((day) => day.messages > 0 && day.errors > 0)
@@ -422,19 +424,19 @@ function renderUsageInsights(
     .map(({ rate: _rate, ...rest }) => rest);
 
   const topModels = aggregates.byModel.slice(0, 5).map((entry) => ({
-    label: entry.model ?? "unknown",
+    label: entry.model ?? "inconnu",
     value: formatCost(entry.totals.totalCost),
     sub: `${formatTokens(entry.totals.totalTokens)} · ${entry.count} msgs`,
   }));
   const topProviders = aggregates.byProvider.slice(0, 5).map((entry) => ({
-    label: entry.provider ?? "unknown",
+    label: entry.provider ?? "inconnu",
     value: formatCost(entry.totals.totalCost),
     sub: `${formatTokens(entry.totals.totalTokens)} · ${entry.count} msgs`,
   }));
   const topTools = aggregates.tools.tools.slice(0, 6).map((tool) => ({
     label: tool.name,
     value: `${tool.count}`,
-    sub: "calls",
+    sub: "appels",
   }));
   const topAgents = aggregates.byAgent.slice(0, 5).map((entry) => ({
     label: entry.agentId,

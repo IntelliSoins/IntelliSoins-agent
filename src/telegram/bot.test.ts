@@ -359,7 +359,7 @@ describe("createTelegramBot", () => {
           chat: { id: 1234, type: "private" },
           date: 1736380800,
           message_id: 23,
-          text: "Approval required.",
+          text: "Approbation requise.",
         },
       },
       me: { username: "openclaw_bot" },

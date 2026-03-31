@@ -87,13 +87,13 @@ export function renderChannelConfigForm(props: ChannelConfigFormProps) {
   const normalized = analysis.schema;
   if (!normalized) {
     return html`
-      <div class="callout danger">Schema unavailable. Use Raw.</div>
+      <div class="callout danger">Schéma indisponible. Utiliser le mode brut.</div>
     `;
   }
   const node = resolveSchemaNode(normalized, ["channels", props.channelId]);
   if (!node) {
     return html`
-      <div class="callout danger">Channel config schema unavailable.</div>
+      <div class="callout danger">Schéma de configuration du canal indisponible.</div>
     `;
   }
   const configValue = props.configValue ?? {};
@@ -123,7 +123,7 @@ export function renderChannelConfigSection(params: { channelId: string; props: C
       ${
         props.configSchemaLoading
           ? html`
-              <div class="muted">Loading config schema…</div>
+              <div class="muted">Chargement du schéma de configuration...</div>
             `
           : renderChannelConfigForm({
               channelId,
@@ -140,14 +140,14 @@ export function renderChannelConfigSection(params: { channelId: string; props: C
           ?disabled=${disabled || !props.configFormDirty}
           @click=${() => props.onConfigSave()}
         >
-          ${props.configSaving ? "Saving…" : "Save"}
+          ${props.configSaving ? "Sauvegarde..." : "Sauvegarder"}
         </button>
         <button
           class="btn"
           ?disabled=${disabled}
           @click=${() => props.onConfigReload()}
         >
-          Reload
+          Recharger
         </button>
       </div>
     </div>

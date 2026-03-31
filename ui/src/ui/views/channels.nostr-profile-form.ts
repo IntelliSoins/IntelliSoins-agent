@@ -148,7 +148,7 @@ export function renderNostrProfileForm(params: {
       <div style="margin-bottom: 12px;">
         <img
           src=${picture}
-          alt="Profile picture preview"
+          alt="Aperçu de la photo de profil"
           style="max-width: 80px; max-height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color);"
           @error=${(e: Event) => {
             const img = e.target as HTMLImageElement;
@@ -166,8 +166,8 @@ export function renderNostrProfileForm(params: {
   return html`
     <div class="nostr-profile-form" style="padding: 16px; background: var(--bg-secondary); border-radius: 8px; margin-top: 12px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <div style="font-weight: 600; font-size: 16px;">Edit Profile</div>
-        <div style="font-size: 12px; color: var(--text-muted);">Account: ${accountId}</div>
+        <div style="font-weight: 600; font-size: 16px;">Modifier le profil</div>
+        <div style="font-size: 12px; color: var(--text-muted);">Compte : ${accountId}</div>
       </div>
 
       ${
@@ -184,57 +184,57 @@ export function renderNostrProfileForm(params: {
 
       ${renderPicturePreview()}
 
-      ${renderField("name", "Username", {
+      ${renderField("name", "Nom d'utilisateur", {
         placeholder: "satoshi",
         maxLength: 256,
-        help: "Short username (e.g., satoshi)",
+        help: "Nom court (ex. : satoshi)",
       })}
 
-      ${renderField("displayName", "Display Name", {
+      ${renderField("displayName", "Nom affiché", {
         placeholder: "Satoshi Nakamoto",
         maxLength: 256,
-        help: "Your full display name",
+        help: "Votre nom complet",
       })}
 
       ${renderField("about", "Bio", {
         type: "textarea",
-        placeholder: "Tell people about yourself...",
+        placeholder: "Parlez de vous...",
         maxLength: 2000,
-        help: "A brief bio or description",
+        help: "Une courte biographie ou description",
       })}
 
-      ${renderField("picture", "Avatar URL", {
+      ${renderField("picture", "URL de l'avatar", {
         type: "url",
         placeholder: "https://example.com/avatar.jpg",
-        help: "HTTPS URL to your profile picture",
+        help: "URL HTTPS de votre photo de profil",
       })}
 
       ${
         state.showAdvanced
           ? html`
             <div style="border-top: 1px solid var(--border-color); padding-top: 12px; margin-top: 12px;">
-              <div style="font-weight: 500; margin-bottom: 12px; color: var(--text-muted);">Advanced</div>
+              <div style="font-weight: 500; margin-bottom: 12px; color: var(--text-muted);">Avancé</div>
 
-              ${renderField("banner", "Banner URL", {
+              ${renderField("banner", "URL de la bannière", {
                 type: "url",
                 placeholder: "https://example.com/banner.jpg",
-                help: "HTTPS URL to a banner image",
+                help: "URL HTTPS d'une image de bannière",
               })}
 
-              ${renderField("website", "Website", {
+              ${renderField("website", "Site web", {
                 type: "url",
                 placeholder: "https://example.com",
-                help: "Your personal website",
+                help: "Votre site web personnel",
               })}
 
-              ${renderField("nip05", "NIP-05 Identifier", {
+              ${renderField("nip05", "Identifiant NIP-05", {
                 placeholder: "you@example.com",
-                help: "Verifiable identifier (e.g., you@domain.com)",
+                help: "Identifiant vérifiable (ex. : vous@domaine.com)",
               })}
 
-              ${renderField("lud16", "Lightning Address", {
+              ${renderField("lud16", "Adresse Lightning", {
                 placeholder: "you@getalby.com",
-                help: "Lightning address for tips (LUD-16)",
+                help: "Adresse Lightning pour les pourboires (LUD-16)",
               })}
             </div>
           `
@@ -247,7 +247,7 @@ export function renderNostrProfileForm(params: {
           @click=${callbacks.onSave}
           ?disabled=${state.saving || !isDirty}
         >
-          ${state.saving ? "Saving..." : "Save & Publish"}
+          ${state.saving ? "Enregistrement\u2026" : "Enregistrer et publier"}
         </button>
 
         <button
@@ -255,14 +255,14 @@ export function renderNostrProfileForm(params: {
           @click=${callbacks.onImport}
           ?disabled=${state.importing || state.saving}
         >
-          ${state.importing ? "Importing..." : "Import from Relays"}
+          ${state.importing ? "Importation\u2026" : "Importer depuis les relais"}
         </button>
 
         <button
           class="btn"
           @click=${callbacks.onToggleAdvanced}
         >
-          ${state.showAdvanced ? "Hide Advanced" : "Show Advanced"}
+          ${state.showAdvanced ? "Masquer avancé" : "Afficher avancé"}
         </button>
 
         <button
@@ -270,7 +270,7 @@ export function renderNostrProfileForm(params: {
           @click=${callbacks.onCancel}
           ?disabled=${state.saving}
         >
-          Cancel
+          Annuler
         </button>
       </div>
 
@@ -278,7 +278,7 @@ export function renderNostrProfileForm(params: {
         isDirty
           ? html`
               <div style="font-size: 12px; color: var(--warning-color); margin-top: 8px">
-                You have unsaved changes
+                Vous avez des modifications non enregistrées
               </div>
             `
           : nothing

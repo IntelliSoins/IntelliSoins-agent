@@ -1,7 +1,7 @@
 {
   "id": "talk-voice",
   "name": "Talk Voice",
-  "description": "Manage Talk voice selection (list/set).",
+  "description": "Gérer la sélection de voix Talk (lister/définir).",
   "configSchema": {
     "type": "object",
     "additionalProperties": false,

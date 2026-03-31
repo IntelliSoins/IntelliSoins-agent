@@ -83,7 +83,7 @@ export async function resolveAcpTargetSessionKey(params: {
   if (!fallback) {
     return {
       ok: false,
-      error: "Missing session key.",
+      error: "Clé de session manquante.",
     };
   }
   return {

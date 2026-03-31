@@ -1,6 +1,6 @@
 ---
 name: eightctl
-description: Control Eight Sleep pods (status, temperature, alarms, schedules).
+description: "Contrôler les pods Eight Sleep (état, température, alarmes, horaires)."
 homepage: https://eightctl.sh
 metadata:
   {

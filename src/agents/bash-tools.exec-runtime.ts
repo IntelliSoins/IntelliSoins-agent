@@ -249,18 +249,20 @@ export function buildApprovalPendingMessage(params: {
   if (warningText) {
     lines.push(warningText, "");
   }
-  lines.push(`Approval required (id ${params.approvalSlug}, full ${params.approvalId}).`);
-  lines.push(`Host: ${params.host}`);
+  lines.push(`Approbation requise (id ${params.approvalSlug}, complet ${params.approvalId}).`);
+  lines.push(`Hôte : ${params.host}`);
   if (params.nodeId) {
-    lines.push(`Node: ${params.nodeId}`);
+    lines.push(`Nœud : ${params.nodeId}`);
   }
-  lines.push(`CWD: ${params.cwd}`);
-  lines.push("Command:");
+  lines.push(`CWD : ${params.cwd}`);
+  lines.push("Commande :");
   lines.push(commandBlock);
-  lines.push("Mode: foreground (interactive approvals available).");
-  lines.push("Background mode requires pre-approved policy (allow-always or ask=off).");
-  lines.push(`Reply with: /approve ${params.approvalSlug} allow-once|allow-always|deny`);
-  lines.push("If the short code is ambiguous, use the full id in /approve.");
+  lines.push("Mode : premier plan (approbations interactives disponibles).");
+  lines.push(
+    "Le mode arrière-plan nécessite une politique pré-approuvée (allow-always ou ask=off).",
+  );
+  lines.push(`Répondre avec : /approve ${params.approvalSlug} allow-once|allow-always|deny`);
+  lines.push("Si le code court est ambigu, utilisez l'ID complet dans /approve.");
   return lines.join("\n");
 }
 

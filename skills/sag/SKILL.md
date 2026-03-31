@@ -1,6 +1,6 @@
 ---
 name: sag
-description: ElevenLabs text-to-speech with mac-style say UX.
+description: Synthèse vocale ElevenLabs avec une UX style say de macOS.
 homepage: https://sag.sh
 metadata:
   {

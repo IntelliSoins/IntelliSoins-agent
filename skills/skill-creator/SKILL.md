@@ -1,6 +1,6 @@
 ---
 name: skill-creator
-description: Create, edit, improve, or audit AgentSkills. Use when creating a new skill from scratch or when asked to improve, review, audit, tidy up, or clean up an existing skill or SKILL.md file. Also use when editing or restructuring a skill directory (moving files to references/ or scripts/, removing stale content, validating against the AgentSkills spec). Triggers on phrases like "create a skill", "author a skill", "tidy up a skill", "improve this skill", "review the skill", "clean up the skill", "audit the skill".
+description: Créer, modifier, améliorer ou auditer des AgentSkills. Utiliser pour créer un nouveau Skill ou pour améliorer, réviser, nettoyer ou auditer un Skill existant ou fichier SKILL.md. Aussi pour restructurer un répertoire de Skill (déplacer des fichiers vers references/ ou scripts/, supprimer du contenu obsolète, valider selon la spec AgentSkills).
 ---
 
 # Skill Creator

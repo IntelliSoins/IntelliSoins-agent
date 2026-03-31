@@ -144,7 +144,7 @@ export async function handleDirectiveOnly(
       };
     }
     return {
-      text: `Unrecognized thinking level "${directives.rawThinkLevel}". Valid levels: ${formatThinkingLevels(resolvedProvider, resolvedModel)}.`,
+      text: `Niveau de réflexion non reconnu "${directives.rawThinkLevel}". Niveaux valides : ${formatThinkingLevels(resolvedProvider, resolvedModel)}.`,
     };
   }
   if (directives.hasVerboseDirective && !directives.verboseLevel) {
@@ -155,7 +155,7 @@ export async function handleDirectiveOnly(
       };
     }
     return {
-      text: `Unrecognized verbose level "${directives.rawVerboseLevel}". Valid levels: off, on, full.`,
+      text: `Niveau verbeux non reconnu "${directives.rawVerboseLevel}". Niveaux valides : off, on, full.`,
     };
   }
   if (directives.hasReasoningDirective && !directives.reasoningLevel) {
@@ -166,7 +166,7 @@ export async function handleDirectiveOnly(
       };
     }
     return {
-      text: `Unrecognized reasoning level "${directives.rawReasoningLevel}". Valid levels: on, off, stream.`,
+      text: `Niveau de raisonnement non reconnu "${directives.rawReasoningLevel}". Niveaux valides : on, off, stream.`,
     };
   }
   if (directives.hasElevatedDirective && !directives.elevatedLevel) {
@@ -191,7 +191,7 @@ export async function handleDirectiveOnly(
       };
     }
     return {
-      text: `Unrecognized elevated level "${directives.rawElevatedLevel}". Valid levels: off, on, ask, full.`,
+      text: `Niveau élevé non reconnu "${directives.rawElevatedLevel}". Niveaux valides : off, on, ask, full.`,
     };
   }
   if (directives.hasElevatedDirective && (!elevatedEnabled || !elevatedAllowed)) {
@@ -206,22 +206,22 @@ export async function handleDirectiveOnly(
   if (directives.hasExecDirective) {
     if (directives.invalidExecHost) {
       return {
-        text: `Unrecognized exec host "${directives.rawExecHost ?? ""}". Valid hosts: sandbox, gateway, node.`,
+        text: `Hôte exec non reconnu "${directives.rawExecHost ?? ""}". Hôtes valides : sandbox, gateway, node.`,
       };
     }
     if (directives.invalidExecSecurity) {
       return {
-        text: `Unrecognized exec security "${directives.rawExecSecurity ?? ""}". Valid: deny, allowlist, full.`,
+        text: `Sécurité exec non reconnue "${directives.rawExecSecurity ?? ""}". Valide : deny, allowlist, full.`,
       };
     }
     if (directives.invalidExecAsk) {
       return {
-        text: `Unrecognized exec ask "${directives.rawExecAsk ?? ""}". Valid: off, on-miss, always.`,
+        text: `Demande exec non reconnue "${directives.rawExecAsk ?? ""}". Valide : off, on-miss, always.`,
       };
     }
     if (directives.invalidExecNode) {
       return {
-        text: "Exec node requires a value.",
+        text: "Le nœud exec nécessite une valeur.",
       };
     }
     if (!directives.hasExecOptions) {
@@ -256,7 +256,7 @@ export async function handleDirectiveOnly(
     !supportsXHighThinking(resolvedProvider, resolvedModel)
   ) {
     return {
-      text: `Thinking level "xhigh" is only supported for ${formatXHighModelHint()}.`,
+      text: `Le niveau de réflexion "xhigh" n'est supporté que pour ${formatXHighModelHint()}.`,
     };
   }
 

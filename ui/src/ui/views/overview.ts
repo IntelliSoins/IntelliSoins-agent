@@ -63,7 +63,7 @@ export function renderOverview(props: OverviewProps) {
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
             title=${t("overviewView.devicePairingDocs")}
-            >Docs: Device pairing</a
+            >Docs : Jumelage d'appareil</a
           >
         </div>
       </div>
@@ -120,7 +120,7 @@ export function renderOverview(props: OverviewProps) {
               target=${EXTERNAL_LINK_TARGET}
               rel=${buildExternalLinkRel()}
               title=${t("overviewView.controlUiAuthDocs")}
-              >Docs: Control UI auth</a
+              >Docs : Auth Control UI</a
             >
           </div>
         </div>
@@ -135,8 +135,8 @@ export function renderOverview(props: OverviewProps) {
             href="https://docs.openclaw.ai/web/dashboard"
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
-            title="Control UI auth docs (opens in new tab)"
-            >Docs: Control UI auth</a
+            title="Documentation auth Control UI (ouvre un nouvel onglet)"
+            >Docs : Auth Control UI</a
           >
         </div>
       </div>
@@ -175,7 +175,7 @@ export function renderOverview(props: OverviewProps) {
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
             title=${t("overviewView.tailscaleDocs")}
-            >Docs: Tailscale Serve</a
+            >Docs : Tailscale Serve</a
           >
           <span class="muted"> · </span>
           <a
@@ -184,7 +184,7 @@ export function renderOverview(props: OverviewProps) {
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
             title=${t("overviewView.insecureHttpDocs")}
-            >Docs: Insecure HTTP</a
+            >Docs : HTTP non sécurisé</a
           >
         </div>
       </div>
@@ -238,7 +238,7 @@ export function renderOverview(props: OverviewProps) {
                       const v = (e.target as HTMLInputElement).value;
                       props.onPasswordChange(v);
                     }}
-                    placeholder="system or shared password"
+                    placeholder="mot de passe système ou partagé"
                   />
                 </label>
               `

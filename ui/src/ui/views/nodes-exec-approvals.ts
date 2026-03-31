@@ -196,9 +196,9 @@ export function renderExecApprovals(state: ExecApprovalsState) {
     <section class="card">
       <div class="row" style="justify-content: space-between; align-items: center;">
         <div>
-          <div class="card-title">Exec approvals</div>
+          <div class="card-title">Approbations exec</div>
           <div class="card-sub">
-            Allowlist and approval policy for <span class="mono">exec host=gateway/node</span>.
+            Liste d'approbation et politique pour <span class="mono">exec host=gateway/node</span>.
           </div>
         </div>
         <button
@@ -206,7 +206,7 @@ export function renderExecApprovals(state: ExecApprovalsState) {
           ?disabled=${state.disabled || !state.dirty || !targetReady}
           @click=${state.onSave}
         >
-          ${state.saving ? "Saving…" : "Save"}
+          ${state.saving ? "Enregistrement…" : "Enregistrer"}
         </button>
       </div>
 
@@ -215,9 +215,9 @@ export function renderExecApprovals(state: ExecApprovalsState) {
       ${
         !ready
           ? html`<div class="row" style="margin-top: 12px; gap: 12px;">
-            <div class="muted">Load exec approvals to edit allowlists.</div>
+            <div class="muted">Charger les approbations exec pour modifier les listes.</div>
             <button class="btn" ?disabled=${state.loading || !targetReady} @click=${state.onLoad}>
-              ${state.loading ? "Loading…" : "Load approvals"}
+              ${state.loading ? "Chargement…" : "Charger les approbations"}
             </button>
           </div>`
           : html`
@@ -241,14 +241,14 @@ function renderExecApprovalsTarget(state: ExecApprovalsState) {
     <div class="list" style="margin-top: 12px;">
       <div class="list-item">
         <div class="list-main">
-          <div class="list-title">Target</div>
+          <div class="list-title">Cible</div>
           <div class="list-sub">
-            Gateway edits local approvals; node edits the selected node.
+            Gateway modifie les approbations locales; node modifie le nœud sélectionné.
           </div>
         </div>
         <div class="list-meta">
           <label class="field">
-            <span>Host</span>
+            <span>Hôte</span>
             <select
               ?disabled=${state.disabled}
               @change=${(event: Event) => {
@@ -279,7 +279,7 @@ function renderExecApprovalsTarget(state: ExecApprovalsState) {
                       state.onSelectTarget("node", value ? value : null);
                     }}
                   >
-                    <option value="" ?selected=${nodeValue === ""}>Select node</option>
+                    <option value="" ?selected=${nodeValue === ""}>Sélectionner un nœud</option>
                     ${state.targetNodes.map(
                       (node) =>
                         html`<option
@@ -299,7 +299,7 @@ function renderExecApprovalsTarget(state: ExecApprovalsState) {
       ${
         state.target === "node" && !hasNodes
           ? html`
-              <div class="muted">No nodes advertise exec approvals yet.</div>
+              <div class="muted">Aucun nœud n'a encore d'approbations exec.</div>
             `
           : nothing
       }
@@ -310,13 +310,13 @@ function renderExecApprovalsTarget(state: ExecApprovalsState) {
 function renderExecApprovalsTabs(state: ExecApprovalsState) {
   return html`
     <div class="row" style="margin-top: 12px; gap: 8px; flex-wrap: wrap;">
-      <span class="label">Scope</span>
+      <span class="label">Portée</span>
       <div class="row" style="gap: 8px; flex-wrap: wrap;">
         <button
           class="btn btn--sm ${state.selectedScope === EXEC_APPROVALS_DEFAULT_SCOPE ? "active" : ""}"
           @click=${() => state.onSelectScope(EXEC_APPROVALS_DEFAULT_SCOPE)}
         >
-          Defaults
+          Défauts
         </button>
         ${state.agents.map((agent) => {
           const label = agent.name?.trim() ? `${agent.name} (${agent.id})` : agent.id;
@@ -354,9 +354,9 @@ function renderExecApprovalsPolicy(state: ExecApprovalsState) {
     <div class="list" style="margin-top: 16px;">
       <div class="list-item">
         <div class="list-main">
-          <div class="list-title">Security</div>
+          <div class="list-title">Sécurité</div>
           <div class="list-sub">
-            ${isDefaults ? "Default security mode." : `Default: ${defaults.security}.`}
+            ${isDefaults ? "Mode de sécurité par défaut." : `Défaut : ${defaults.security}.`}
           </div>
         </div>
         <div class="list-meta">
@@ -377,7 +377,7 @@ function renderExecApprovalsPolicy(state: ExecApprovalsState) {
               ${
                 !isDefaults
                   ? html`<option value="__default__" ?selected=${securityValue === "__default__"}>
-                    Use default (${defaults.security})
+                    Utiliser le défaut (${defaults.security})
                   </option>`
                   : nothing
               }
@@ -397,9 +397,9 @@ function renderExecApprovalsPolicy(state: ExecApprovalsState) {
 
       <div class="list-item">
         <div class="list-main">
-          <div class="list-title">Ask</div>
+          <div class="list-title">Demander</div>
           <div class="list-sub">
-            ${isDefaults ? "Default prompt policy." : `Default: ${defaults.ask}.`}
+            ${isDefaults ? "Politique de confirmation par défaut." : `Défaut : ${defaults.ask}.`}
           </div>
         </div>
         <div class="list-meta">
@@ -420,7 +420,7 @@ function renderExecApprovalsPolicy(state: ExecApprovalsState) {
               ${
                 !isDefaults
                   ? html`<option value="__default__" ?selected=${askValue === "__default__"}>
-                    Use default (${defaults.ask})
+                    Utiliser le défaut (${defaults.ask})
                   </option>`
                   : nothing
               }
@@ -440,18 +440,18 @@ function renderExecApprovalsPolicy(state: ExecApprovalsState) {
 
       <div class="list-item">
         <div class="list-main">
-          <div class="list-title">Ask fallback</div>
+          <div class="list-title">Confirmation alternative</div>
           <div class="list-sub">
             ${
               isDefaults
-                ? "Applied when the UI prompt is unavailable."
-                : `Default: ${defaults.askFallback}.`
+                ? "Appliqué quand l'interface de confirmation est indisponible."
+                : `Défaut : ${defaults.askFallback}.`
             }
           </div>
         </div>
         <div class="list-meta">
           <label class="field">
-            <span>Fallback</span>
+            <span>Alternative</span>
             <select
               ?disabled=${state.disabled}
               @change=${(event: Event) => {
@@ -467,7 +467,7 @@ function renderExecApprovalsPolicy(state: ExecApprovalsState) {
               ${
                 !isDefaults
                   ? html`<option value="__default__" ?selected=${askFallbackValue === "__default__"}>
-                    Use default (${defaults.askFallback})
+                    Utiliser le défaut (${defaults.askFallback})
                   </option>`
                   : nothing
               }
@@ -487,20 +487,20 @@ function renderExecApprovalsPolicy(state: ExecApprovalsState) {
 
       <div class="list-item">
         <div class="list-main">
-          <div class="list-title">Auto-allow skill CLIs</div>
+          <div class="list-title">Autoriser automatiquement les CLI de Skills</div>
           <div class="list-sub">
             ${
               isDefaults
-                ? "Allow skill executables listed by the Gateway."
+                ? "Autoriser les exécutables de Skills listés par le Gateway."
                 : autoIsDefault
-                  ? `Using default (${defaults.autoAllowSkills ? "on" : "off"}).`
-                  : `Override (${autoEffective ? "on" : "off"}).`
+                  ? `Utilise le défaut (${defaults.autoAllowSkills ? "on" : "off"}).`
+                  : `Remplacé (${autoEffective ? "on" : "off"}).`
             }
           </div>
         </div>
         <div class="list-meta">
           <label class="field">
-            <span>Enabled</span>
+            <span>Activé</span>
             <input
               type="checkbox"
               ?disabled=${state.disabled}
@@ -518,7 +518,7 @@ function renderExecApprovalsPolicy(state: ExecApprovalsState) {
                 ?disabled=${state.disabled}
                 @click=${() => state.onRemove([...basePath, "autoAllowSkills"])}
               >
-                Use default
+                Utiliser le défaut
               </button>`
               : nothing
           }
@@ -534,8 +534,8 @@ function renderExecApprovalsAllowlist(state: ExecApprovalsState) {
   return html`
     <div class="row" style="margin-top: 18px; justify-content: space-between;">
       <div>
-        <div class="card-title">Allowlist</div>
-        <div class="card-sub">Case-insensitive glob patterns.</div>
+        <div class="card-title">Liste autorisée</div>
+        <div class="card-sub">Patterns glob insensibles à la casse.</div>
       </div>
       <button
         class="btn btn--sm"
@@ -545,14 +545,14 @@ function renderExecApprovalsAllowlist(state: ExecApprovalsState) {
           state.onPatch(allowlistPath, next);
         }}
       >
-        Add pattern
+        Ajouter un pattern
       </button>
     </div>
     <div class="list" style="margin-top: 12px;">
       ${
         entries.length === 0
           ? html`
-              <div class="muted">No allowlist entries yet.</div>
+              <div class="muted">Aucune entrée dans la liste.</div>
             `
           : entries.map((entry, index) => renderAllowlistEntry(state, entry, index))
       }
@@ -565,14 +565,14 @@ function renderAllowlistEntry(
   entry: ExecApprovalsAllowlistEntry,
   index: number,
 ) {
-  const lastUsed = entry.lastUsedAt ? formatRelativeTimestamp(entry.lastUsedAt) : "never";
+  const lastUsed = entry.lastUsedAt ? formatRelativeTimestamp(entry.lastUsedAt) : "jamais";
   const lastCommand = entry.lastUsedCommand ? clampText(entry.lastUsedCommand, 120) : null;
   const lastPath = entry.lastResolvedPath ? clampText(entry.lastResolvedPath, 120) : null;
   return html`
     <div class="list-item">
       <div class="list-main">
-        <div class="list-title">${entry.pattern?.trim() ? entry.pattern : "New pattern"}</div>
-        <div class="list-sub">Last used: ${lastUsed}</div>
+        <div class="list-title">${entry.pattern?.trim() ? entry.pattern : "Nouveau pattern"}</div>
+        <div class="list-sub">Dernière utilisation : ${lastUsed}</div>
         ${lastCommand ? html`<div class="list-sub mono">${lastCommand}</div>` : nothing}
         ${lastPath ? html`<div class="list-sub mono">${lastPath}</div>` : nothing}
       </div>
@@ -603,7 +603,7 @@ function renderAllowlistEntry(
             state.onRemove(["agents", state.selectedScope, "allowlist", index]);
           }}
         >
-          Remove
+          Retirer
         </button>
       </div>
     </div>

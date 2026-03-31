@@ -344,7 +344,7 @@ export function renderNode(params: {
   if (unsupported.has(key)) {
     return html`<div class="cfg-field cfg-field--error">
       <div class="cfg-field__label">${label}</div>
-      <div class="cfg-field__error">Unsupported schema node. Use Raw mode.</div>
+      <div class="cfg-field__error">Nœud de schéma non supporté. Utiliser le mode brut.</div>
     </div>`;
   }
   if (
@@ -525,7 +525,7 @@ export function renderNode(params: {
   return html`
     <div class="cfg-field cfg-field--error">
       <div class="cfg-field__label">${label}</div>
-      <div class="cfg-field__error">Unsupported type: ${type}. Use Raw mode.</div>
+      <div class="cfg-field__error">Type non supporté : ${type}. Utiliser le mode brut.</div>
     </div>
   `;
 }
@@ -692,7 +692,7 @@ function renderSelect(params: {
           onPatch(path, val === unset ? undefined : options[Number(val)]);
         }}
       >
-        <option value=${unset}>Select...</option>
+        <option value=${unset}>Sélectionner…</option>
         ${options.map(
           (opt, idx) => html`
           <option value=${String(idx)}>${String(opt)}</option>
@@ -835,7 +835,7 @@ function renderArray(params: {
     return html`
       <div class="cfg-field cfg-field--error">
         <div class="cfg-field__label">${label}</div>
-        <div class="cfg-field__error">Unsupported array schema. Use Raw mode.</div>
+        <div class="cfg-field__error">Schéma de tableau non supporté. Utiliser le mode brut.</div>
       </div>
     `;
   }
@@ -868,7 +868,7 @@ function renderArray(params: {
       ${
         arr.length === 0
           ? html`
-              <div class="cfg-array__empty">No items yet. Click "Add" to create one.</div>
+              <div class="cfg-array__empty">Aucun élément. Cliquer « Ajouter » pour en créer un.</div>
             `
           : html`
         <div class="cfg-array__items">
@@ -954,7 +954,7 @@ function renderMapField(params: {
   return html`
     <div class="cfg-map">
       <div class="cfg-map__header">
-        <span class="cfg-map__label">Custom entries</span>
+        <span class="cfg-map__label">Entrées personnalisées</span>
         <button
           type="button"
           class="cfg-map__add"
@@ -979,7 +979,7 @@ function renderMapField(params: {
       ${
         visibleEntries.length === 0
           ? html`
-              <div class="cfg-map__empty">No custom entries.</div>
+              <div class="cfg-map__empty">Aucune entrée personnalisée.</div>
             `
           : html`
         <div class="cfg-map__items">

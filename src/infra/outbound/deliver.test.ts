@@ -351,7 +351,7 @@ describe("deliverOutboundPayloads", () => {
       sendTelegram,
       cfg,
       payload: {
-        text: "Approval required",
+        text: "Approbation requise",
         channelData: {
           telegram: {
             buttons: [

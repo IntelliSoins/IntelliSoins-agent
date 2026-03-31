@@ -1,6 +1,6 @@
 ---
 name: trello
-description: Manage Trello boards, lists, and cards via the Trello REST API.
+description: "Gérer les tableaux, listes et cartes Trello via l'API REST Trello."
 homepage: https://developer.atlassian.com/cloud/trello/rest/
 metadata:
   {

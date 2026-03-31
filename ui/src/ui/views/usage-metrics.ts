@@ -89,7 +89,7 @@ type UsageMosaicStats = {
   weekdayTotals: Array<{ label: string; tokens: number }>;
 };
 
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAYS = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
 
 function getZonedHour(date: Date, zone: "local" | "utc"): number {
   return zone === "utc" ? date.getUTCHours() : date.getHours();
@@ -177,12 +177,12 @@ function renderUsageMosaic(
       <div class="card usage-mosaic">
         <div class="usage-mosaic-header">
           <div>
-            <div class="usage-mosaic-title">Activity by Time</div>
-            <div class="usage-mosaic-sub">Estimates require session timestamps.</div>
+            <div class="usage-mosaic-title">Activité par heure</div>
+            <div class="usage-mosaic-sub">Les estimations nécessitent des horodatages de session.</div>
           </div>
           <div class="usage-mosaic-total">${formatTokens(0)} tokens</div>
         </div>
-        <div class="muted" style="padding: 12px; text-align: center;">No timeline data yet.</div>
+        <div class="muted" style="padding: 12px; text-align: center;">Aucune donnée chronologique.</div>
       </div>
     `;
   }
@@ -194,16 +194,16 @@ function renderUsageMosaic(
     <div class="card usage-mosaic">
       <div class="usage-mosaic-header">
         <div>
-          <div class="usage-mosaic-title">Activity by Time</div>
+          <div class="usage-mosaic-title">Activité par heure</div>
           <div class="usage-mosaic-sub">
-            Estimated from session spans (first/last activity). Time zone: ${timeZone === "utc" ? "UTC" : "Local"}.
+            Estimé à partir des sessions (première/dernière activité). Fuseau horaire : ${timeZone === "utc" ? "UTC" : "Local"}.
           </div>
         </div>
         <div class="usage-mosaic-total">${formatTokens(stats.totalTokens)} tokens</div>
       </div>
       <div class="usage-mosaic-grid">
         <div class="usage-mosaic-section">
-          <div class="usage-mosaic-section-title">Day of Week</div>
+          <div class="usage-mosaic-section-title">Jour de la semaine</div>
           <div class="usage-daypart-grid">
             ${stats.weekdayTotals.map((part) => {
               const intensity = Math.min(part.tokens / maxWeekday, 1);
@@ -220,7 +220,7 @@ function renderUsageMosaic(
         </div>
         <div class="usage-mosaic-section">
           <div class="usage-mosaic-section-title">
-            <span>Hours</span>
+            <span>Heures</span>
             <span class="usage-mosaic-sub">0 → 23</span>
           </div>
           <div class="usage-hour-grid">
@@ -241,16 +241,16 @@ function renderUsageMosaic(
             })}
           </div>
           <div class="usage-hour-labels">
-            <span>Midnight</span>
-            <span>4am</span>
-            <span>8am</span>
-            <span>Noon</span>
-            <span>4pm</span>
-            <span>8pm</span>
+            <span>Minuit</span>
+            <span>4h</span>
+            <span>8h</span>
+            <span>Midi</span>
+            <span>16h</span>
+            <span>20h</span>
           </div>
           <div class="usage-hour-legend">
             <span></span>
-            Low → High token density
+            Densité de tokens faible → élevée
           </div>
         </div>
       </div>

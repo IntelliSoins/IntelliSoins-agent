@@ -1,6 +1,6 @@
 ---
 name: gog
-description: Google Workspace CLI for Gmail, Calendar, Drive, Contacts, Sheets, and Docs.
+description: CLI Google Workspace pour Gmail, Calendar, Drive, Contacts, Sheets et Docs.
 homepage: https://gogcli.sh
 metadata:
   {

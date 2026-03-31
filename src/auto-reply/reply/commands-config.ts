@@ -75,7 +75,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
       return {
         shouldContinue: false,
         reply: {
-          text: `⚠️ Config writes are disabled for ${channelLabel}. Set ${hint} to enable.`,
+          text: `⚠️ L'écriture de config est désactivée pour ${channelLabel}. Définir ${hint} pour activer.`,
         },
       };
     }
@@ -86,7 +86,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
     return {
       shouldContinue: false,
       reply: {
-        text: "⚠️ Config file is invalid; fix it before using /config.",
+        text: "⚠️ Le fichier de config est invalide; corrigez-le avant d'utiliser /config.",
       },
     };
   }
@@ -107,14 +107,14 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
       return {
         shouldContinue: false,
         reply: {
-          text: `⚙️ Config ${pathRaw}:\n\`\`\`json\n${rendered}\n\`\`\``,
+          text: `⚙️ Config ${pathRaw} :\n\`\`\`json\n${rendered}\n\`\`\``,
         },
       };
     }
     const json = JSON.stringify(parsedBase, null, 2);
     return {
       shouldContinue: false,
-      reply: { text: `⚙️ Config (raw):\n\`\`\`json\n${json}\n\`\`\`` },
+      reply: { text: `⚙️ Config (brut) :\n\`\`\`json\n${json}\n\`\`\`` },
     };
   }
 
@@ -130,7 +130,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
     if (!removed) {
       return {
         shouldContinue: false,
-        reply: { text: `⚙️ No config value found for ${configCommand.path}.` },
+        reply: { text: `⚙️ Aucune valeur de config trouvée pour ${configCommand.path}.` },
       };
     }
     const validated = validateConfigObjectWithPlugins(parsedBase);
@@ -139,14 +139,14 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
       return {
         shouldContinue: false,
         reply: {
-          text: `⚠️ Config invalid after unset (${issue.path}: ${issue.message}).`,
+          text: `⚠️ Config invalide après suppression (${issue.path}: ${issue.message}).`,
         },
       };
     }
     await writeConfigFile(validated.config);
     return {
       shouldContinue: false,
-      reply: { text: `⚙️ Config updated: ${configCommand.path} removed.` },
+      reply: { text: `⚙️ Config mise à jour : ${configCommand.path} supprimé.` },
     };
   }
 
@@ -165,7 +165,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
       return {
         shouldContinue: false,
         reply: {
-          text: `⚠️ Config invalid after set (${issue.path}: ${issue.message}).`,
+          text: `⚠️ Config invalide après modification (${issue.path}: ${issue.message}).`,
         },
       };
     }
@@ -177,7 +177,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
     return {
       shouldContinue: false,
       reply: {
-        text: `⚙️ Config updated: ${configCommand.path}=${valueLabel ?? "null"}`,
+        text: `⚙️ Config mise à jour : ${configCommand.path}=${valueLabel ?? "null"}`,
       },
     };
   }
@@ -216,14 +216,14 @@ export const handleDebugCommand: CommandHandler = async (params, allowTextComman
     if (!hasOverrides) {
       return {
         shouldContinue: false,
-        reply: { text: "⚙️ Debug overrides: (none)" },
+        reply: { text: "⚙️ Surcharges debug : (aucune)" },
       };
     }
     const json = JSON.stringify(overrides, null, 2);
     return {
       shouldContinue: false,
       reply: {
-        text: `⚙️ Debug overrides (memory-only):\n\`\`\`json\n${json}\n\`\`\``,
+        text: `⚙️ Surcharges debug (mémoire seule) :\n\`\`\`json\n${json}\n\`\`\``,
       },
     };
   }
@@ -231,7 +231,7 @@ export const handleDebugCommand: CommandHandler = async (params, allowTextComman
     resetConfigOverrides();
     return {
       shouldContinue: false,
-      reply: { text: "⚙️ Debug overrides cleared; using config on disk." },
+      reply: { text: "⚙️ Surcharges debug supprimées; utilisation de la config sur disque." },
     };
   }
   if (debugCommand.action === "unset") {
@@ -246,13 +246,13 @@ export const handleDebugCommand: CommandHandler = async (params, allowTextComman
       return {
         shouldContinue: false,
         reply: {
-          text: `⚙️ No debug override found for ${debugCommand.path}.`,
+          text: `⚙️ Aucune surcharge debug trouvée pour ${debugCommand.path}.`,
         },
       };
     }
     return {
       shouldContinue: false,
-      reply: { text: `⚙️ Debug override removed for ${debugCommand.path}.` },
+      reply: { text: `⚙️ Surcharge debug supprimée pour ${debugCommand.path}.` },
     };
   }
   if (debugCommand.action === "set") {
@@ -270,7 +270,7 @@ export const handleDebugCommand: CommandHandler = async (params, allowTextComman
     return {
       shouldContinue: false,
       reply: {
-        text: `⚙️ Debug override set: ${debugCommand.path}=${valueLabel ?? "null"}`,
+        text: `⚙️ Surcharge debug définie : ${debugCommand.path}=${valueLabel ?? "null"}`,
       },
     };
   }

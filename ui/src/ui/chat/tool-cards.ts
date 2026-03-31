@@ -106,7 +106,7 @@ export function renderToolCardSidebar(card: ToolCard, onOpenSidebar?: (content: 
       ${
         isEmpty
           ? html`
-              <div class="chat-tool-card__status-text muted">Completed</div>
+              <div class="chat-tool-card__status-text muted">Terminé</div>
             `
           : nothing
       }

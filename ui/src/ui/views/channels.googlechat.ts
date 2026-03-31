@@ -14,21 +14,21 @@ export function renderGoogleChatCard(params: {
   return html`
     <div class="card">
       <div class="card-title">Google Chat</div>
-      <div class="card-sub">Chat API webhook status and channel configuration.</div>
+      <div class="card-sub">État du webhook Chat API et configuration du canal.</div>
       ${accountCountLabel}
 
       <div class="status-list" style="margin-top: 16px;">
         <div>
-          <span class="label">Configured</span>
-          <span>${googleChat ? (googleChat.configured ? "Yes" : "No") : "n/a"}</span>
+          <span class="label">Configuré</span>
+          <span>${googleChat ? (googleChat.configured ? "Oui" : "Non") : "n/d"}</span>
         </div>
         <div>
-          <span class="label">Running</span>
-          <span>${googleChat ? (googleChat.running ? "Yes" : "No") : "n/a"}</span>
+          <span class="label">En cours</span>
+          <span>${googleChat ? (googleChat.running ? "Oui" : "Non") : "n/d"}</span>
         </div>
         <div>
-          <span class="label">Credential</span>
-          <span>${googleChat?.credentialSource ?? "n/a"}</span>
+          <span class="label">Identifiant</span>
+          <span>${googleChat?.credentialSource ?? "n/d"}</span>
         </div>
         <div>
           <span class="label">Audience</span>
@@ -36,17 +36,17 @@ export function renderGoogleChatCard(params: {
             ${
               googleChat?.audienceType
                 ? `${googleChat.audienceType}${googleChat.audience ? ` · ${googleChat.audience}` : ""}`
-                : "n/a"
+                : "n/d"
             }
           </span>
         </div>
         <div>
-          <span class="label">Last start</span>
-          <span>${googleChat?.lastStartAt ? formatRelativeTimestamp(googleChat.lastStartAt) : "n/a"}</span>
+          <span class="label">Dernier démarrage</span>
+          <span>${googleChat?.lastStartAt ? formatRelativeTimestamp(googleChat.lastStartAt) : "n/d"}</span>
         </div>
         <div>
-          <span class="label">Last probe</span>
-          <span>${googleChat?.lastProbeAt ? formatRelativeTimestamp(googleChat.lastProbeAt) : "n/a"}</span>
+          <span class="label">Dernière vérification</span>
+          <span>${googleChat?.lastProbeAt ? formatRelativeTimestamp(googleChat.lastProbeAt) : "n/d"}</span>
         </div>
       </div>
 
@@ -71,7 +71,7 @@ export function renderGoogleChatCard(params: {
 
       <div class="row" style="margin-top: 12px;">
         <button class="btn" @click=${() => props.onRefresh(true)}>
-          Probe
+          Vérifier
         </button>
       </div>
     </div>

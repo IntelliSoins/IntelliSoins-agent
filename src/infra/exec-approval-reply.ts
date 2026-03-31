@@ -34,7 +34,7 @@ export type ExecApprovalUnavailableReplyParams = {
 };
 
 export function getExecApprovalApproverDmNoticeText(): string {
-  return "Approval required. I sent the allowed approvers DMs.";
+  return "Approbation requise. J'ai envoyé des DMs aux approbateurs autorisés.";
 }
 
 function buildFence(text: string, language?: string): string {
@@ -85,12 +85,12 @@ export function buildExecApprovalPendingReplyPayload(
   if (warningText) {
     lines.push(warningText, "");
   }
-  lines.push("Approval required.");
-  lines.push("Run:");
+  lines.push("Approbation requise.");
+  lines.push("Exécuter :");
   lines.push(buildFence(`/approve ${approvalCommandId} allow-once`, "txt"));
-  lines.push("Pending command:");
+  lines.push("Commande en attente :");
   lines.push(buildFence(params.command, "sh"));
-  lines.push("Other options:");
+  lines.push("Autres options :");
   lines.push(
     buildFence(
       `/approve ${approvalCommandId} allow-always\n/approve ${approvalCommandId} deny`,
@@ -98,21 +98,21 @@ export function buildExecApprovalPendingReplyPayload(
     ),
   );
   const info: string[] = [];
-  info.push(`Host: ${params.host}`);
+  info.push(`Hôte : ${params.host}`);
   if (params.nodeId) {
-    info.push(`Node: ${params.nodeId}`);
+    info.push(`Nœud : ${params.nodeId}`);
   }
   if (params.cwd) {
-    info.push(`CWD: ${params.cwd}`);
+    info.push(`CWD : ${params.cwd}`);
   }
   if (typeof params.expiresAtMs === "number" && Number.isFinite(params.expiresAtMs)) {
     const expiresInSec = Math.max(
       0,
       Math.round((params.expiresAtMs - (params.nowMs ?? Date.now())) / 1000),
     );
-    info.push(`Expires in: ${expiresInSec}s`);
+    info.push(`Expire dans : ${expiresInSec}s`);
   }
-  info.push(`Full id: \`${params.approvalId}\``);
+  info.push(`ID complet : \`${params.approvalId}\``);
   lines.push(info.join("\n"));
 
   return {

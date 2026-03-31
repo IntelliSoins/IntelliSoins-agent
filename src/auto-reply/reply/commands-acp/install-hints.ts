@@ -19,5 +19,5 @@ export function resolveAcpInstallCommandHint(cfg: OpenClawConfig): string {
     }
     return "openclaw plugins install acpx";
   }
-  return `Install and enable the plugin that provides ACP backend "${backendId}".`;
+  return `Installer et activer le plugin qui fournit le backend ACP "${backendId}".`;
 }

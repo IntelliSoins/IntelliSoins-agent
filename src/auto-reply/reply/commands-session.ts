@@ -137,7 +137,9 @@ export const handleActivationCommand: CommandHandler = async (params, allowTextC
   if (!params.isGroup) {
     return {
       shouldContinue: false,
-      reply: { text: "⚙️ Group activation only applies to group chats." },
+      reply: {
+        text: "⚙️ L'activation de groupe s'applique uniquement aux conversations de groupe.",
+      },
     };
   }
   if (!params.command.isAuthorizedSender) {
@@ -149,7 +151,7 @@ export const handleActivationCommand: CommandHandler = async (params, allowTextC
   if (!activationCommand.mode) {
     return {
       shouldContinue: false,
-      reply: { text: "⚙️ Usage: /activation mention|always" },
+      reply: { text: "⚙️ Usage : /activation mention|always" },
     };
   }
   if (params.sessionEntry && params.sessionStore && params.sessionKey) {
@@ -160,7 +162,7 @@ export const handleActivationCommand: CommandHandler = async (params, allowTextC
   return {
     shouldContinue: false,
     reply: {
-      text: `⚙️ Group activation set to ${activationCommand.mode}.`,
+      text: `⚙️ Activation de groupe définie à ${activationCommand.mode}.`,
     },
   };
 };
@@ -182,7 +184,7 @@ export const handleSendPolicyCommand: CommandHandler = async (params, allowTextC
   if (!sendPolicyCommand.mode) {
     return {
       shouldContinue: false,
-      reply: { text: "⚙️ Usage: /send on|off|inherit" },
+      reply: { text: "⚙️ Usage : /send on|off|inherit" },
     };
   }
   if (params.sessionEntry && params.sessionStore && params.sessionKey) {
@@ -201,7 +203,7 @@ export const handleSendPolicyCommand: CommandHandler = async (params, allowTextC
         : "off";
   return {
     shouldContinue: false,
-    reply: { text: `⚙️ Send policy set to ${label}.` },
+    reply: { text: `⚙️ Politique d'envoi définie à ${label}.` },
   };
 };
 
@@ -257,14 +259,14 @@ export const handleUsageCommand: CommandHandler = async (params, allowTextComman
 
     return {
       shouldContinue: false,
-      reply: { text: `💸 Usage cost\n${sessionLine}\n${todayLine}\n${last30Line}` },
+      reply: { text: `💸 Coût d'utilisation\n${sessionLine}\n${todayLine}\n${last30Line}` },
     };
   }
 
   if (rawArgs && !requested) {
     return {
       shouldContinue: false,
-      reply: { text: "⚙️ Usage: /usage off|tokens|full|cost" },
+      reply: { text: "⚙️ Usage : /usage off|tokens|full|cost" },
     };
   }
 
@@ -286,7 +288,7 @@ export const handleUsageCommand: CommandHandler = async (params, allowTextComman
   return {
     shouldContinue: false,
     reply: {
-      text: `⚙️ Usage footer: ${next}.`,
+      text: `⚙️ Pied de page utilisation : ${next}.`,
     },
   };
 };
@@ -322,7 +324,7 @@ export const handleSessionCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: "⚠️ /session idle and /session max-age are currently available for Discord and Telegram bound sessions.",
+        text: "⚠️ /session idle et /session max-age sont disponibles uniquement pour les sessions liées Discord et Telegram.",
       },
     };
   }
@@ -337,7 +339,7 @@ export const handleSessionCommand: CommandHandler = async (params, allowTextComm
   if (onDiscord && !discordManager) {
     return {
       shouldContinue: false,
-      reply: { text: "⚠️ Discord thread bindings are unavailable for this account." },
+      reply: { text: "⚠️ Les liaisons de threads Discord sont indisponibles pour ce compte." },
     };
   }
 
@@ -356,13 +358,13 @@ export const handleSessionCommand: CommandHandler = async (params, allowTextComm
       return {
         shouldContinue: false,
         reply: {
-          text: "⚠️ /session idle and /session max-age must be run inside a focused Discord thread.",
+          text: "⚠️ /session idle et /session max-age doivent être exécutés dans un thread Discord focalisé.",
         },
       };
     }
     return {
       shouldContinue: false,
-      reply: { text: "ℹ️ This thread is not currently focused." },
+      reply: { text: "ℹ️ Ce thread n'est pas actuellement focalisé." },
     };
   }
   if (onTelegram && !telegramBinding) {
@@ -370,13 +372,13 @@ export const handleSessionCommand: CommandHandler = async (params, allowTextComm
       return {
         shouldContinue: false,
         reply: {
-          text: "⚠️ /session idle and /session max-age on Telegram require a topic context in groups, or a direct-message conversation.",
+          text: "⚠️ /session idle et /session max-age sur Telegram nécessitent un contexte de sujet dans les groupes, ou une conversation en message direct.",
         },
       };
     }
     return {
       shouldContinue: false,
-      reply: { text: "ℹ️ This conversation is not currently focused." },
+      reply: { text: "ℹ️ Cette conversation n'est pas actuellement focalisée." },
     };
   }
 
@@ -420,13 +422,15 @@ export const handleSessionCommand: CommandHandler = async (params, allowTextComm
         return {
           shouldContinue: false,
           reply: {
-            text: `ℹ️ Idle timeout active (${formatThreadBindingDurationLabel(idleTimeoutMs)}, next auto-unfocus at ${formatSessionExpiry(idleExpiresAt)}).`,
+            text: `ℹ️ Délai d'inactivité actif (${formatThreadBindingDurationLabel(idleTimeoutMs)}, prochain défocus auto à ${formatSessionExpiry(idleExpiresAt)}).`,
           },
         };
       }
       return {
         shouldContinue: false,
-        reply: { text: "ℹ️ Idle timeout is currently disabled for this focused session." },
+        reply: {
+          text: "ℹ️ Le délai d'inactivité est actuellement désactivé pour cette session focalisée.",
+        },
       };
     }
 
@@ -438,13 +442,13 @@ export const handleSessionCommand: CommandHandler = async (params, allowTextComm
       return {
         shouldContinue: false,
         reply: {
-          text: `ℹ️ Max age active (${formatThreadBindingDurationLabel(maxAgeMs)}, hard auto-unfocus at ${formatSessionExpiry(maxAgeExpiresAt)}).`,
+          text: `ℹ️ Durée max active (${formatThreadBindingDurationLabel(maxAgeMs)}, défocus auto forcé à ${formatSessionExpiry(maxAgeExpiresAt)}).`,
         },
       };
     }
     return {
       shouldContinue: false,
-      reply: { text: "ℹ️ Max age is currently disabled for this focused session." },
+      reply: { text: "ℹ️ La durée max est actuellement désactivée pour cette session focalisée." },
     };
   }
 
@@ -559,7 +563,7 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: "⚠️ /restart is disabled (commands.restart=false).",
+        text: "⚠️ /restart est désactivé (commands.restart=false).",
       },
     };
   }
@@ -569,7 +573,7 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: "⚙️ Restarting OpenClaw in-process (SIGUSR1); back in a few seconds.",
+        text: "⚙️ Redémarrage d'OpenClaw en cours (SIGUSR1); de retour dans quelques secondes.",
       },
     };
   }
@@ -579,14 +583,14 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: `⚠️ Restart failed (${restartMethod.method}).${detail}`,
+        text: `⚠️ Échec du redémarrage (${restartMethod.method}).${detail}`,
       },
     };
   }
   return {
     shouldContinue: false,
     reply: {
-      text: `⚙️ Restarting OpenClaw via ${restartMethod.method}; give me a few seconds to come back online.`,
+      text: `⚙️ Redémarrage d'OpenClaw via ${restartMethod.method}; donnez-moi quelques secondes pour revenir en ligne.`,
     },
   };
 };

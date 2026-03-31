@@ -60,7 +60,7 @@ export const handleCompactCommand: CommandHandler = async (params) => {
   if (!params.sessionEntry?.sessionId) {
     return {
       shouldContinue: false,
-      reply: { text: "⚙️ Compaction unavailable (missing session id)." },
+      reply: { text: "⚙️ Compaction indisponible (ID de session manquant)." },
     };
   }
   const sessionId = params.sessionEntry.sessionId;

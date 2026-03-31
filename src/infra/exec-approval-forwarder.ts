@@ -210,42 +210,42 @@ function formatApprovalCommand(command: string): { inline: boolean; text: string
 }
 
 function buildRequestMessage(request: ExecApprovalRequest, nowMs: number) {
-  const lines: string[] = ["🔒 Exec approval required", `ID: ${request.id}`];
+  const lines: string[] = ["🔒 Approbation exec requise", `ID : ${request.id}`];
   const command = formatApprovalCommand(request.request.command);
   if (command.inline) {
-    lines.push(`Command: ${command.text}`);
+    lines.push(`Commande : ${command.text}`);
   } else {
-    lines.push("Command:");
+    lines.push("Commande :");
     lines.push(command.text);
   }
   if (request.request.cwd) {
-    lines.push(`CWD: ${request.request.cwd}`);
+    lines.push(`CWD : ${request.request.cwd}`);
   }
   if (request.request.nodeId) {
-    lines.push(`Node: ${request.request.nodeId}`);
+    lines.push(`Nœud : ${request.request.nodeId}`);
   }
   if (Array.isArray(request.request.envKeys) && request.request.envKeys.length > 0) {
-    lines.push(`Env overrides: ${request.request.envKeys.join(", ")}`);
+    lines.push(`Surcharges env : ${request.request.envKeys.join(", ")}`);
   }
   if (request.request.host) {
-    lines.push(`Host: ${request.request.host}`);
+    lines.push(`Hôte : ${request.request.host}`);
   }
   if (request.request.agentId) {
-    lines.push(`Agent: ${request.request.agentId}`);
+    lines.push(`Agent : ${request.request.agentId}`);
   }
   if (request.request.security) {
-    lines.push(`Security: ${request.request.security}`);
+    lines.push(`Sécurité : ${request.request.security}`);
   }
   if (request.request.ask) {
-    lines.push(`Ask: ${request.request.ask}`);
+    lines.push(`Demande : ${request.request.ask}`);
   }
   const expiresIn = Math.max(0, Math.round((request.expiresAtMs - nowMs) / 1000));
-  lines.push(`Expires in: ${expiresIn}s`);
-  lines.push("Mode: foreground (interactive approvals available in this chat).");
+  lines.push(`Expire dans : ${expiresIn}s`);
+  lines.push("Mode : premier plan (approbations interactives disponibles dans ce chat).");
   lines.push(
-    "Background mode note: non-interactive runs cannot wait for chat approvals; use pre-approved policy (allow-always or ask=off).",
+    "Note mode arrière-plan : les exécutions non-interactives ne peuvent pas attendre les approbations du chat; utilisez une politique pré-approuvée (allow-always ou ask=off).",
   );
-  lines.push("Reply with: /approve <id> allow-once|allow-always|deny");
+  lines.push("Répondre avec : /approve <id> allow-once|allow-always|deny");
   return lines.join("\n");
 }
 

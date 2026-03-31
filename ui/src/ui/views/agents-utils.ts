@@ -408,7 +408,7 @@ export function buildModelOptions(
   }
   if (options.length === 0) {
     return html`
-      <option value="" disabled>No configured models</option>
+      <option value="" disabled>Aucun modèle configuré</option>
     `;
   }
   return options.map((option) => html`<option value=${option.value}>${option.label}</option>`);

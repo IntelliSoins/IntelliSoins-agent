@@ -260,21 +260,21 @@ export async function handleCommands(params: HandleCommandsParams): Promise<Comm
         }
         return {
           shouldContinue: false,
-          reply: { text: "✅ ACP session reset in place." },
+          reply: { text: "✅ Session ACP réinitialisée." },
         };
       }
       if (resetResult.skipped) {
         return {
           shouldContinue: false,
           reply: {
-            text: "⚠️ ACP session reset unavailable for this bound conversation. Rebind with /acp bind or /acp spawn.",
+            text: "⚠️ Réinitialisation de session ACP indisponible pour cette conversation liée. Relier avec /acp bind ou /acp spawn.",
           },
         };
       }
       return {
         shouldContinue: false,
         reply: {
-          text: "⚠️ ACP session reset failed. Check /acp status and try again.",
+          text: "⚠️ Échec de la réinitialisation de session ACP. Vérifiez /acp status et réessayez.",
         },
       };
     }

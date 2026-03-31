@@ -1,7 +1,7 @@
 {
   "id": "lobster",
   "name": "Lobster",
-  "description": "Typed workflow tool with resumable approvals.",
+  "description": "Outil de workflow typé avec approbations suspendables.",
   "configSchema": {
     "type": "object",
     "additionalProperties": false,

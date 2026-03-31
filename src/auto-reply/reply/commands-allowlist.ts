@@ -398,14 +398,14 @@ export const handleAllowlistCommand: CommandHandler = async (params, allowTextCo
   if (!channelId) {
     return {
       shouldContinue: false,
-      reply: { text: "⚠️ Unknown channel. Add channel=<id> to the command." },
+      reply: { text: "⚠️ Canal inconnu. Ajoutez channel=<id> à la commande." },
     };
   }
   if (parsed.account?.trim() && !normalizeOptionalAccountId(parsed.account)) {
     return {
       shouldContinue: false,
       reply: {
-        text: "⚠️ Invalid account id. Reserved keys (__proto__, constructor, prototype) are blocked.",
+        text: "⚠️ ID de compte invalide. Les clés réservées (__proto__, constructor, prototype) sont bloquées.",
       },
     };
   }
@@ -594,7 +594,9 @@ export const handleAllowlistCommand: CommandHandler = async (params, allowTextCo
       const hint = `channels.${channelId}.configWrites=true`;
       return {
         shouldContinue: false,
-        reply: { text: `⚠️ Config writes are disabled for ${channelId}. Set ${hint} to enable.` },
+        reply: {
+          text: `⚠️ L'écriture de config est désactivée pour ${channelId}. Définir ${hint} pour activer.`,
+        },
       };
     }
 
@@ -603,7 +605,7 @@ export const handleAllowlistCommand: CommandHandler = async (params, allowTextCo
       return {
         shouldContinue: false,
         reply: {
-          text: `⚠️ ${channelId} does not support ${scope} allowlist edits via /allowlist.`,
+          text: `⚠️ ${channelId} ne supporte pas la modification de la liste autorisée ${scope} via /allowlist.`,
         },
       };
     }
@@ -612,7 +614,9 @@ export const handleAllowlistCommand: CommandHandler = async (params, allowTextCo
     if (!snapshot.valid || !snapshot.parsed || typeof snapshot.parsed !== "object") {
       return {
         shouldContinue: false,
-        reply: { text: "⚠️ Config file is invalid; fix it before using /allowlist." },
+        reply: {
+          text: "⚠️ Le fichier de config est invalide; corrigez-le avant d'utiliser /allowlist.",
+        },
       };
     }
     const parsedConfig = structuredClone(snapshot.parsed as Record<string, unknown>);
@@ -650,7 +654,7 @@ export const handleAllowlistCommand: CommandHandler = async (params, allowTextCo
     if (normalizedEntry.length === 0) {
       return {
         shouldContinue: false,
-        reply: { text: "⚠️ Invalid allowlist entry." },
+        reply: { text: "⚠️ Entrée de liste autorisée invalide." },
       };
     }
 
@@ -709,7 +713,9 @@ export const handleAllowlistCommand: CommandHandler = async (params, allowTextCo
         const issue = validated.issues[0];
         return {
           shouldContinue: false,
-          reply: { text: `⚠️ Config invalid after update (${issue.path}: ${issue.message}).` },
+          reply: {
+            text: `⚠️ Config invalide après la mise à jour (${issue.path}: ${issue.message}).`,
+          },
         };
       }
       await writeConfigFile(validated.config);
@@ -742,7 +748,7 @@ export const handleAllowlistCommand: CommandHandler = async (params, allowTextCo
     return {
       shouldContinue: false,
       reply: {
-        text: `✅ ${scopeLabel} allowlist ${actionLabel}: ${targetLabel}.`,
+        text: `✅ Liste autorisée ${scopeLabel} ${actionLabel} : ${targetLabel}.`,
       },
     };
   }
@@ -750,7 +756,7 @@ export const handleAllowlistCommand: CommandHandler = async (params, allowTextCo
   if (!shouldTouchStore) {
     return {
       shouldContinue: false,
-      reply: { text: "⚠️ This channel does not support allowlist storage." },
+      reply: { text: "⚠️ Ce canal ne supporte pas le stockage de liste autorisée." },
     };
   }
 
@@ -765,6 +771,6 @@ export const handleAllowlistCommand: CommandHandler = async (params, allowTextCo
   const scopeLabel = scope === "dm" ? "DM" : "group";
   return {
     shouldContinue: false,
-    reply: { text: `✅ ${scopeLabel} allowlist ${actionLabel} in pairing store.` },
+    reply: { text: `✅ Liste autorisée ${scopeLabel} ${actionLabel} dans le magasin de jumelage.` },
   };
 };

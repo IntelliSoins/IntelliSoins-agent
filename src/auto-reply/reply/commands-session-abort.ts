@@ -171,5 +171,5 @@ export const handleAbortTrigger: CommandHandler = async (params, allowTextComman
       targetSessionKey: abortTarget.key,
     }),
   });
-  return { shouldContinue: false, reply: { text: "⚙️ Agent was aborted." } };
+  return { shouldContinue: false, reply: { text: "⚙️ L'agent a été interrompu." } };
 };

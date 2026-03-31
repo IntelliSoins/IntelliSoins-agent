@@ -208,16 +208,16 @@ function renderGenericChannelCard(
           : html`
             <div class="status-list" style="margin-top: 16px;">
               <div>
-                <span class="label">Configured</span>
-                <span>${configured == null ? "n/a" : configured ? "Yes" : "No"}</span>
+                <span class="label">Configuré</span>
+                <span>${configured == null ? "n/d" : configured ? "Oui" : "Non"}</span>
               </div>
               <div>
-                <span class="label">Running</span>
-                <span>${running == null ? "n/a" : running ? "Yes" : "No"}</span>
+                <span class="label">En cours</span>
+                <span>${running == null ? "n/d" : running ? "Oui" : "Non"}</span>
               </div>
               <div>
-                <span class="label">Connected</span>
-                <span>${connected == null ? "n/a" : connected ? "Yes" : "No"}</span>
+                <span class="label">Connecté</span>
+                <span>${connected == null ? "n/d" : connected ? "Oui" : "Non"}</span>
               </div>
             </div>
           `
@@ -259,29 +259,29 @@ function hasRecentActivity(account: ChannelAccountSnapshot): boolean {
   return Date.now() - account.lastInboundAt < RECENT_ACTIVITY_THRESHOLD_MS;
 }
 
-function deriveRunningStatus(account: ChannelAccountSnapshot): "Yes" | "No" | "Active" {
+function deriveRunningStatus(account: ChannelAccountSnapshot): "Oui" | "Non" | "Actif" {
   if (account.running) {
-    return "Yes";
+    return "Oui";
   }
   // If we have recent inbound activity, the channel is effectively running
   if (hasRecentActivity(account)) {
-    return "Active";
+    return "Actif";
   }
-  return "No";
+  return "Non";
 }
 
-function deriveConnectedStatus(account: ChannelAccountSnapshot): "Yes" | "No" | "Active" | "n/a" {
+function deriveConnectedStatus(account: ChannelAccountSnapshot): "Oui" | "Non" | "Actif" | "n/d" {
   if (account.connected === true) {
-    return "Yes";
+    return "Oui";
   }
   if (account.connected === false) {
-    return "No";
+    return "Non";
   }
   // If connected is null/undefined but we have recent activity, show as active
   if (hasRecentActivity(account)) {
-    return "Active";
+    return "Actif";
   }
-  return "n/a";
+  return "n/d";
 }
 
 function renderGenericAccount(account: ChannelAccountSnapshot) {
@@ -296,20 +296,20 @@ function renderGenericAccount(account: ChannelAccountSnapshot) {
       </div>
       <div class="status-list account-card-status">
         <div>
-          <span class="label">Running</span>
+          <span class="label">En cours</span>
           <span>${runningStatus}</span>
         </div>
         <div>
-          <span class="label">Configured</span>
-          <span>${account.configured ? "Yes" : "No"}</span>
+          <span class="label">Configuré</span>
+          <span>${account.configured ? "Oui" : "Non"}</span>
         </div>
         <div>
-          <span class="label">Connected</span>
+          <span class="label">Connecté</span>
           <span>${connectedStatus}</span>
         </div>
         <div>
-          <span class="label">Last inbound</span>
-          <span>${account.lastInboundAt ? formatRelativeTimestamp(account.lastInboundAt) : "n/a"}</span>
+          <span class="label">Dernier message entrant</span>
+          <span>${account.lastInboundAt ? formatRelativeTimestamp(account.lastInboundAt) : "n/d"}</span>
         </div>
         ${
           account.lastError

@@ -1,6 +1,6 @@
 ---
 name: openhue
-description: Control Philips Hue lights and scenes via the OpenHue CLI.
+description: Contrôler les lumières et scènes Philips Hue via le CLI OpenHue.
 homepage: https://www.openhue.io/cli
 metadata:
   {
