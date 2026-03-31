@@ -1,5 +1,6 @@
 import { html, nothing } from "lit";
 import { ref } from "lit/directives/ref.js";
+import { t } from "../../i18n/index.ts";
 import type { SkillMessageMap } from "../controllers/skills.ts";
 import { clampText } from "../format.ts";
 import { resolveSafeExternalUrl } from "../open-external-url.ts";
@@ -111,15 +112,15 @@ export function renderSkills(props: SkillsProps) {
     <section class="card">
       <div class="row" style="justify-content: space-between;">
         <div>
-          <div class="card-title">Skills</div>
-          <div class="card-sub">Installed skills and their status.</div>
+          <div class="card-title">${t("skillsView.title")}</div>
+          <div class="card-sub">${t("skillsView.subtitle")}</div>
         </div>
         <button
           class="btn"
           ?disabled=${props.loading || !props.connected}
           @click=${props.onRefresh}
         >
-          ${props.loading ? "Loading\u2026" : "Refresh"}
+          ${props.loading ? t("skillsView.loading") : t("skillsView.refresh")}
         </button>
       </div>
 
@@ -152,12 +153,12 @@ export function renderSkills(props: SkillsProps) {
           <input
             .value=${props.filter}
             @input=${(e: Event) => props.onFilterChange((e.target as HTMLInputElement).value)}
-            placeholder="Search skills"
+            placeholder=${t("searchCommon.skills")}
             autocomplete="off"
             name="skills-filter"
           />
         </label>
-        <div class="muted">${filtered.length} shown</div>
+        <div class="muted">${filtered.length} ${t("skillsView.shown")}</div>
       </div>
 
       ${props.error
@@ -168,7 +169,7 @@ export function renderSkills(props: SkillsProps) {
             <div class="muted" style="margin-top: 16px">
               ${!props.connected && !props.report
                 ? "Not connected to gateway."
-                : "No skills found."}
+                : t("skillsView.noSkills")}
             </div>
           `
         : html`
@@ -289,14 +290,18 @@ function renderSkillDetail(skill: SkillStatusEntry, props: SkillsProps) {
                   class="callout"
                   style="border-color: var(--warn-subtle); background: var(--warn-subtle); color: var(--warn);"
                 >
-                  <div style="font-weight: 600; margin-bottom: 4px;">Missing requirements</div>
+                  <div style="font-weight: 600; margin-bottom: 4px;">
+                    ${t("skillsView.missing")}
+                  </div>
                   <div>${missing.join(", ")}</div>
                 </div>
               `
             : nothing}
           ${reasons.length > 0
             ? html`
-                <div class="muted" style="font-size: 13px;">Reason: ${reasons.join(", ")}</div>
+                <div class="muted" style="font-size: 13px;">
+                  ${t("skillsView.reason")}: ${reasons.join(", ")}
+                </div>
               `
             : nothing}
 
@@ -311,7 +316,7 @@ function renderSkillDetail(skill: SkillStatusEntry, props: SkillsProps) {
               />
             </label>
             <span style="font-size: 13px; font-weight: 500;">
-              ${skill.disabled ? "Disabled" : "Enabled"}
+              ${skill.disabled ? t("skillsView.disable") : t("skillsView.enable")}
             </span>
             ${canInstall
               ? html`<button
@@ -319,7 +324,7 @@ function renderSkillDetail(skill: SkillStatusEntry, props: SkillsProps) {
                   ?disabled=${busy}
                   @click=${() => props.onInstall(skill.skillKey, skill.name, skill.install[0].id)}
                 >
-                  ${busy ? "Installing\u2026" : skill.install[0].label}
+                  ${busy ? t("skillsView.installing") : skill.install[0].label}
                 </button>`
               : nothing}
           </div>
@@ -334,7 +339,7 @@ function renderSkillDetail(skill: SkillStatusEntry, props: SkillsProps) {
                 <div style="display: grid; gap: 8px;">
                   <div class="field">
                     <span
-                      >API key
+                      >${t("skillsView.apiKey")}
                       <span class="muted" style="font-weight: normal; font-size: 0.88em;"
                         >(${skill.primaryEnv})</span
                       ></span
@@ -362,7 +367,7 @@ function renderSkillDetail(skill: SkillStatusEntry, props: SkillsProps) {
                     ?disabled=${busy}
                     @click=${() => props.onSaveKey(skill.skillKey)}
                   >
-                    Save key
+                    ${t("skillsView.saveKey")}
                   </button>
                 </div>
               `

@@ -1,6 +1,7 @@
 import { html, nothing, type TemplateResult } from "lit";
 import { ref } from "lit/directives/ref.js";
 import { repeat } from "lit/directives/repeat.js";
+import { t } from "../../i18n/index.ts";
 import {
   CHAT_ATTACHMENT_ACCEPT,
   isSupportedChatAttachmentMimeType,
@@ -200,7 +201,7 @@ function renderCompactionIndicator(status: CompactionIndicatorStatus | null | un
         role="status"
         aria-live="polite"
       >
-        ${icons.loader} Compacting context...
+        ${icons.loader} ${t("chatView.compacting")}
       </div>
     `;
   }
@@ -213,7 +214,7 @@ function renderCompactionIndicator(status: CompactionIndicatorStatus | null | un
           role="status"
           aria-live="polite"
         >
-          ${icons.check} Context compacted
+          ${icons.check} ${t("chatView.contextCompacted")}
         </div>
       `;
     }
@@ -231,18 +232,24 @@ function renderFallbackIndicator(status: FallbackIndicatorStatus | null | undefi
     return nothing;
   }
   const details = [
-    `Selected: ${status.selected}`,
-    phase === "cleared" ? `Active: ${status.selected}` : `Active: ${status.active}`,
-    phase === "cleared" && status.previous ? `Previous fallback: ${status.previous}` : null,
-    status.reason ? `Reason: ${status.reason}` : null,
-    status.attempts.length > 0 ? `Attempts: ${status.attempts.slice(0, 3).join(" | ")}` : null,
+    t("chatView.fallbackSelected", { name: status.selected }),
+    phase === "cleared"
+      ? t("chatView.fallbackActive", { name: status.selected })
+      : t("chatView.fallbackActive", { name: status.active }),
+    phase === "cleared" && status.previous
+      ? t("chatView.fallbackPrevious", { name: status.previous })
+      : null,
+    status.reason ? t("chatView.fallbackReason", { reason: status.reason }) : null,
+    status.attempts.length > 0
+      ? t("chatView.fallbackAttempts", { list: status.attempts.slice(0, 3).join(" | ") })
+      : null,
   ]
     .filter(Boolean)
     .join(" • ");
   const message =
     phase === "cleared"
-      ? `Fallback cleared: ${status.selected}`
-      : `Fallback active: ${status.active}`;
+      ? t("chatView.fallbackCleared", { name: status.selected })
+      : t("chatView.fallbackActiveMsg", { name: status.active });
   const className =
     phase === "cleared"
       ? "compaction-indicator compaction-indicator--fallback-cleared"
@@ -466,11 +473,11 @@ function renderAttachmentPreview(props: ChatProps): TemplateResult | typeof noth
       ${attachments.map(
         (att) => html`
           <div class="chat-attachment-thumb">
-            <img src=${att.dataUrl} alt="Attachment preview" />
+            <img src=${att.dataUrl} alt=${t("chatView.attachmentPreviewAlt")} />
             <button
               class="chat-attachment-remove"
               type="button"
-              aria-label="Remove attachment"
+              aria-label=${t("chatView.removeAttachment")}
               @click=${() => {
                 const next = (props.attachments ?? []).filter((a) => a.id !== att.id);
                 props.onAttachmentsChange?.(next);
@@ -907,9 +914,9 @@ export function renderChat(props: ChatProps) {
 
   const placeholder = props.connected
     ? hasAttachments
-      ? "Add a message or paste more images..."
-      : `Message ${props.assistantName || "agent"} (Enter to send)`
-    : "Connect to the gateway to start chatting...";
+      ? t("chatView.placeholderWithImages")
+      : t("chatView.placeholder")
+    : t("chatView.placeholderDisconnected");
 
   const requestUpdate = props.onRequestUpdate ?? (() => {});
   const getDraft = props.getDraft ?? (() => props.draft);
@@ -946,7 +953,7 @@ export function renderChat(props: ChatProps) {
       <div class="chat-thread-inner">
         ${props.loading
           ? html`
-              <div class="chat-loading-skeleton" aria-label="Loading chat">
+              <div class="chat-loading-skeleton" aria-label=${t("chatView.loadingChat")}>
                 <div class="chat-line assistant">
                   <div class="chat-msg">
                     <div class="chat-bubble">
@@ -1170,8 +1177,8 @@ export function renderChat(props: ChatProps) {
               class="chat-focus-exit"
               type="button"
               @click=${props.onToggleFocusMode}
-              aria-label="Exit focus mode"
-              title="Exit focus mode"
+              aria-label=${t("chatView.exitFocusModeAria")}
+              title=${t("chatView.exitFocusMode")}
             >
               ${icons.x}
             </button>
@@ -1213,7 +1220,7 @@ export function renderChat(props: ChatProps) {
       ${props.queue.length
         ? html`
             <div class="chat-queue" role="status" aria-live="polite">
-              <div class="chat-queue__title">Queued (${props.queue.length})</div>
+              <div class="chat-queue__title">${t("chatView.queued")} (${props.queue.length})</div>
               <div class="chat-queue__list">
                 ${props.queue.map(
                   (item) => html`

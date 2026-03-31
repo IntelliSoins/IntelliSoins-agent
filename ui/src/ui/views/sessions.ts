@@ -1,4 +1,5 @@
 import { html, nothing } from "lit";
+import { t } from "../../i18n/index.ts";
 import { formatRelativeTimestamp } from "../format.ts";
 import { icons } from "../icons.ts";
 import { pathForTab } from "../navigation.ts";
@@ -214,21 +215,19 @@ export function renderSessions(props: SessionsProps) {
     <section class="card">
       <div class="row" style="justify-content: space-between; margin-bottom: 12px;">
         <div>
-          <div class="card-title">Sessions</div>
+          <div class="card-title">${t("sessionsView.title")}</div>
           <div class="card-sub">
-            ${props.result
-              ? `Store: ${props.result.path}`
-              : "Active session keys and per-session overrides."}
+            ${props.result ? `Store: ${props.result.path}` : t("sessionsView.subtitle")}
           </div>
         </div>
         <button class="btn" ?disabled=${props.loading} @click=${props.onRefresh}>
-          ${props.loading ? "Loading…" : "Refresh"}
+          ${props.loading ? t("sessionsView.loading") : t("sessionsView.refresh")}
         </button>
       </div>
 
       <div class="filters" style="margin-bottom: 12px;">
         <label class="field-inline">
-          <span>Active</span>
+          <span>${t("sessionsView.activeWithin")}</span>
           <input
             style="width: 72px;"
             placeholder="min"
@@ -243,7 +242,7 @@ export function renderSessions(props: SessionsProps) {
           />
         </label>
         <label class="field-inline">
-          <span>Limit</span>
+          <span>${t("sessionsView.limit")}</span>
           <input
             style="width: 64px;"
             .value=${props.limit}
@@ -268,7 +267,7 @@ export function renderSessions(props: SessionsProps) {
                 includeUnknown: props.includeUnknown,
               })}
           />
-          <span>Global</span>
+          <span>${t("sessionsView.includeGlobal")}</span>
         </label>
         <label class="field-inline checkbox">
           <input
@@ -282,7 +281,7 @@ export function renderSessions(props: SessionsProps) {
                 includeUnknown: (e.target as HTMLInputElement).checked,
               })}
           />
-          <span>Unknown</span>
+          <span>${t("sessionsView.includeUnknown")}</span>
         </label>
       </div>
 
@@ -312,7 +311,7 @@ export function renderSessions(props: SessionsProps) {
                   ?disabled=${props.loading}
                   @click=${props.onDeleteSelected}
                 >
-                  ${icons.trash} Delete
+                  ${icons.trash} ${t("sessionsView.delete")}
                 </button>
               </div>
             `
@@ -360,7 +359,7 @@ export function renderSessions(props: SessionsProps) {
                         colspan="10"
                         style="text-align: center; padding: 48px 16px; color: var(--muted)"
                       >
-                        No sessions found.
+                        ${t("sessionsView.noSessions")}
                       </td>
                     </tr>
                   `

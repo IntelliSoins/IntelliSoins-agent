@@ -1,4 +1,5 @@
 import { html, nothing } from "lit";
+import { t } from "../../i18n/index.ts";
 import type { LogEntry, LogLevel } from "../types.ts";
 
 const LEVELS: LogLevel[] = ["trace", "debug", "info", "warn", "error", "fatal"];
@@ -57,12 +58,12 @@ export function renderLogs(props: LogsProps) {
     <section class="card">
       <div class="row" style="justify-content: space-between;">
         <div>
-          <div class="card-title">Logs</div>
-          <div class="card-sub">Gateway file logs (JSONL).</div>
+          <div class="card-title">${t("logsView.title")}</div>
+          <div class="card-sub">${t("logsView.subtitle")}</div>
         </div>
         <div class="row" style="gap: 8px;">
           <button class="btn" ?disabled=${props.loading} @click=${props.onRefresh}>
-            ${props.loading ? "Loading…" : "Refresh"}
+            ${props.loading ? t("logsView.loading") : t("logsView.refresh")}
           </button>
           <button
             class="btn"
@@ -73,14 +74,14 @@ export function renderLogs(props: LogsProps) {
                 exportLabel,
               )}
           >
-            Export ${exportLabel}
+            ${t("logsView.export")} ${exportLabel}
           </button>
         </div>
       </div>
 
       <div class="filters" style="margin-top: 14px;">
         <label class="field" style="min-width: 220px;">
-          <span>Filter</span>
+          <span>${t("logsView.filter")}</span>
           <input
             .value=${props.filterText}
             @input=${(e: Event) => props.onFilterTextChange((e.target as HTMLInputElement).value)}
@@ -88,7 +89,7 @@ export function renderLogs(props: LogsProps) {
           />
         </label>
         <label class="field checkbox">
-          <span>Auto-follow</span>
+          <span>${t("logsView.autoFollow")}</span>
           <input
             type="checkbox"
             .checked=${props.autoFollow}
@@ -115,14 +116,12 @@ export function renderLogs(props: LogsProps) {
       </div>
 
       ${props.file
-        ? html`<div class="muted" style="margin-top: 10px;">File: ${props.file}</div>`
+        ? html`<div class="muted" style="margin-top: 10px;">
+            ${t("logsView.file")}: ${props.file}
+          </div>`
         : nothing}
       ${props.truncated
-        ? html`
-            <div class="callout" style="margin-top: 10px">
-              Log output truncated; showing latest chunk.
-            </div>
-          `
+        ? html` <div class="callout" style="margin-top: 10px">${t("logsView.truncated")}</div> `
         : nothing}
       ${props.error
         ? html`<div class="callout danger" style="margin-top: 10px;">${props.error}</div>`
@@ -130,7 +129,7 @@ export function renderLogs(props: LogsProps) {
 
       <div class="log-stream" style="margin-top: 12px;" @scroll=${props.onScroll}>
         ${filtered.length === 0
-          ? html` <div class="muted" style="padding: 12px">No log entries.</div> `
+          ? html` <div class="muted" style="padding: 12px">${t("logsView.noEntries")}</div> `
           : filtered.map(
               (entry) => html`
                 <div class="log-row">
