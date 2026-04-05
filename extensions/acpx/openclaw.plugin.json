@@ -1,5 +1,6 @@
 {
   "id": "acpx",
+  "enabledByDefault": true,
   "name": "ACPX Runtime",
   "description": "Backend runtime ACP alimenté par acpx avec chemin de commande configurable et politique de version.",
   "skills": ["./skills"],

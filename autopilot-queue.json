@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "project": "openclaw",
+  "projectRoot": "/Users/michaelahern/openclaw/openclaw",
+  "description": "Francisation complète d'OpenClaw — système i18n + traduction FR",
+  "tasks": [
+    {
+      "id": "i18n-001",
+      "title": "Infrastructure i18n — module de localisation",
+      "description": "Créer src/i18n/ avec: index.ts (getLocale, t() function), types, loader. Supporter en/fr via fichiers JSON. Locale configurable dans openclaw.json (settings.locale). Fallback anglais si clé manquante.",
+      "type": "feat",
+      "scope": "i18n",
+      "branch": "feat/i18n-french",
+      "phases": ["3", "4", "9"],
+      "files": [
+        "src/i18n/index.ts",
+        "src/i18n/types.ts",
+        "src/i18n/locales/en.json",
+        "src/i18n/locales/fr.json",
+        "src/config/"
+      ]
+    },
+    {
+      "id": "i18n-002",
+      "title": "Extraction strings CLI — help, banner, prompts",
+      "description": "Extraire toutes les strings user-facing de src/cli/ vers les fichiers de locale en/fr. Remplacer les literals par des appels t(). Zones: program.ts, banner.ts, help, register.*.ts, login.ts, prompt.ts.",
+      "type": "feat",
+      "scope": "cli",
+      "branch": "feat/i18n-french",
+      "phases": ["3", "4", "9"],
+      "files": ["src/cli/", "src/i18n/locales/en.json", "src/i18n/locales/fr.json"]
+    },
+    {
+      "id": "i18n-003",
+      "title": "Extraction strings TUI — status, waiting, composants",
+      "description": "Extraire les strings de src/tui/ vers les locales. Zones: tui-waiting.ts (phrases), tui-status-summary.ts, composants interactifs (labels, messages).",
+      "type": "feat",
+      "scope": "tui",
+      "branch": "feat/i18n-french",
+      "phases": ["3", "4", "9"],
+      "files": ["src/tui/", "src/i18n/locales/en.json", "src/i18n/locales/fr.json"]
+    },
+    {
+      "id": "i18n-004",
+      "title": "Extraction strings Commands — status, onboard, config",
+      "description": "Extraire les strings de src/commands/ vers les locales. Zone la plus volumineuse (~300-400 strings). Prioriser: status.command.ts, onboard*.ts, config commands.",
+      "type": "feat",
+      "scope": "commands",
+      "branch": "feat/i18n-french",
+      "phases": ["3", "4", "9"],
+      "files": ["src/commands/", "src/i18n/locales/en.json", "src/i18n/locales/fr.json"]
+    },
+    {
+      "id": "i18n-005",
+      "title": "Extraction strings Gateway + Web + Pairing",
+      "description": "Extraire les strings restantes: src/gateway/ (messages connexion, statuts), src/web/ (login, auto-reply), src/pairing/ (pairing-labels.ts).",
+      "type": "feat",
+      "scope": "gateway",
+      "branch": "feat/i18n-french",
+      "phases": ["3", "4", "9"],
+      "files": [
+        "src/gateway/",
+        "src/web/",
+        "src/pairing/",
+        "src/i18n/locales/en.json",
+        "src/i18n/locales/fr.json"
+      ]
+    },
+    {
+      "id": "i18n-006",
+      "title": "Build final + test local + config locale FR",
+      "description": "pnpm build, lancer openclaw localement avec locale=fr, valider que les strings s'affichent en français. Configurer ~/.openclaw/openclaw.json avec locale: fr.",
+      "type": "test",
+      "scope": "i18n",
+      "branch": "feat/i18n-french",
+      "phases": ["4", "9"],
+      "files": ["package.json", "dist/", "~/.openclaw/openclaw.json"]
+    }
+  ]
+}

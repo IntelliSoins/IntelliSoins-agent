@@ -1,9 +1,11 @@
 import type { AgentEvent } from "@mariozechner/pi-agent-core";
-import { emitAgentEvent } from "../infra/agent-events.js";
+import type { AgentItemEventData } from "../infra/agent-events.js";
+import { emitAgentEvent, emitAgentItemEvent } from "../infra/agent-events.js";
 import {
   buildExecApprovalPendingReplyPayload,
   buildExecApprovalUnavailableReplyPayload,
 } from "../infra/exec-approval-reply.js";
+import type { ExecApprovalDecision } from "../infra/exec-approvals.js";
 import { getGlobalHookRunner } from "../plugins/hook-runner-global.js";
 import type { PluginHookAfterToolCallEvent } from "../plugins/types.js";
 import { normalizeTextForComparison } from "./pi-embedded-helpers.js";
@@ -12,6 +14,7 @@ import type {
   ToolCallSummary,
   ToolHandlerContext,
 } from "./pi-embedded-subscribe.handlers.types.js";
+import { isPromiseLike } from "./pi-embedded-subscribe.promise.js";
 import {
   extractToolResultMediaArtifact,
   extractMessagingToolSend,
@@ -19,6 +22,7 @@ import {
   extractToolResultText,
   filterToolResultMediaUrls,
   isToolResultError,
+  isToolResultTimedOut,
   sanitizeToolResult,
 } from "./pi-embedded-subscribe.tools.js";
 import { inferToolMetaFromArgs } from "./pi-embedded-utils.js";
@@ -53,6 +57,14 @@ function buildToolCallSummary(toolName: string, args: unknown, meta?: string): T
     mutatingAction: mutation.mutatingAction,
     actionFingerprint: mutation.actionFingerprint,
   };
+}
+
+function buildToolItemId(toolCallId: string): string {
+  return `tool:${toolCallId}`;
+}
+
+function buildToolItemTitle(toolName: string, meta?: string): string {
+  return meta ? `${toolName} ${meta}` : toolName;
 }
 
 function extendExecMeta(toolName: string, args: unknown, meta?: string): string | undefined {
@@ -164,6 +176,7 @@ function readExecApprovalPendingDetails(result: unknown): {
   approvalId: string;
   approvalSlug: string;
   expiresAtMs?: number;
+  allowedDecisions?: readonly ExecApprovalDecision[];
   host: "gateway" | "node";
   command: string;
   cwd?: string;
@@ -192,6 +205,12 @@ function readExecApprovalPendingDetails(result: unknown): {
     approvalId,
     approvalSlug,
     expiresAtMs: typeof details.expiresAtMs === "number" ? details.expiresAtMs : undefined,
+    allowedDecisions: Array.isArray(details.allowedDecisions)
+      ? details.allowedDecisions.filter(
+          (decision): decision is ExecApprovalDecision =>
+            decision === "allow-once" || decision === "allow-always" || decision === "deny",
+        )
+      : undefined,
     host,
     command,
     cwd: typeof details.cwd === "string" ? details.cwd : undefined,
@@ -262,6 +281,7 @@ async function emitToolResultOutput(params: {
         buildExecApprovalPendingReplyPayload({
           approvalId: approvalPending.approvalId,
           approvalSlug: approvalPending.approvalSlug,
+          allowedDecisions: approvalPending.allowedDecisions,
           command: approvalPending.command,
           cwd: approvalPending.cwd,
           host: approvalPending.host,
@@ -326,96 +346,132 @@ async function emitToolResultOutput(params: {
   });
 }
 
-export async function handleToolExecutionStart(
+export function handleToolExecutionStart(
   ctx: ToolHandlerContext,
   evt: AgentEvent & { toolName: string; toolCallId: string; args: unknown },
 ) {
-  // Flush pending block replies to preserve message boundaries before tool execution.
-  ctx.flushBlockReplyBuffer();
-  if (ctx.params.onBlockReplyFlush) {
-    await ctx.params.onBlockReplyFlush();
-  }
-
-  const rawToolName = String(evt.toolName);
-  const toolName = normalizeToolName(rawToolName);
-  const toolCallId = String(evt.toolCallId);
-  const args = evt.args;
-  const runId = ctx.params.runId;
-
-  // Track start time and args for after_tool_call hook
-  toolStartData.set(buildToolStartKey(runId, toolCallId), { startTime: Date.now(), args });
-
-  if (toolName === "read") {
-    const record = args && typeof args === "object" ? (args as Record<string, unknown>) : {};
-    const filePathValue =
-      typeof record.path === "string"
-        ? record.path
-        : typeof record.file_path === "string"
-          ? record.file_path
-          : "";
-    const filePath = filePathValue.trim();
-    if (!filePath) {
-      const argsPreview = typeof args === "string" ? args.slice(0, 200) : undefined;
-      ctx.log.warn(
-        `read tool called without path: toolCallId=${toolCallId} argsType=${typeof args}${argsPreview ? ` argsPreview=${argsPreview}` : ""}`,
-      );
+  const continueAfterBlockReplyFlush = () => {
+    const onBlockReplyFlushResult = ctx.params.onBlockReplyFlush?.();
+    if (isPromiseLike<void>(onBlockReplyFlushResult)) {
+      return onBlockReplyFlushResult.then(() => {
+        continueToolExecutionStart();
+      });
     }
-  }
+    continueToolExecutionStart();
+  };
 
-  const meta = extendExecMeta(toolName, args, inferToolMetaFromArgs(toolName, args));
-  ctx.state.toolMetaById.set(toolCallId, buildToolCallSummary(toolName, args, meta));
-  ctx.log.debug(
-    `embedded run tool start: runId=${ctx.params.runId} tool=${toolName} toolCallId=${toolCallId}`,
-  );
+  const continueToolExecutionStart = () => {
+    const rawToolName = String(evt.toolName);
+    const toolName = normalizeToolName(rawToolName);
+    const toolCallId = String(evt.toolCallId);
+    const args = evt.args;
+    const runId = ctx.params.runId;
 
-  const shouldEmitToolEvents = ctx.shouldEmitToolResult();
-  emitAgentEvent({
-    runId: ctx.params.runId,
-    stream: "tool",
-    data: {
+    // Track start time and args for after_tool_call hook.
+    const startedAt = Date.now();
+    toolStartData.set(buildToolStartKey(runId, toolCallId), { startTime: startedAt, args });
+
+    if (toolName === "read") {
+      const record = args && typeof args === "object" ? (args as Record<string, unknown>) : {};
+      const filePathValue =
+        typeof record.path === "string"
+          ? record.path
+          : typeof record.file_path === "string"
+            ? record.file_path
+            : "";
+      const filePath = filePathValue.trim();
+      if (!filePath) {
+        const argsPreview = typeof args === "string" ? args.slice(0, 200) : undefined;
+        ctx.log.warn(
+          `read tool called without path: toolCallId=${toolCallId} argsType=${typeof args}${argsPreview ? ` argsPreview=${argsPreview}` : ""}`,
+        );
+      }
+    }
+
+    const meta = extendExecMeta(toolName, args, inferToolMetaFromArgs(toolName, args));
+    ctx.state.toolMetaById.set(toolCallId, buildToolCallSummary(toolName, args, meta));
+    ctx.log.debug(
+      `embedded run tool start: runId=${ctx.params.runId} tool=${toolName} toolCallId=${toolCallId}`,
+    );
+
+    const shouldEmitToolEvents = ctx.shouldEmitToolResult();
+    emitAgentEvent({
+      runId: ctx.params.runId,
+      stream: "tool",
+      data: {
+        phase: "start",
+        name: toolName,
+        toolCallId,
+        args: args as Record<string, unknown>,
+      },
+    });
+    const itemData: AgentItemEventData = {
+      itemId: buildToolItemId(toolCallId),
       phase: "start",
+      kind: "tool",
+      title: buildToolItemTitle(toolName, meta),
+      status: "running",
       name: toolName,
+      meta,
       toolCallId,
-      args: args as Record<string, unknown>,
-    },
-  });
-  // Best-effort typing signal; do not block tool summaries on slow emitters.
-  void ctx.params.onAgentEvent?.({
-    stream: "tool",
-    data: { phase: "start", name: toolName, toolCallId },
-  });
+      startedAt,
+    };
+    ctx.state.itemActiveIds.add(itemData.itemId);
+    ctx.state.itemStartedCount += 1;
+    emitAgentItemEvent({
+      runId: ctx.params.runId,
+      ...(ctx.params.sessionKey ? { sessionKey: ctx.params.sessionKey } : {}),
+      data: itemData,
+    });
+    // Best-effort typing signal; do not block tool summaries on slow emitters.
+    void ctx.params.onAgentEvent?.({
+      stream: "tool",
+      data: { phase: "start", name: toolName, toolCallId },
+    });
+    void ctx.params.onAgentEvent?.({
+      stream: "item",
+      data: itemData,
+    });
 
-  if (
-    ctx.params.onToolResult &&
-    shouldEmitToolEvents &&
-    !ctx.state.toolSummaryById.has(toolCallId)
-  ) {
-    ctx.state.toolSummaryById.add(toolCallId);
-    ctx.emitToolSummary(toolName, meta);
-  }
+    if (
+      ctx.params.onToolResult &&
+      shouldEmitToolEvents &&
+      !ctx.state.toolSummaryById.has(toolCallId)
+    ) {
+      ctx.state.toolSummaryById.add(toolCallId);
+      ctx.emitToolSummary(toolName, meta);
+    }
 
-  // Track messaging tool sends (pending until confirmed in tool_execution_end).
-  if (isMessagingTool(toolName)) {
-    const argsRecord = args && typeof args === "object" ? (args as Record<string, unknown>) : {};
-    const isMessagingSend = isMessagingToolSendAction(toolName, argsRecord);
-    if (isMessagingSend) {
-      const sendTarget = extractMessagingToolSend(toolName, argsRecord);
-      if (sendTarget) {
-        ctx.state.pendingMessagingTargets.set(toolCallId, sendTarget);
-      }
-      // Field names vary by tool: Discord/Slack use "content", sessions_send uses "message"
-      const text = (argsRecord.content as string) ?? (argsRecord.message as string);
-      if (text && typeof text === "string") {
-        ctx.state.pendingMessagingTexts.set(toolCallId, text);
-        ctx.log.debug(`Tracking pending messaging text: tool=${toolName} len=${text.length}`);
-      }
-      // Track media URLs from messaging tool args (pending until tool_execution_end).
-      const mediaUrls = collectMessagingMediaUrlsFromRecord(argsRecord);
-      if (mediaUrls.length > 0) {
-        ctx.state.pendingMessagingMediaUrls.set(toolCallId, mediaUrls);
+    // Track messaging tool sends (pending until confirmed in tool_execution_end).
+    if (isMessagingTool(toolName)) {
+      const argsRecord = args && typeof args === "object" ? (args as Record<string, unknown>) : {};
+      const isMessagingSend = isMessagingToolSendAction(toolName, argsRecord);
+      if (isMessagingSend) {
+        const sendTarget = extractMessagingToolSend(toolName, argsRecord);
+        if (sendTarget) {
+          ctx.state.pendingMessagingTargets.set(toolCallId, sendTarget);
+        }
+        // Field names vary by tool: Discord/Slack use "content", sessions_send uses "message"
+        const text = (argsRecord.content as string) ?? (argsRecord.message as string);
+        if (text && typeof text === "string") {
+          ctx.state.pendingMessagingTexts.set(toolCallId, text);
+          ctx.log.debug(`Tracking pending messaging text: tool=${toolName} len=${text.length}`);
+        }
+        // Track media URLs from messaging tool args (pending until tool_execution_end).
+        const mediaUrls = collectMessagingMediaUrlsFromRecord(argsRecord);
+        if (mediaUrls.length > 0) {
+          ctx.state.pendingMessagingMediaUrls.set(toolCallId, mediaUrls);
+        }
       }
     }
+  };
+
+  // Flush pending block replies to preserve message boundaries before tool execution.
+  const flushBlockReplyBufferResult = ctx.flushBlockReplyBuffer();
+  if (isPromiseLike<void>(flushBlockReplyBufferResult)) {
+    return flushBlockReplyBufferResult.then(() => continueAfterBlockReplyFlush());
   }
+  return continueAfterBlockReplyFlush();
 }
 
 export function handleToolExecutionUpdate(
@@ -440,6 +496,21 @@ export function handleToolExecutionUpdate(
       partialResult: sanitized,
     },
   });
+  const itemData: AgentItemEventData = {
+    itemId: buildToolItemId(toolCallId),
+    phase: "update",
+    kind: "tool",
+    title: buildToolItemTitle(toolName, ctx.state.toolMetaById.get(toolCallId)?.meta),
+    status: "running",
+    name: toolName,
+    meta: ctx.state.toolMetaById.get(toolCallId)?.meta,
+    toolCallId,
+  };
+  emitAgentItemEvent({
+    runId: ctx.params.runId,
+    ...(ctx.params.sessionKey ? { sessionKey: ctx.params.sessionKey } : {}),
+    data: itemData,
+  });
   void ctx.params.onAgentEvent?.({
     stream: "tool",
     data: {
@@ -447,6 +518,10 @@ export function handleToolExecutionUpdate(
       name: toolName,
       toolCallId,
     },
+  });
+  void ctx.params.onAgentEvent?.({
+    stream: "item",
+    data: itemData,
   });
 }
 
@@ -480,6 +555,7 @@ export async function handleToolExecutionEnd(
       toolName,
       meta,
       error: errorMessage,
+      timedOut: isToolResultTimedOut(sanitizedResult) || undefined,
       mutatingAction: callSummary?.mutatingAction,
       actionFingerprint: callSummary?.actionFingerprint,
     };
@@ -561,6 +637,30 @@ export async function handleToolExecutionEnd(
       result: sanitizedResult,
     },
   });
+  const endedAt = Date.now();
+  const itemId = buildToolItemId(toolCallId);
+  ctx.state.itemActiveIds.delete(itemId);
+  ctx.state.itemCompletedCount += 1;
+  const itemData: AgentItemEventData = {
+    itemId,
+    phase: "end",
+    kind: "tool",
+    title: buildToolItemTitle(toolName, meta),
+    status: isToolError ? "failed" : "completed",
+    name: toolName,
+    meta,
+    toolCallId,
+    startedAt: startData?.startTime,
+    endedAt,
+    ...(isToolError && extractToolErrorMessage(sanitizedResult)
+      ? { error: extractToolErrorMessage(sanitizedResult) }
+      : {}),
+  };
+  emitAgentItemEvent({
+    runId: ctx.params.runId,
+    ...(ctx.params.sessionKey ? { sessionKey: ctx.params.sessionKey } : {}),
+    data: itemData,
+  });
   void ctx.params.onAgentEvent?.({
     stream: "tool",
     data: {
@@ -570,6 +670,10 @@ export async function handleToolExecutionEnd(
       meta,
       isError: isToolError,
     },
+  });
+  void ctx.params.onAgentEvent?.({
+    stream: "item",
+    data: itemData,
   });
 
   ctx.log.debug(
