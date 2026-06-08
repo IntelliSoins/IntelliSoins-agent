@@ -1145,6 +1145,16 @@ importers:
         specifier: 2026.5.28
         version: 2026.5.28
 
+  extensions/my-speech-service:
+    dependencies:
+      ws:
+        specifier: ^8.20.0
+        version: 8.21.0
+    devDependencies:
+      '@openclaw/plugin-sdk':
+        specifier: workspace:*
+        version: link:../../packages/plugin-sdk
+
   extensions/nextcloud-talk:
     dependencies:
       zod:

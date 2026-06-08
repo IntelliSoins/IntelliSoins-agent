@@ -1263,8 +1263,14 @@ function buildTranslationBatches(items: readonly TranslationBatchItem[]): Transl
 export function resolveTranslationModel(): Model {
   const provider = resolveKnownTranslationProvider();
   const modelId = resolveConfiguredModel();
+  const baseModel = { ...TRANSLATION_PROVIDER_DEFAULTS[provider] };
+  if (provider === "openai" && process.env.OPENAI_API_BASE) {
+    baseModel.baseUrl = process.env.OPENAI_API_BASE;
+  } else if (provider === "anthropic" && process.env.ANTHROPIC_API_BASE) {
+    baseModel.baseUrl = process.env.ANTHROPIC_API_BASE;
+  }
   return {
-    ...TRANSLATION_PROVIDER_DEFAULTS[provider],
+    ...baseModel,
     id: modelId,
     name: modelId,
   };
