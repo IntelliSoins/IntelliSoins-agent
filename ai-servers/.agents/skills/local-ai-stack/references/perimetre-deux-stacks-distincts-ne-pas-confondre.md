@@ -1,0 +1,16 @@
+## Périmètre — Deux stacks distincts, NE PAS confondre
+
+| Critère              | **Stack perso (cette rule)**                                                                        | **Stack Docker IntelliSoins (autres rules)**                                                                                    |
+| -------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **But**              | Usage personnel : Continue VS Code, Claude Code harness, scripts Python locaux, expérimentation MLX | Application IntelliSoins (web app médicale en production)                                                                       |
+| **Hôte**             | macOS host (Apple Silicon M3 Max)                                                                   | Containers Docker (Mac local :4000 ou VPS OVH)                                                                                  |
+| **Installation**     | Homebrew, MLX natif, LaunchAgents (`aictl install`), binaires sur disque                            | `docker compose up`, images registry Forgejo                                                                                    |
+| **LiteLLM Proxy**    | `:8092` natif sur 127.0.0.1, géré par LaunchAgent                                                   | LiteLLM dans container Docker (`docker-compose.vps.yml`, voir `litellm.md`)                                                     |
+| **Config**           | `~/ai-servers/servers.yaml`, `~/ai-servers/litellm-proxy/config.yaml`                               | `litellm/*.yaml`, `docker-compose*.yml`, secrets SOPS                                                                           |
+| **Modèles**          | MLX (`mlx-openai-server`, `vllm-mlx`), omlx, Ollama brew                                            | Qwen3.5-35B vLLM/SGLang GPU OVH, MedGemma vision via LiteLLM/FastAPI BHS5                                                       |
+| **Authentification** | Master key Keychain macOS (`security find-generic-password`)                                        | Virtual keys LiteLLM (DB Postgres), SOPS-encrypted secrets                                                                      |
+| **Rules associées**  | Cette rule (`local-ai-stack.md`)                                                                    | `litellm.md` + `litellm/*.md`, `ovh.md` (index) + `ovh/gpu-bhs5.md` + `ovh/ai-endpoints.md`, `vps-infrastructure.md`, `cicd.md` |
+
+**Règle d'or** : ne JAMAIS pointer une config de l'application IntelliSoins (`.env*`, `docker-compose*.yml`, code applicatif `src/**`) vers `127.0.0.1:8092` (proxy perso macOS). Les containers Docker ont leur propre proxy LiteLLM ; mélanger les deux casse l'isolation, le tracking spend, et empêche le deploy VPS.
+
+**Réciproquement** : ne pas configurer le stack perso (`~/ai-servers/litellm-proxy/config.yaml`) pour appeler des services internes Docker IntelliSoins (`http://app:3000`, `http://litellm:4000` dans le réseau Docker). Ces deux stacks vivent dans des espaces réseau différents.

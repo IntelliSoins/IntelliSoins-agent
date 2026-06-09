@@ -95,13 +95,16 @@ vi.mock("../../commands/agent.js", () => ({
   agentCommandFromIngress: mocks.agentCommand,
 }));
 
-vi.mock("../../config/config.js", async () => {
-  const actual =
-    await vi.importActual<typeof import("../../config/config.js")>("../../config/config.js");
-  return {
-    ...actual,
-    getRuntimeConfig: () => mocks.loadConfigReturn,
-  };
+vi.mock("../../config/config.js", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../../config/config.js")>();
+  return new Proxy(actual, {
+    get(target, prop, receiver) {
+      if (prop === "getRuntimeConfig") {
+        return () => mocks.loadConfigReturn;
+      }
+      return Reflect.get(target, prop, receiver);
+    },
+  });
 });
 
 vi.mock("../../agents/agent-scope.js", () => ({

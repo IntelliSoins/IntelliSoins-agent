@@ -19,6 +19,7 @@ export type {
   SpeechProviderResolveTalkOverridesContext,
   SpeechProviderOverrides,
   SpeechSynthesisRequest,
+  SpeechSynthesisResult,
   SpeechSynthesisStreamRequest,
   SpeechSynthesisStreamResult,
   SpeechSynthesisTarget,

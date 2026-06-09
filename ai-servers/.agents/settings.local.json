@@ -1,0 +1,7 @@
+{
+  "enabledPlugins": {
+    "mlx-dev": true,
+    "openclaw": true,
+    "litellm": true
+  }
+}

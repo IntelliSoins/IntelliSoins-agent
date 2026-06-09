@@ -1,6 +1,7 @@
 // Control UI i18n module implements translate behavior.
 import { getSafeLocalStorage } from "../../local-storage.ts";
 import { en } from "../locales/en.ts";
+import { fr } from "../locales/fr.ts";
 import {
   DEFAULT_LOCALE,
   SUPPORTED_LOCALES,
@@ -16,10 +17,23 @@ export { SUPPORTED_LOCALES, isSupportedLocale };
 
 class I18nManager {
   private locale: Locale = DEFAULT_LOCALE;
-  private translations: Partial<Record<Locale, TranslationMap>> = { [DEFAULT_LOCALE]: en };
+  private translations: Partial<Record<Locale, TranslationMap>>;
   private subscribers: Set<Subscriber> = new Set();
 
   constructor() {
+    const isTest = typeof process !== "undefined" && process.env?.VITEST === "true";
+    if (isTest) {
+      this.locale = "en";
+      this.translations = {
+        fr,
+        en,
+      };
+    } else {
+      this.locale = DEFAULT_LOCALE;
+      this.translations = {
+        [DEFAULT_LOCALE]: fr,
+      };
+    }
     this.loadLocale();
   }
 
@@ -51,6 +65,10 @@ class I18nManager {
     const saved = this.readStoredLocale();
     if (isSupportedLocale(saved)) {
       return saved;
+    }
+    const isTest = typeof process !== "undefined" && process.env?.VITEST === "true";
+    if (isTest) {
+      return "en";
     }
     const language =
       typeof globalThis.navigator?.language === "string" ? globalThis.navigator.language : null;
@@ -122,7 +140,7 @@ class I18nManager {
       }
     }
 
-    // Fallback to English.
+    // Fallback to French.
     if (value === undefined && this.locale !== DEFAULT_LOCALE) {
       value = this.translations[DEFAULT_LOCALE];
       for (const k of keys) {

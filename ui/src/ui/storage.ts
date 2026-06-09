@@ -239,6 +239,7 @@ export function loadSettings(): UiSettings {
     recentSessionsCollapsed: false,
     borderRadius: 50,
     textScale: 100,
+    locale: "fr",
   };
 
   try {

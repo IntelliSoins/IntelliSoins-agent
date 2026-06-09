@@ -1,0 +1,82 @@
+[
+  {
+    "query": "yo j'essaie de brancher un voice agent dans une PWA Next.js avec gpt-4o-realtime via mon proxy litellm sur :8092, j'ai pas trop compris la diff entre /v1/realtime et /v1/realtime/calls — c'est lequel pour le browser?",
+    "should_trigger": true
+  },
+  {
+    "query": "ok faut que j'configure azure realtime preview dans config.yaml, ça plante à 500 sur /v1/realtime/calls, j'pense que c'est api_version manquant mais je vois pas quel param exact mettre",
+    "should_trigger": true
+  },
+  {
+    "query": "j'ai un voice bot Python qui parle directement à OpenAI via WebSocket /v1/realtime, je veux le router via litellm pour avoir le cost tracking. Faut que je change quoi côté litellm_params?",
+    "should_trigger": true
+  },
+  {
+    "query": "browser dit 401 token expired quand je call /v1/realtime/calls — je génère le ek_... avant ou après pc.createOffer()? skill litellm me dit que c'est éphémère mais combien de temps exactement",
+    "should_trigger": true
+  },
+  {
+    "query": "speech to speech audio bidirectionnel pour mon assistant pharmacien IntelliSoins, qu'est-ce qui est mieux WebRTC ou WebSocket pour Loi 25? Audio P2P ça contourne les guardrails Presidio non?",
+    "should_trigger": true
+  },
+  {
+    "query": "comment je trigger session.update via le data channel oai-events après que la connexion WebRTC est ouverte? Je veux changer la voice et les instructions en cours de session",
+    "should_trigger": true
+  },
+  {
+    "query": "/v1/realtime/client_secrets retourne quoi exactement? Le token c'est dans body.client_secret.value ou body.token? Je suis dans un fetch côté browser et je vois client_secret comme objet",
+    "should_trigger": true
+  },
+  {
+    "query": "voice agent xai grok-4-1-fast-non-reasoning via mon litellm proxy local — comment je config le model_list pour mode realtime",
+    "should_trigger": true
+  },
+  {
+    "query": "j'veux logger response.audio.delta dans Langfuse pour debug une session realtime qui freeze après 5 min, c'est où qu'on configure logged_real_time_event_types",
+    "should_trigger": true
+  },
+  {
+    "query": "plan: backend Python génère virtual key courte-durée, appelle client_secrets, retourne ek_ au browser Next.js. Browser fait /calls. Est-ce que ce flow respecte les bonnes pratiques litellm sécurité?",
+    "should_trigger": true
+  },
+  {
+    "query": "TTS one-shot pour générer un mp3 d'instructions pharmaceutiques avec elevenlabs ou polly via mon litellm proxy, c'est /v1/audio/speech right?",
+    "should_trigger": false
+  },
+  {
+    "query": "j'ai un fichier .wav 30 min de consultation pharmacie à transcrire avec whisper via litellm, je veux le passer en multipart/form-data — quel endpoint exact?",
+    "should_trigger": false
+  },
+  {
+    "query": "configurer kokoro-tts local mlx-omni-server derrière mon litellm gateway pour faire du voice synthesis offline sur mon Mac M3 Max",
+    "should_trigger": false
+  },
+  {
+    "query": "comment activer Presidio guardrail PII sur ma virtual key litellm pour scrub les NAM avant envoi à Anthropic? Loi 25 compliance",
+    "should_trigger": false
+  },
+  {
+    "query": "Claude Code se connecte à mon proxy litellm via ANTHROPIC_BASE_URL=http://127.0.0.1:8092, je veux router vers gpt-5.5 OpenAI au lieu d'Anthropic — c'est faisable avec /v1/messages?",
+    "should_trigger": false
+  },
+  {
+    "query": "j'ai un dataset 25k JSONL pour fine-tuner Qwen3-VL en MLX, comment je le passe à mlx-tune avec un adapter LoRA rank 8",
+    "should_trigger": false
+  },
+  {
+    "query": "RAG pipeline: ingester 200 PDFs Health Canada DPD dans un vector store via litellm /v1/rag/ingest avec chunking recursive 512 tokens",
+    "should_trigger": false
+  },
+  {
+    "query": "image generation FLUX via mon litellm proxy local, j'veux 4 images en parallèle pour un mockup UI — c'est /v1/images/generations avec n=4",
+    "should_trigger": false
+  },
+  {
+    "query": "container OpenAI code interpreter session pour faire tourner du code Python sandbox via litellm — POST /v1/containers retourne quoi exactement",
+    "should_trigger": false
+  },
+  {
+    "query": "embeddings BGE-reranker-v2-m3 sur 5000 chunks via mon litellm gateway, je veux faire du rerank cross-encoder après hnsw retrieval pgvector",
+    "should_trigger": false
+  }
+]

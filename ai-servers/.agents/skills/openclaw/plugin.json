@@ -1,0 +1,10 @@
+{
+  "name": "openclaw",
+  "skills": [
+    "skills/openclaw-agents/SKILL.md",
+    "skills/openclaw-dev/SKILL.md",
+    "skills/openclaw-finetuning/SKILL.md",
+    "skills/openclaw-frontend/SKILL.md",
+    "skills/openclaw-gateway/SKILL.md"
+  ]
+}

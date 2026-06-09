@@ -4,11 +4,11 @@ import { fileURLToPath } from "node:url";
 import type { Locale, TranslationMap } from "./types.js";
 import { DEFAULT_LOCALE, isSupportedLocale } from "./types.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
 /** Resolve the built-in locale JSON path. */
 function builtinLocalePath(locale: Locale): string {
-  return path.join(__dirname, "locales", `${locale}.json`);
+  return path.join(currentDir, "locales", `${locale}.json`);
 }
 
 /** Load a translation map from a JSON file. Returns empty map on failure. */
@@ -31,15 +31,15 @@ function loadJsonMap(filePath: string): TranslationMap {
  * Resolution order:
  * 1. Custom translations file (if provided via config)
  * 2. Built-in locale file (`src/i18n/locales/<locale>.json`)
- * 3. Built-in English fallback
+ * 3. Built-in French fallback
  */
 export function loadTranslations(locale: Locale, customPath?: string): TranslationMap {
-  const en = locale === DEFAULT_LOCALE ? {} : loadJsonMap(builtinLocalePath(DEFAULT_LOCALE));
+  const fallback = locale === DEFAULT_LOCALE ? {} : loadJsonMap(builtinLocalePath(DEFAULT_LOCALE));
   const target = loadJsonMap(builtinLocalePath(locale));
   const custom = customPath ? loadJsonMap(customPath) : {};
 
-  // English base → locale override → custom override
-  return { ...en, ...target, ...custom };
+  // French base → locale override → custom override
+  return { ...fallback, ...target, ...custom };
 }
 
 /**

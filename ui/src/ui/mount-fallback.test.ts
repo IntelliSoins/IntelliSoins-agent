@@ -78,8 +78,12 @@ describe("Control UI mount fallback", () => {
     );
     expect(fallback.hidden).toBe(false);
     expect([...frameWindow.document.body.classList]).toEqual(["openclaw-mount-fallback-active"]);
-    expect(fallback.querySelector("h1")?.textContent?.trim()).toBe("Control UI did not start");
-    expect(fallback.querySelector("a")?.textContent?.trim()).toBe("Control UI troubleshooting");
+    expect(fallback.querySelector("h1")?.textContent?.trim()).toBe(
+      "L'interface de contrôle ne s'est pas lancée",
+    );
+    expect(fallback.querySelector("a")?.textContent?.trim()).toBe(
+      "instructions de dépannage de l'interface",
+    );
     expect(frameWindow.document.activeElement).toBeInstanceOf(frameWindow.HTMLElement);
     expect([...(frameWindow.document.activeElement as HTMLElement).classList]).toEqual([
       "mount-fallback__panel",

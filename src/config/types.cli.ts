@@ -11,4 +11,6 @@ export type CliConfig = {
      */
     taglineMode?: CliBannerTaglineMode;
   };
+  /** Preferred locale for CLI commands and server logs. */
+  locale?: "en" | "fr";
 };

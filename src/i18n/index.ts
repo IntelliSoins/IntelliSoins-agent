@@ -23,7 +23,7 @@ let initialized = false;
  */
 export function initI18n(options?: { locale?: string; customTranslationsPath?: string }): void {
   // Resolve locale
-  let locale: Locale = DEFAULT_LOCALE;
+  let locale: Locale;
 
   if (options?.locale && isSupportedLocale(options.locale)) {
     locale = options.locale;

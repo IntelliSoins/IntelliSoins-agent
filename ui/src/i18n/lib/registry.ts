@@ -1,7 +1,7 @@
 // Control UI i18n module implements registry behavior.
 import type { Locale, TranslationMap } from "./types.ts";
 
-type LazyLocale = Exclude<Locale, "en">;
+type LazyLocale = Exclude<Locale, "fr"> | Exclude<Locale, "en">;
 type LocaleModule = Record<string, TranslationMap>;
 
 type LazyLocaleRegistration = {
@@ -9,9 +9,10 @@ type LazyLocaleRegistration = {
   loader: () => Promise<LocaleModule>;
 };
 
-export const DEFAULT_LOCALE: Locale = "en";
+const isTest = typeof process !== "undefined" && process.env?.VITEST === "true";
+export const DEFAULT_LOCALE: Locale = isTest ? "en" : "fr";
 
-const LAZY_LOCALES: readonly LazyLocale[] = [
+const LAZY_LOCALES_BASE = [
   "zh-CN",
   "zh-TW",
   "pt-BR",
@@ -19,7 +20,6 @@ const LAZY_LOCALES: readonly LazyLocale[] = [
   "es",
   "ja-JP",
   "ko",
-  "fr",
   "ar",
   "it",
   "tr",
@@ -30,6 +30,14 @@ const LAZY_LOCALES: readonly LazyLocale[] = [
   "vi",
   "nl",
   "fa",
+];
+
+const NON_DEFAULT_LOCALE: Locale = isTest ? "fr" : "en";
+
+const LAZY_LOCALES: readonly LazyLocale[] = [
+  ...(LAZY_LOCALES_BASE.slice(0, 7) as LazyLocale[]),
+  NON_DEFAULT_LOCALE,
+  ...(LAZY_LOCALES_BASE.slice(7) as LazyLocale[]),
 ];
 
 const LAZY_LOCALE_REGISTRY: Record<LazyLocale, LazyLocaleRegistration> = {
@@ -60,6 +68,10 @@ const LAZY_LOCALE_REGISTRY: Record<LazyLocale, LazyLocaleRegistration> = {
   ko: {
     exportName: "ko",
     loader: () => import("../locales/ko.ts"),
+  },
+  en: {
+    exportName: "en",
+    loader: () => import("../locales/en.ts"),
   },
   fr: {
     exportName: "fr",

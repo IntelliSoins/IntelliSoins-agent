@@ -50,6 +50,12 @@ import {
   type UnifiedTalkSessionRecord,
 } from "../talk-session-registry.js";
 import {
+  cancelTalkSttTtsRelayTurn,
+  createTalkSttTtsRelaySession,
+  sendTalkSttTtsRelayAudio,
+  stopTalkSttTtsRelaySession,
+} from "../talk-stt-tts-relay.js";
+import {
   cancelTalkTranscriptionRelayTurn,
   createTalkTranscriptionRelaySession,
   sendTalkTranscriptionRelayAudio,
@@ -381,6 +387,27 @@ export const talkSessionHandlers: GatewayRequestHandlers = {
         return;
       }
 
+      if (mode === "stt-tts" && transport === "gateway-relay") {
+        const session = createTalkSttTtsRelaySession({
+          context,
+          connId,
+          sessionKey: params.sessionKey ?? "default",
+          agentId: (params as any).agentId,
+          provider: params.provider,
+        });
+        rememberUnifiedTalkSession(session.relaySessionId, {
+          kind: "stt-tts-relay",
+          connId,
+          relaySessionId: session.relaySessionId,
+        });
+        respondOk(respond, {
+          ...session,
+          sessionId: session.relaySessionId,
+          brain,
+        });
+        return;
+      }
+
       respondInvalidRequest(
         respond,
         `stt-tts talk.session.create requires transport="managed-room"`,
@@ -454,6 +481,16 @@ export const talkSessionHandlers: GatewayRequestHandlers = {
         const connId = requireUnifiedTalkSessionConn(session, client?.connId);
         sendTalkTranscriptionRelayAudio({
           transcriptionSessionId: session.transcriptionSessionId,
+          connId,
+          audioBase64: params.audioBase64,
+        });
+        respondOk(respond);
+        return;
+      }
+      if (session.kind === "stt-tts-relay") {
+        const connId = requireUnifiedTalkSessionConn(session, client?.connId);
+        sendTalkSttTtsRelayAudio({
+          relaySessionId: session.relaySessionId,
           connId,
           audioBase64: params.audioBase64,
         });
@@ -583,6 +620,16 @@ export const talkSessionHandlers: GatewayRequestHandlers = {
     }
     try {
       const session = getUnifiedTalkSession(params.sessionId);
+      if (session.kind === "stt-tts-relay") {
+        const connId = requireUnifiedTalkSessionConn(session, client?.connId);
+        cancelTalkSttTtsRelayTurn({
+          relaySessionId: session.relaySessionId,
+          connId,
+          reason: normalizeOptionalString(params.reason) ?? "output-cancelled",
+        });
+        respondOk(respond);
+        return;
+      }
       if (session.kind !== "realtime-relay") {
         respondInvalidRequest(respond, "talk.session.cancelOutput requires realtime relay");
         return;
@@ -649,7 +696,7 @@ export const talkSessionHandlers: GatewayRequestHandlers = {
         respondOk(respond, result);
         return;
       }
-      if (session.kind === "transcription-relay") {
+      if (session.kind === "transcription-relay" || session.kind === "stt-tts-relay") {
         respondInvalidRequest(respond, "talk.session.steer requires an agent-backed Talk session");
         return;
       }
@@ -695,6 +742,12 @@ export const talkSessionHandlers: GatewayRequestHandlers = {
         const connId = requireUnifiedTalkSessionConn(session, client?.connId);
         stopTalkTranscriptionRelaySession({
           transcriptionSessionId: session.transcriptionSessionId,
+          connId,
+        });
+      } else if (session.kind === "stt-tts-relay") {
+        const connId = requireUnifiedTalkSessionConn(session, client?.connId);
+        stopTalkSttTtsRelaySession({
+          relaySessionId: session.relaySessionId,
           connId,
         });
       } else {

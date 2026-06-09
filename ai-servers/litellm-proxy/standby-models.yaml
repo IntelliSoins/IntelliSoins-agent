@@ -1,0 +1,64 @@
+# Models kept out of active LiteLLM config until their runtime path is proven.
+# Re-entry rule: move a model back to config.yaml only after aictl status,
+# /v1/models, and a minimal /v1/chat/completions smoke all pass.
+standby_models:
+  - model_name: claude-local-medgemma-27b
+    expected_port: 8080
+    last_status: DOWN
+    reason: medgemma-27b backend was not listening during cleanup.
+    reentry_test: "aictl status medgemma-27b; GET /v1/models on 8080; chat smoke via LiteLLM"
+  - model_name: medgemma-27b
+    expected_port: 8080
+    last_status: DOWN
+    reason: active medical auto route cannot depend on a DOWN backend.
+    reentry_test: "aictl status medgemma-27b; GET /v1/models on 8080; chat smoke via LiteLLM"
+  - model_name: claude-local-qwen3-email
+    expected_port: 8081
+    last_status: DOWN
+    reason: qwen3-email backend was not listening during cleanup.
+    reentry_test: "aictl status qwen3-email; GET /v1/models on 8081; chat smoke via LiteLLM"
+  - model_name: qwen3-email
+    expected_port: 8081
+    last_status: DOWN
+    reason: qwen3-email backend was not listening during cleanup.
+    reentry_test: "aictl status qwen3-email; GET /v1/models on 8081; chat smoke via LiteLLM"
+  - model_name: claude-local-nemotron-30b
+    expected_port: 8082
+    last_status: DOWN
+    reason: nemotron-30b backend was not listening during cleanup.
+    reentry_test: "aictl status nemotron-30b; GET /v1/models on 8082; chat smoke via LiteLLM"
+  - model_name: nemotron-30b
+    expected_port: 8082
+    last_status: DOWN
+    reason: nemotron-30b backend was not listening during cleanup.
+    reentry_test: "aictl status nemotron-30b; GET /v1/models on 8082; chat smoke via LiteLLM"
+  - model_name: claude-local-qwen3-merged
+    expected_port: 8083
+    last_status: DOWN
+    reason: qwen3-merged backend was not listening during cleanup.
+    reentry_test: "aictl status qwen3-merged; GET /v1/models on 8083; chat smoke via LiteLLM"
+  - model_name: qwen3-merged
+    expected_port: 8083
+    last_status: DOWN
+    reason: qwen3-merged backend was not listening during cleanup.
+    reentry_test: "aictl status qwen3-merged; GET /v1/models on 8083; chat smoke via LiteLLM"
+  - model_name: medgemma-4b-vision
+    expected_port: 8001
+    last_status: DOWN
+    reason: vision fallback cannot point to a DOWN backend.
+    reentry_test: "aictl status medgemma-4b-vision; GET /v1/models on 8001; chat smoke via LiteLLM"
+  - model_name: gemma3-4b
+    expected_port: 8086
+    last_status: DOWN
+    reason: gemma3-4b backend was not listening during cleanup.
+    reentry_test: "aictl status gemma3-4b; GET /v1/models on 8086; chat smoke via LiteLLM"
+  - model_name: gemma4-e4b
+    expected_port: 8088
+    last_status: DOWN
+    reason: gemma4-e4b backend was not listening during cleanup.
+    reentry_test: "aictl status gemma4-e4b; GET /v1/models on 8088; chat smoke via LiteLLM"
+  - model_name: vmlx-qwen36
+    expected_port: 8002
+    last_status: CONNECTION_REFUSED
+    reason: config pointed to 8002 but no listener accepted connections.
+    reentry_test: "lsof/aictl proves 8002 listener; GET /v1/models on 8002; chat smoke via LiteLLM"

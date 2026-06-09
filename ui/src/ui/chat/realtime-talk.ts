@@ -32,6 +32,8 @@ export type RealtimeTalkLaunchOptions = {
   silenceDurationMs?: number;
   prefixPaddingMs?: number;
   reasoningEffort?: string;
+  mode?: "realtime" | "stt-tts" | "transcription";
+  brain?: "agent-consult" | "direct-tools" | "none";
 };
 
 function createTransport(
@@ -100,6 +102,10 @@ export class RealtimeTalkSession {
   }
 
   private async createSession(): Promise<RealtimeTalkSessionResult> {
+    const launchMode = this.options.mode ?? "stt-tts";
+    const launchTransport = this.options.transport ?? "gateway-relay";
+    const launchBrain = this.options.brain ?? "agent-consult";
+
     try {
       return await this.client.request<RealtimeTalkSessionResult>(
         "talk.client.create",
@@ -118,9 +124,9 @@ export class RealtimeTalkSession {
           compactLaunchParams({
             sessionKey: this.sessionKey,
             ...this.options,
-            mode: "realtime",
-            transport: this.options.transport ?? "gateway-relay",
-            brain: "agent-consult",
+            mode: launchMode,
+            transport: launchTransport,
+            brain: launchBrain,
           }),
         );
       } catch {

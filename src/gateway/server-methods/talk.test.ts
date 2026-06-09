@@ -38,6 +38,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("../../config/config.js", () => ({
   readConfigFileSnapshot: mocks.readConfigFileSnapshot,
+  getRuntimeConfig: mocks.getRuntimeConfig,
 }));
 
 vi.mock("../../tts/provider-registry.js", () => ({

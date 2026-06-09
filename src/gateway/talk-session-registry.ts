@@ -14,6 +14,11 @@ export type UnifiedTalkSessionRecord =
       transcriptionSessionId: string;
     }
   | {
+      kind: "stt-tts-relay";
+      connId: string;
+      relaySessionId: string;
+    }
+  | {
       kind: "managed-room";
       handoffId: string;
       token: string;

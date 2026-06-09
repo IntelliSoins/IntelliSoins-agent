@@ -605,6 +605,7 @@ export const OpenClawSchema = z
           })
           .strict()
           .optional(),
+        locale: z.union([z.literal("en"), z.literal("fr")]).optional(),
       })
       .strict()
       .optional(),

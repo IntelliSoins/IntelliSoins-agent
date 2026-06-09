@@ -1,0 +1,369 @@
+# ~/ai-servers/servers.yaml — Registre des serveurs IA locaux
+# Source de verite unique. Editer ce fichier puis `aictl install` pour regenerer les LaunchAgents.
+#
+# Champs:
+#   name            Nom d'affichage
+#   category        llm | vlm | embedding | reranker | vector_store | ocr | tts | stt | webrtc | translation | app
+#   port            Port TCP (null pour les apps macOS)
+#   host            Adresse d'ecoute (defaut: 127.0.0.1)
+#   launcher        Chemin relatif du script de lancement
+#   autostart       Demarrer au login (RunAtLoad)
+#   keepalive       Redemarrer si crash (KeepAlive)
+#   requires_disk   Attend le disque PRO-G40 avant de demarrer
+#   log_stdout      Chemin relatif du log stdout
+#   log_stderr      Chemin relatif du log stderr
+#   health_endpoint Chemin HTTP pour health check (defaut: /health)
+#   throttle        Intervalle minimum entre redemarrages en secondes (defaut: 30)
+#   working_dir     Repertoire de travail (optionnel)
+#   managed_by      Si present, aictl affiche le status mais ne controle pas (ex: brew)
+#   process_match   Pattern pgrep -f pour apps sans port
+#   env             Variables d'environnement supplementaires (cle: valeur)
+
+servers:
+  mlxcel:
+    name: "mlxcel (Rust native MLX)"
+    category: llm
+    port: 8097
+    host: 127.0.0.1
+    launcher: launchers/mlxcel.sh
+    autostart: false
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/mlxcel.log
+    log_stderr: logs/mlxcel.error.log
+    health_endpoint: /v1/models
+    throttle: 30
+
+  medgemma-27b:
+    name: "MedGemma 27B Text"
+    category: llm
+    port: 8080
+    host: 127.0.0.1
+    launcher: launchers/medgemma-27b.sh
+    autostart: false
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/medgemma-27b.log
+    log_stderr: logs/medgemma-27b.error.log
+    health_endpoint: /v1/models
+    throttle: 30
+
+  qwen3-email:
+    name: "Qwen3-8B Email LoRA"
+    category: llm
+    port: 8081
+    host: 127.0.0.1
+    launcher: launchers/qwen3-email.sh
+    autostart: false
+    keepalive: true
+    requires_disk: true
+    log_stdout: logs/qwen3-email.log
+    log_stderr: logs/qwen3-email.error.log
+    health_endpoint: /v1/models
+    throttle: 30
+
+  nemotron-30b:
+    name: "Nemotron 30B Tools"
+    category: llm
+    port: 8082
+    host: 127.0.0.1
+    launcher: launchers/nemotron-30b.sh
+    autostart: false
+    keepalive: true
+    requires_disk: true
+    log_stdout: logs/nemotron-30b.log
+    log_stderr: logs/nemotron-30b.error.log
+    health_endpoint: /v1/models
+    throttle: 30
+
+  qwen3-merged:
+    name: "Qwen3-8B Merged + Tools"
+    category: llm
+    port: 8083
+    host: 127.0.0.1
+    launcher: launchers/qwen3-merged.sh
+    autostart: false
+    keepalive: true
+    requires_disk: true
+    log_stdout: logs/qwen3-merged.log
+    log_stderr: logs/qwen3-merged.error.log
+    health_endpoint: /v1/models
+    throttle: 30
+
+  embedding:
+    name: "Qwen3-Embedding-0.6B"
+    category: embedding
+    port: 8084
+    host: 127.0.0.1
+    launcher: launchers/embedding.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/embedding.log
+    log_stderr: logs/embedding.error.log
+    health_endpoint: /health
+    throttle: 30
+
+  reranker:
+    name: "BGE-reranker-v2-m3"
+    category: reranker
+    port: 8085
+    host: 127.0.0.1
+    launcher: launchers/reranker.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/reranker.log
+    log_stderr: logs/reranker.error.log
+    health_endpoint: /health
+    throttle: 30
+
+  gliner:
+    name: "GLiNER Biomed NER"
+    category: ner
+    port: 8091
+    host: 127.0.0.1
+    launcher: launchers/gliner.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/gliner.log
+    log_stderr: logs/gliner.error.log
+    health_endpoint: /health
+    throttle: 30
+
+  qwen35-35b:
+    name: "Qwen3.5 35B MoE Agentic"
+    category: llm
+    port: 8087
+    host: 127.0.0.1
+    launcher: launchers/qwen35-35b.sh
+    autostart: false
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/qwen35-35b.log
+    log_stderr: logs/qwen35-35b.error.log
+    health_endpoint: /v1/models
+    throttle: 30
+
+  gemma4-12b:
+    name: "Gemma 4 12B Instruct"
+    category: llm
+    port: 8098
+    host: 127.0.0.1
+    launcher: launchers/gemma4-12b.sh
+    autostart: true
+    keepalive: true
+    requires_disk: true
+    log_stdout: logs/gemma4-12b.log
+    log_stderr: logs/gemma4-12b.error.log
+    health_endpoint: /v1/models
+    throttle: 30
+
+  docling:
+    name: "Docling OCR/Extraction"
+    category: ocr
+    port: 5010
+    host: 127.0.0.1
+    launcher: launchers/docling.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/docling.log
+    log_stderr: logs/docling.error.log
+    health_endpoint: /health
+    throttle: 30
+
+  kokoro-tts:
+    name: "Kokoro TTS"
+    category: tts
+    port: 8880
+    host: 127.0.0.1
+    launcher: launchers/kokoro-tts.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/kokoro-tts.log
+    log_stderr: logs/kokoro-tts.error.log
+    health_endpoint: /v1/models
+    throttle: 30
+    # working_dir configuré dans le launcher
+
+  vibevoice-tts:
+    name: "VibeVoice Realtime 0.5B TTS"
+    category: tts
+    port: 8882
+    host: 127.0.0.1
+    launcher: launchers/vibevoice-tts.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/vibevoice-tts.log
+    log_stderr: logs/vibevoice-tts.error.log
+    health_endpoint: /v1/models
+    throttle: 30
+
+
+  whisper-stt:
+    name: "Whisper large-v3-turbo STT"
+    category: stt
+    port: 2022
+    host: 127.0.0.1
+    launcher: launchers/whisper-stt.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/whisper-stt.log
+    log_stderr: logs/whisper-stt.error.log
+    health_endpoint: /health
+    throttle: 30
+
+  translation:
+    name: "NLLB-200 Traduction"
+    category: translation
+    port: 6060
+    host: 127.0.0.1
+    launcher: launchers/translation.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/translation.log
+    log_stderr: logs/translation.error.log
+    health_endpoint: /health
+    throttle: 30
+    working_dir: /Users/michaelahern/master-IA/tools/live-translator
+
+  gemma4-e4b:
+    name: "Gemma 4 E4B Multimodal"
+    category: vlm
+    port: 8088
+    host: 127.0.0.1
+    launcher: launchers/gemma4-e4b.sh
+    autostart: false
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/gemma4-e4b.log
+    log_stderr: logs/gemma4-e4b.error.log
+    health_endpoint: /v1/models
+    throttle: 30
+
+  qwen35-9b-vision:
+    name: "Qwen3.5-9B Vision + Tools"
+    category: vlm
+    port: 8089
+    host: 127.0.0.1
+    launcher: launchers/qwen35-9b-vision.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/qwen35-9b-vision.log
+    log_stderr: logs/qwen35-9b-vision.error.log
+    health_endpoint: /v1/models
+    throttle: 30
+
+  litellm-proxy:
+    name: "LiteLLM Proxy (OpenAI gateway)"
+    category: llm
+    port: 8092
+    host: 127.0.0.1
+    launcher: launchers/litellm-proxy.sh
+    autostart: false
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/litellm-proxy.log
+    log_stderr: logs/litellm-proxy.error.log
+    health_endpoint: /health/liveliness
+    throttle: 30
+
+  litellm-config-sync:
+    name: "LiteLLM Config/UI Sync"
+    category: app
+    port: null
+    host: 127.0.0.1
+    launcher: launchers/litellm-config-sync.sh
+    process_match: litellm_config_sync.py
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/litellm-config-sync.log
+    log_stderr: logs/litellm-config-sync.error.log
+    health_endpoint: null
+    throttle: 30
+
+  litellm-pgvector:
+    name: "LiteLLM PGVector sidecar"
+    category: vector_store
+    port: 8093
+    host: 127.0.0.1
+    launcher: launchers/litellm-pgvector.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/litellm-pgvector.log
+    log_stderr: logs/litellm-pgvector.error.log
+    health_endpoint: /health
+    throttle: 30
+
+  signal-api:
+    name: "Signal Messenger REST API"
+    category: app
+    port: 8094
+    host: 127.0.0.1
+    launcher: launchers/signal-api.sh
+    autostart: false
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/signal-api.log
+    log_stderr: logs/signal-api.error.log
+    health_endpoint: /v1/health
+    throttle: 30
+
+  signal-agent-router:
+    name: "Signal Agent Router"
+    category: app
+    port: 8096
+    host: 127.0.0.1
+    launcher: launchers/signal-agent-router.sh
+    autostart: false
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/signal-agent-router.log
+    log_stderr: logs/signal-agent-router.error.log
+    health_endpoint: /health
+    throttle: 30
+
+  openclaw:
+    name: "OpenClaw (IntelliSoins Gateway)"
+    category: app
+    port: 18789
+    host: 127.0.0.1
+    launcher: launchers/openclaw.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/openclaw.log
+    log_stderr: logs/openclaw.error.log
+    health_endpoint: /healthz
+    throttle: 30
+
+  # --- Serveurs externes (affiches en status, pas controles par aictl) ---
+
+  ollama:
+    name: "Ollama"
+    category: llm
+    port: 11434
+    host: 127.0.0.1
+    managed_by: brew
+    health_endpoint: /api/tags
+
+  omlx:
+    name: "oMLX (multi-model, KV cache RAM+SSD)"
+    category: llm
+    port: 8010
+    host: 127.0.0.1
+    managed_by: brew
+    health_endpoint: /health
+    # Lance par LaunchAgent Homebrew (homebrew.mxcl.omlx)
+    # Config: ~/.omlx/settings.json (hot cache 25GB, SSD cache 92GB)
+    # API key requise: cat ~/.omlx/settings.json | jq -r .auth.api_key
+    # Models: ~/.omlx/models/ (charge a la demande, multi-modele)
