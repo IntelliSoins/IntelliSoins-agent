@@ -1,0 +1,17 @@
+{
+  "id": "my-speech-service",
+  "activation": {
+    "onStartup": true
+  },
+  "enabledByDefault": true,
+  "contracts": {
+    "speechProviders": ["my-speech-provider"],
+    "realtimeTranscriptionProviders": ["my-transcription-provider"],
+    "realtimeVoiceProviders": ["local-voice"]
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
