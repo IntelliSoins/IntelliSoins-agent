@@ -392,7 +392,7 @@ export const talkSessionHandlers: GatewayRequestHandlers = {
           context,
           connId,
           sessionKey: params.sessionKey ?? "default",
-          agentId: (params as any).agentId,
+          agentId: (params as Record<string, unknown>).agentId as string | undefined,
           provider: params.provider,
         });
         rememberUnifiedTalkSession(session.relaySessionId, {

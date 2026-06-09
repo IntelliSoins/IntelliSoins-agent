@@ -7,8 +7,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const projectRoot = path.resolve(__dirname, "..");
+const dir = path.dirname(fileURLToPath(import.meta.url));
+const projectRoot = path.resolve(dir, "..");
 
 const srcLocales = path.join(projectRoot, "src", "i18n", "locales");
 const distLocales = path.join(projectRoot, "dist", "i18n", "locales");

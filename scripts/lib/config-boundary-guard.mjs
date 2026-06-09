@@ -10,6 +10,7 @@ const COMPAT_CONFIG_API_FILES = new Set([
   "src/config/config.ts",
   "src/config/io.ts",
   "src/config/mutate.ts",
+  "src/i18n/index.ts",
   "src/memory-host-sdk/runtime-core.ts",
   "src/plugin-sdk/config-runtime.ts",
   "src/plugin-sdk/memory-core-host-runtime-core.ts",
