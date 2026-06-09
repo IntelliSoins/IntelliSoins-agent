@@ -179,7 +179,7 @@ function createHost(): TestGatewayHost {
     agentsList: null,
     agentsError: null,
     debugHealth: null,
-    assistantName: "OpenClaw",
+    assistantName: "IntelliSoins",
     assistantAvatar: null,
     assistantAgentId: null,
     localMediaPreviewRoots: [],
@@ -1163,7 +1163,7 @@ describe("connectGateway", () => {
     await Promise.resolve();
 
     expect(host.pendingAbort).toBeNull();
-    expect(warn).toHaveBeenCalledWith("[openclaw] pending abort failed:", error);
+    expect(warn).toHaveBeenCalledWith("[intellisoins] pending abort failed:", error);
     warn.mockRestore();
   });
 

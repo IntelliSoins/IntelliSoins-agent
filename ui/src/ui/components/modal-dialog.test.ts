@@ -16,7 +16,7 @@ let restoreDialogPolyfill: () => void;
 async function renderModal() {
   render(
     html`
-      <openclaw-modal-dialog
+      <intellisoins-modal-dialog
         label="Confirm action"
         description="Review the operation before continuing."
       >
@@ -26,7 +26,7 @@ async function renderModal() {
           <button id="first-action">First</button>
           <button id="last-action">Last</button>
         </section>
-      </openclaw-modal-dialog>
+      </intellisoins-modal-dialog>
     `,
     container,
   );
@@ -41,7 +41,7 @@ function expectShadowElement(modal: OpenClawModalDialog, id: string): HTMLElemen
   return element;
 }
 
-describe("openclaw-modal-dialog", () => {
+describe("intellisoins-modal-dialog", () => {
   beforeEach(() => {
     restoreDialogPolyfill = installDialogPolyfill();
     container = document.createElement("div");
@@ -63,14 +63,14 @@ describe("openclaw-modal-dialog", () => {
     expect(dialog.getAttribute("aria-modal")).toBe("true");
     const labelId = dialog.getAttribute("aria-labelledby");
     const descriptionId = dialog.getAttribute("aria-describedby");
-    expect(labelId).toBe("openclaw-modal-dialog-label");
-    expect(descriptionId).toBe("openclaw-modal-dialog-description");
+    expect(labelId).toBe("intellisoins-modal-dialog-label");
+    expect(descriptionId).toBe("intellisoins-modal-dialog-description");
     expect(dialog.getRootNode()).toBe(modal.shadowRoot);
     expect(dialog.ownerDocument.querySelector(`#${labelId}`)).toBeNull();
-    expect(expectShadowElement(modal, "openclaw-modal-dialog-label").textContent).toBe(
+    expect(expectShadowElement(modal, "intellisoins-modal-dialog-label").textContent).toBe(
       "Confirm action",
     );
-    expect(expectShadowElement(modal, "openclaw-modal-dialog-description").textContent).toBe(
+    expect(expectShadowElement(modal, "intellisoins-modal-dialog-description").textContent).toBe(
       "Review the operation before continuing.",
     );
   });

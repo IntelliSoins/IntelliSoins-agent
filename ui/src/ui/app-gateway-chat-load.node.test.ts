@@ -204,7 +204,7 @@ function createHost(tab: Tab) {
     healthResult: null,
     healthError: null,
     debugHealth: null,
-    assistantName: "OpenClaw",
+    assistantName: "IntelliSoins",
     assistantAvatar: null,
     assistantAgentId: null,
     serverVersion: null,

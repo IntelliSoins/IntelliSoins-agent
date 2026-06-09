@@ -152,7 +152,7 @@ function createHost() {
     toolsCatalogError: null,
     toolsCatalogResult: null,
     debugHealth: null,
-    assistantName: "OpenClaw",
+    assistantName: "IntelliSoins",
     assistantAvatar: null,
     assistantAgentId: null,
     serverVersion: null,

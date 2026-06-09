@@ -1,5 +1,12 @@
 {
   "fallbackKeys": [
+    "sessionsView.goalActive",
+    "sessionsView.goalBlocked",
+    "sessionsView.goalBudgetLimited",
+    "sessionsView.goalComplete",
+    "sessionsView.goalPaused",
+    "sessionsView.goalTokensUsed",
+    "sessionsView.goalUsageLimited",
     "skillWorkshop.header.useCurrentChat",
     "skillWorkshop.header.useCurrentChatAria",
     "skillWorkshop.header.useCurrentChatTooltip",
@@ -32,12 +39,12 @@
     "workboard.unknownStatus",
     "workboard.viewDetails"
   ],
-  "generatedAt": "2026-06-05T02:10:21.317Z",
+  "generatedAt": "2026-06-09T14:37:21.594Z",
   "locale": "zh-TW",
   "model": "claude-opus-4-8",
   "provider": "anthropic",
-  "sourceHash": "f70b6a841addd3bd15207867930a15d303b1d8408de36584925865436cfeb4f7",
-  "totalKeys": 1333,
+  "sourceHash": "8a08e27181e33bc4b6448f69e9740bddd6ff741c9723f82f28e64533523c88af",
+  "totalKeys": 1340,
   "translatedKeys": 1302,
   "workflow": 1
 }

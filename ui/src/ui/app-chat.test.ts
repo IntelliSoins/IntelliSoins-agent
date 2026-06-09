@@ -1541,7 +1541,7 @@ describe("handleSendChat", () => {
       ),
     );
     expect(warn).toHaveBeenCalledWith(
-      "[openclaw] control-ui.chat.send",
+      "[intellisoins] control-ui.chat.send",
       expect.objectContaining({
         phase: "first-assistant-visible",
         runId,

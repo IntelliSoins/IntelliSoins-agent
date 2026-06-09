@@ -1241,7 +1241,7 @@ export class OpenClawApp extends LitElement {
           }
         },
         onTranscript: (entry) => {
-          this.realtimeTalkTranscript = `${entry.role === "user" ? "You" : "OpenClaw"}: ${entry.text}`;
+          this.realtimeTalkTranscript = `${entry.role === "user" ? "You" : "IntelliSoins"}: ${entry.text}`;
           this.realtimeTalkConversationState = updateRealtimeTalkConversation(
             this.realtimeTalkConversationState,
             entry,
@@ -1590,6 +1590,6 @@ export class OpenClawApp extends LitElement {
   }
 }
 
-if (!customElements.get("openclaw-app")) {
-  customElements.define("openclaw-app", OpenClawApp);
+if (!customElements.get("intellisoins-app")) {
+  customElements.define("intellisoins-app", OpenClawApp);
 }

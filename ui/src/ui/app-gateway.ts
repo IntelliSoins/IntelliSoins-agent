@@ -779,7 +779,7 @@ export function connectGateway(host: GatewayHost, options?: ConnectGatewayOption
           .catch((err: unknown) => {
             // Log to console for diagnostics; user sees no feedback for a stale abort
             // since the run likely completed during the disconnect window anyway.
-            console.warn("[openclaw] pending abort failed:", err);
+            console.warn("[intellisoins] pending abort failed:", err);
           });
       }
       // Reset orphaned chat run state from before disconnect.

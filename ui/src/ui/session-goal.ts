@@ -1,3 +1,4 @@
+import { t } from "../i18n/index.ts";
 // Control UI module implements session goal behavior.
 import type { SessionGoal } from "./types.ts";
 
@@ -25,7 +26,7 @@ export function formatGoalUsage(goal: SessionGoal): string | null {
     return `${formatGoalTokenCount(goal.tokensUsed)}/${formatGoalTokenCount(goal.tokenBudget)}`;
   }
   if (goal.tokensUsed > 0) {
-    return `${formatGoalTokenCount(goal.tokensUsed)} used`;
+    return t("sessionsView.goalTokensUsed", { count: formatGoalTokenCount(goal.tokensUsed) });
   }
   return null;
 }
@@ -33,17 +34,17 @@ export function formatGoalUsage(goal: SessionGoal): string | null {
 export function formatGoalStatusLabel(status: SessionGoal["status"]): string {
   switch (status) {
     case "active":
-      return "Pursuing goal";
+      return t("sessionsView.goalActive");
     case "paused":
-      return "Goal paused";
+      return t("sessionsView.goalPaused");
     case "blocked":
-      return "Goal blocked";
+      return t("sessionsView.goalBlocked");
     case "usage_limited":
-      return "Goal hit usage limits";
+      return t("sessionsView.goalUsageLimited");
     case "budget_limited":
-      return "Goal unmet";
+      return t("sessionsView.goalBudgetLimited");
     case "complete":
-      return "Goal achieved";
+      return t("sessionsView.goalComplete");
   }
   const unreachable: never = status;
   return unreachable;

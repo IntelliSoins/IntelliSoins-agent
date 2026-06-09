@@ -188,6 +188,13 @@ export const es: TranslationMap = {
     compaction: "Compactación",
     goal: "Objetivo",
     goalNote: "Nota del objetivo",
+    goalActive: "Pursuing goal",
+    goalPaused: "Goal paused",
+    goalBlocked: "Goal blocked",
+    goalUsageLimited: "Goal hit usage limits",
+    goalBudgetLimited: "Goal unmet",
+    goalComplete: "Goal achieved",
+    goalTokensUsed: "{count} used",
     thinking: "Pensamiento",
     fast: "Rápido",
     verbose: "Detallado",
@@ -728,7 +735,7 @@ export const es: TranslationMap = {
       metadataUpgradeSummary:
         "Este dispositivo ya está emparejado, pero el cambio de metadatos está pendiente de aprobación.",
       mobileHint:
-        "¿En el móvil? Copia la URL completa (incluyendo #token=...) desde openclaw dashboard --no-open en tu escritorio.",
+        "¿En el móvil? Copia la URL completa (incluyendo #token=...) desde intellisoins dashboard --no-open en tu escritorio.",
       docsTitle: "Documentación de emparejamiento de dispositivos (se abre en una pestaña nueva)",
       docsLink: "Documentación: Emparejamiento de dispositivos",
     },
@@ -766,7 +773,8 @@ export const es: TranslationMap = {
       modelAuthExpiresIn: "caduca {when}",
       modelAuthAttentionExpiredTitle: "La autenticación del modelo ha caducado",
       modelAuthAttentionExpiringTitle: "La autenticación del modelo caducará pronto",
-      modelAuthAttentionExpiredDesc: "{providers} — vuelve a autenticarte con openclaw models auth",
+      modelAuthAttentionExpiredDesc:
+        "{providers} — vuelve a autenticarte con intellisoins models auth",
       modelAuthAttentionExpiringEntry: "{provider} ({when})",
     },
     attention: {
@@ -1196,16 +1204,17 @@ export const es: TranslationMap = {
         summary:
           "Se puede acceder al Gateway, pero necesita un token o una contraseña coincidente antes de que este navegador pueda conectarse.",
         stepPaste:
-          "Pega el token de openclaw dashboard --no-open o introduce la contraseña configurada.",
+          "Pega el token de intellisoins dashboard --no-open o introduce la contraseña configurada.",
         stepGenerate:
-          "Si no hay token configurado, ejecuta openclaw doctor --generate-gateway-token en el host del Gateway.",
+          "Si no hay token configurado, ejecuta intellisoins doctor --generate-gateway-token en el host del Gateway.",
         stepConnect: "Haz clic en Connect de nuevo después de actualizar la credencial.",
       },
       authFailed: {
         title: "La autenticación no coincide",
         summary:
           "La credencial proporcionada fue rechazada. La causa más común es un token obsoleto o copiado desde otra URL de Gateway.",
-        stepDashboard: "Ejecuta openclaw dashboard --no-open y abre la URL nueva o pega su token.",
+        stepDashboard:
+          "Ejecuta intellisoins dashboard --no-open y abre la URL nueva o pega su token.",
         stepReplace:
           "Reemplaza valores obsoletos de token/contraseña; no reutilices un token de otra URL de Gateway.",
         stepMode:
@@ -1230,8 +1239,8 @@ export const es: TranslationMap = {
           "Este navegador necesita una aprobación única del host del Gateway antes de poder usar Control UI.",
         upgradeSummary:
           "Este navegador ya es conocido, pero el acceso solicitado cambió y necesita una aprobación nueva.",
-        stepList: "Ejecuta openclaw devices list en el host del Gateway.",
-        stepApproveId: "Aprueba esta solicitud: openclaw devices approve {requestId}.",
+        stepList: "Ejecuta intellisoins devices list en el host del Gateway.",
+        stepApproveId: "Aprueba esta solicitud: intellisoins devices approve {requestId}.",
         stepApprove: "Aprueba la solicitud pendiente de navegador/dispositivo desde esa lista.",
         stepReconnect: "Vuelve a conectar después de completar la aprobación.",
       },
@@ -1259,22 +1268,22 @@ export const es: TranslationMap = {
         summary:
           "La Control UI servida y el Gateway en ejecución no coinciden en el protocolo de conexión admitido.",
         stepDashboard:
-          "Vuelve a abrir el dashboard servido con openclaw dashboard para que UI y Gateway provengan de la misma instalación.",
+          "Vuelve a abrir el dashboard servido con intellisoins dashboard para que UI y Gateway provengan de la misma instalación.",
         stepDevUi:
           "Si usas pnpm ui:dev, reconstruye o reinicia la UI de desarrollo contra el checkout actual.",
         stepRestart:
-          "Reinicia el Gateway después de actualizar OpenClaw para que sirva el protocolo actual.",
+          "Reinicia el Gateway después de actualizar IntelliSoins para que sirva el protocolo actual.",
       },
       network: {
         title: "No se pudo conectar",
         summary:
           "El navegador no pudo completar la conexión al Gateway. Revisa el destino y el transporte antes de reintentar credenciales.",
         stepGateway:
-          "Confirma que el Gateway esté en ejecución con openclaw status u openclaw gateway run.",
+          "Confirma que el Gateway esté en ejecución con intellisoins status u intellisoins gateway run.",
         stepUrl:
           "Revisa la URL de WebSocket y usa wss:// cuando el Gateway esté detrás de HTTPS/Tailscale Serve.",
         stepDashboard:
-          "Vuelve a abrir el dashboard con openclaw dashboard --no-open para copiar la URL y los detalles de autenticación actuales.",
+          "Vuelve a abrir el dashboard con intellisoins dashboard --no-open para copiar la URL y los detalles de autenticación actuales.",
       },
     },
   },

@@ -155,7 +155,7 @@ describe("OpenClawApp Talk controls", () => {
 
   it("keeps the Talk options toggle inside the open-panel click guard", async () => {
     await import("./app.ts");
-    const app = document.createElement("openclaw-app");
+    const app = document.createElement("intellisoins-app");
     const guardHost = app as unknown as {
       chatMobileControlsPointerdownHandler: (event: Event) => void;
       realtimeTalkOptionsOpen: boolean;

@@ -6,7 +6,7 @@ import type { SidebarContent } from "./sidebar-content.ts";
 describe("OpenClawApp full-message sidebar upgrade", () => {
   async function createApp() {
     await import("./app.ts");
-    return document.createElement("openclaw-app") as import("./app.ts").OpenClawApp;
+    return document.createElement("intellisoins-app") as import("./app.ts").OpenClawApp;
   }
 
   it("defaults canvas embeds to strict sandbox before bootstrap config loads", async () => {

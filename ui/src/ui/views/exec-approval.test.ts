@@ -90,13 +90,15 @@ describe("approval and confirmation modals", () => {
     const { modal, dialog } = await getRenderedDialog();
 
     expect(dialog.getAttribute("aria-modal")).toBe("true");
-    expect(dialog.getAttribute("aria-labelledby")).toBe("openclaw-modal-dialog-label");
-    expect(dialog.getAttribute("aria-describedby")).toBe("openclaw-modal-dialog-description");
-    expect(modal.shadowRoot?.querySelector("#openclaw-modal-dialog-label")?.textContent).toBe(
+    expect(dialog.getAttribute("aria-labelledby")).toBe("intellisoins-modal-dialog-label");
+    expect(dialog.getAttribute("aria-describedby")).toBe("intellisoins-modal-dialog-description");
+    expect(modal.shadowRoot?.querySelector("#intellisoins-modal-dialog-label")?.textContent).toBe(
       "Exec approval needed",
     );
     expect(
-      modal.shadowRoot?.querySelector("#openclaw-modal-dialog-description")?.textContent?.trim(),
+      modal.shadowRoot
+        ?.querySelector("#intellisoins-modal-dialog-description")
+        ?.textContent?.trim(),
     ).toBe("expires in 1m");
     expect(container.querySelector("#exec-approval-title")?.textContent?.trim()).toBe(
       "Exec approval needed",

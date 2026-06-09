@@ -41,7 +41,7 @@ servers:
     host: 127.0.0.1
     launcher: launchers/medgemma-27b.sh
     autostart: false
-    keepalive: true
+    keepalive: false
     requires_disk: false
     log_stdout: logs/medgemma-27b.log
     log_stderr: logs/medgemma-27b.error.log
@@ -55,7 +55,7 @@ servers:
     host: 127.0.0.1
     launcher: launchers/qwen3-email.sh
     autostart: false
-    keepalive: true
+    keepalive: false
     requires_disk: true
     log_stdout: logs/qwen3-email.log
     log_stderr: logs/qwen3-email.error.log
@@ -69,7 +69,7 @@ servers:
     host: 127.0.0.1
     launcher: launchers/nemotron-30b.sh
     autostart: false
-    keepalive: true
+    keepalive: false
     requires_disk: true
     log_stdout: logs/nemotron-30b.log
     log_stderr: logs/nemotron-30b.error.log
@@ -83,7 +83,7 @@ servers:
     host: 127.0.0.1
     launcher: launchers/qwen3-merged.sh
     autostart: false
-    keepalive: true
+    keepalive: false
     requires_disk: true
     log_stdout: logs/qwen3-merged.log
     log_stderr: logs/qwen3-merged.error.log
@@ -180,8 +180,8 @@ servers:
     port: 8880
     host: 127.0.0.1
     launcher: launchers/kokoro-tts.sh
-    autostart: true
-    keepalive: true
+    autostart: false
+    keepalive: false
     requires_disk: false
     log_stdout: logs/kokoro-tts.log
     log_stderr: logs/kokoro-tts.error.log
@@ -202,7 +202,6 @@ servers:
     log_stderr: logs/vibevoice-tts.error.log
     health_endpoint: /v1/models
     throttle: 30
-
 
   whisper-stt:
     name: "Whisper large-v3-turbo STT"

@@ -378,7 +378,8 @@ async function processSpeechAndQueryAgent(
   const wavBuffer = Buffer.concat([wavHeader, ...chunks]);
 
   const cfg = session.context.getRuntimeConfig();
-  const tmpFilePath = path.join(os.tmpdir(), `openclaw-talk-${randomUUID()}.wav`);
+  const filename = `openclaw-talk-${randomUUID()}.wav`;
+  const tmpFilePath = path.join(os.tmpdir(), filename);
   fs.writeFileSync(tmpFilePath, wavBuffer);
 
   try {

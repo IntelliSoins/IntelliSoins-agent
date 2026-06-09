@@ -23,17 +23,19 @@ const files = [
 async function renderPreview(query = "") {
   render(
     html`
-      <openclaw-file-preview-modal
+      <intellisoins-file-preview-modal
         .files=${files}
         .activePath=${"templates/digest.md"}
         .query=${query}
         .contextLabel=${"in morning-catchup"}
-      ></openclaw-file-preview-modal>
+      ></intellisoins-file-preview-modal>
     `,
     container,
   );
 
-  const modal = container.querySelector<OpenClawFilePreviewModal>("openclaw-file-preview-modal");
+  const modal = container.querySelector<OpenClawFilePreviewModal>(
+    "intellisoins-file-preview-modal",
+  );
   expect(modal).toBeInstanceOf(HTMLElement);
   if (!modal) {
     throw new Error("expected file preview modal");
@@ -46,7 +48,7 @@ function shadowText(modal: OpenClawFilePreviewModal): string {
   return modal.shadowRoot?.textContent ?? "";
 }
 
-describe("openclaw-file-preview-modal", () => {
+describe("intellisoins-file-preview-modal", () => {
   beforeEach(() => {
     container = document.createElement("div");
     document.body.append(container);

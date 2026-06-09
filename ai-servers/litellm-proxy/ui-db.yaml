@@ -900,23 +900,22 @@ memory: []
 cache_config: []
 agents: []
 skills:
-- skill_id: "diagnostic-medecin-assistant"
-  display_title: "Assistant de Diagnostic Clinique"
-  description: "Aide à la structuration des notes médicales sous format SOAP."
-  instructions: |
-    Tu es un assistant clinique expert au Québec. 
-    Aide le médecin à structurer ses notes au format SOAP (Subjectif, Objectif, Appréciation, Plan).
-    Respecte scrupuleusement la nomenclature du Collège des médecins du Québec.
-  source: "local-git"
-  latest_version: "1.0.0"
+- source: local-git
+  metadata:
+    domain: medical
+    compliance: loi-25
+  skill_id: diagnostic-medecin-assistant
   file_name: null
   file_type: null
+  created_at: '2026-06-04T10:22:00'
+  created_by: system
+  updated_at: '2026-06-04T10:22:00'
+  updated_by: system
+  description: "Aide \xE0 la structuration des notes m\xE9dicales sous format SOAP."
   file_content: null
-  metadata:
-    domain: "medical"
-    compliance: "loi-25"
-  created_at: '2026-06-04T10:22:00.000'
-  created_by: "system"
-  updated_at: '2026-06-04T10:22:00.000'
-  updated_by: "system"
+  instructions: "Tu es un assistant clinique expert au Qu\xE9bec. \nAide le m\xE9decin \xE0 structurer ses notes au format\
+    \ SOAP (Subjectif, Objectif, Appr\xE9ciation, Plan).\nRespecte scrupuleusement la nomenclature du Coll\xE8ge des m\xE9\
+    decins du Qu\xE9bec.\n"
+  display_title: Assistant de Diagnostic Clinique
+  latest_version: 1.0.0
 config: []

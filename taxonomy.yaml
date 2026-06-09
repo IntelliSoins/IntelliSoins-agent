@@ -3,7 +3,7 @@ process_version: 3
 title: Maturity scorecard
 summary: Draft maturity scorecard model for OpenClaw subsystems, features, apps, and platforms.
 snapshot:
-  date: '2026-05-26'
+  date: "2026-05-26"
   source_ref: origin/main@41eef4a7965
 levels:
   - id: planned
@@ -63,8 +63,8 @@ surfaces:
           - docs/gateway/protocol.md
           - docs/gateway/security/index.md
         search_anchors:
-          - 'gateway runtime and websocket protocol gateway runtime websocket feature matrix: approval and execution safety'
-          - 'gateway runtime websocket feature matrix: approval and execution safety'
+          - "gateway runtime and websocket protocol gateway runtime websocket feature matrix: approval and execution safety"
+          - "gateway runtime websocket feature matrix: approval and execution safety"
         category_note: approval-and-execution-safety.md
         human_lts_override: true
       - name: HTTP APIs
@@ -119,31 +119,31 @@ surfaces:
       - name: Gateway RPC APIs and Events
         features:
           - name: Health APIs
-            description: '`health` and `status` RPCs.'
+            description: "`health` and `status` RPCs."
           - name: Identity and presence APIs
-            description: '`gateway.identity.get`, `system-presence`, `system-event`, and heartbeat RPCs.'
+            description: "`gateway.identity.get`, `system-presence`, `system-event`, and heartbeat RPCs."
           - name: Model APIs
-            description: '`models.list` RPCs.'
+            description: "`models.list` RPCs."
           - name: Usage and memory APIs
             description: Usage summaries and memory readiness RPCs.
           - name: Session APIs
-            description: '`sessions.*` RPCs.'
+            description: "`sessions.*` RPCs."
           - name: Chat APIs
-            description: '`chat.*` and `agent.wait` RPCs.'
+            description: "`chat.*` and `agent.wait` RPCs."
           - name: Channel APIs
-            description: '`channels.status` and `channels.logout` RPCs.'
+            description: "`channels.status` and `channels.logout` RPCs."
           - name: Web login and wake APIs
-            description: '`web.login.*`, `push.test`, and `voicewake.*` RPCs.'
+            description: "`web.login.*`, `push.test`, and `voicewake.*` RPCs."
           - name: Config and secrets APIs
-            description: '`config.*` and `secrets.*` RPCs.'
+            description: "`config.*` and `secrets.*` RPCs."
           - name: Update and setup APIs
-            description: '`update.*` and `wizard.*` RPCs.'
+            description: "`update.*` and `wizard.*` RPCs."
           - name: Agent and artifact APIs
-            description: '`agents.*`, agent files, environments, and artifact RPCs.'
+            description: "`agents.*`, agent files, environments, and artifact RPCs."
           - name: Task and automation APIs
-            description: '`wake`, `cron.*`, and `tasks.*` RPCs.'
+            description: "`wake`, `cron.*`, and `tasks.*` RPCs."
           - name: Tool and skill APIs
-            description: '`commands.list`, `tools.*`, and `skills.*` RPCs.'
+            description: "`commands.list`, `tools.*`, and `skills.*` RPCs."
           - name: Request and event envelopes
             description: Request, response, and event frame shapes.
           - name: Idempotent side effects
@@ -233,11 +233,11 @@ surfaces:
           - name: Node capabilities
             description: Node capability declaration at connect time.
           - name: Node inventory
-            description: '`node.list`, `node.describe`, and naming/state visibility.'
+            description: "`node.list`, `node.describe`, and naming/state visibility."
           - name: Node actions
-            description: '`node.invoke` and `node.invoke.result`.'
+            description: "`node.invoke` and `node.invoke.result`."
           - name: Node events
-            description: '`node.event`, especially `node.presence.alive`.'
+            description: "`node.event`, especially `node.presence.alive`."
           - name: Pending work delivery
             description: Pending work APIs for connected and disconnected nodes.
           - name: Remote device capabilities
@@ -256,13 +256,13 @@ surfaces:
       - name: Health, Diagnostics, and Repair
         features:
           - name: Health snapshots
-            description: '`health` and `status` snapshots.'
+            description: "`health` and `status` snapshots."
           - name: Channel readiness
             description: Channel readiness probing through the running Gateway.
           - name: Stability diagnostics
             description: Stability recorder output.
           - name: Payload diagnostics
-            description: '`payload.large` diagnostics.'
+            description: "`payload.large` diagnostics."
           - name: Diagnostics exports
             description: Diagnostics export contents, privacy model, and CLI/chat triggers.
           - name: Doctor checks
@@ -307,7 +307,7 @@ surfaces:
       - name: Roles and Permissions
         features:
           - name: Role negotiation
-            description: '`operator` versus `node` role negotiation.'
+            description: "`operator` versus `node` role negotiation."
           - name: Operator permissions
             description: Core operator scopes such as `operator.read`, `operator.write`, `operator.admin`, `operator.approvals`, `operator.pairing`, and `operator.talk.secrets`.
           - name: Approval-gated actions
@@ -320,8 +320,8 @@ surfaces:
           - docs/gateway/protocol.md
           - docs/gateway/security/index.md
         search_anchors:
-          - 'gateway runtime and websocket protocol gateway runtime websocket feature matrix: roles, scopes, and operator policy'
-          - 'gateway runtime websocket feature matrix: roles, scopes, and operator policy'
+          - "gateway runtime and websocket protocol gateway runtime websocket feature matrix: roles, scopes, and operator policy"
+          - "gateway runtime websocket feature matrix: roles, scopes, and operator policy"
         category_note: roles-scopes-and-operator-policy.md
         human_lts_override: true
       - name: Gateway Lifecycle
@@ -337,7 +337,7 @@ surfaces:
           - name: Bind and port settings
             description: Bind and port precedence across CLI flags, env vars, config, and persisted supervisor metadata.
           - name: Config reload
-            description: 'Config reload modes: `off`, `hot`, `restart`, and `hybrid`.'
+            description: "Config reload modes: `off`, `hot`, `restart`, and `hybrid`."
           - name: Multi-gateway isolation
             description: Multiple-gateway isolation on one host, including config/state/workspace separation.
         docs:
@@ -382,7 +382,7 @@ surfaces:
           - name: Protocol version negotiation
             description: Protocol range negotiation (`minProtocol`/`maxProtocol`).
           - name: hello-ok snapshot
-            description: 'Required `hello-ok` payload structure: server identity, negotiated auth, feature discovery, snapshot, and policy limits.'
+            description: "Required `hello-ok` payload structure: server identity, negotiated auth, feature discovery, snapshot, and policy limits."
           - name: Startup retry
             description: Retryable startup-sidecar `UNAVAILABLE` behavior during Gateway startup.
           - name: Session limits
@@ -399,7 +399,7 @@ surfaces:
         human_lts_override: true
     last_score_run:
       status: complete
-      completed_at: '2026-05-31'
+      completed_at: "2026-05-31"
       by: codex
       source_ref: null
       process_version: 3
@@ -579,7 +579,7 @@ surfaces:
         human_lts_override: true
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -621,9 +621,9 @@ surfaces:
           - name: Migration shims
             description: Deprecated or compatibility subpaths continue to resolve during author migrations.
           - name: Plugin manifest
-            description: '`openclaw.plugin.json` declares plugin identity, capabilities, and config schema.'
+            description: "`openclaw.plugin.json` declares plugin identity, capabilities, and config schema."
           - name: Package metadata
-            description: '`package.json` carries the required `openclaw` metadata for discovery and release flows.'
+            description: "`package.json` carries the required `openclaw` metadata for discovery and release flows."
           - name: Runtime compatibility
             description: Plugin packages declare supported runtime and plugin API compatibility.
           - name: Validation feedback
@@ -841,7 +841,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -1052,7 +1052,7 @@ surfaces:
         human_lts_override: true
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -1238,7 +1238,7 @@ surfaces:
         human_lts_override: true
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -1450,7 +1450,7 @@ surfaces:
         human_lts_override: true
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -1524,11 +1524,11 @@ surfaces:
       - name: Channel Access Control
         features:
           - name: Channel Identity
-            description: 'Covers Channel Identity across who can talk to OpenClaw through message channels: DM pairing codes, pairing stores, `dmPolicy`, `allowFrom`, and related channel identity, allowlists, and sender pairing behavior.'
+            description: "Covers Channel Identity across who can talk to OpenClaw through message channels: DM pairing codes, pairing stores, `dmPolicy`, `allowFrom`, and related channel identity, allowlists, and sender pairing behavior."
           - name: Allowlists
-            description: 'Covers Allowlists across who can talk to OpenClaw through message channels: DM pairing codes, pairing stores, `dmPolicy`, `allowFrom`, and related channel identity, allowlists, and sender pairing behavior.'
+            description: "Covers Allowlists across who can talk to OpenClaw through message channels: DM pairing codes, pairing stores, `dmPolicy`, `allowFrom`, and related channel identity, allowlists, and sender pairing behavior."
           - name: Sender Pairing
-            description: 'Covers Sender Pairing across who can talk to OpenClaw through message channels: DM pairing codes, pairing stores, `dmPolicy`, `allowFrom`, and related channel identity, allowlists, and sender pairing behavior.'
+            description: "Covers Sender Pairing across who can talk to OpenClaw through message channels: DM pairing codes, pairing stores, `dmPolicy`, `allowFrom`, and related channel identity, allowlists, and sender pairing behavior."
         docs:
           - docs/channels/pairing.md
           - docs/channels/telegram.md
@@ -1602,9 +1602,9 @@ surfaces:
       - name: Credential and Secret Hygiene
         features:
           - name: Provider Auth Profiles
-            description: 'Covers Provider Auth Profiles across provider credentials and auth health as a security/secrets surface: API keys, OAuth profiles, `auth-profiles.json`, auth order, and related provider auth profiles and api key health behavior.'
+            description: "Covers Provider Auth Profiles across provider credentials and auth health as a security/secrets surface: API keys, OAuth profiles, `auth-profiles.json`, auth order, and related provider auth profiles and api key health behavior."
           - name: API Key Health
-            description: 'Covers API Key Health across provider credentials and auth health as a security/secrets surface: API keys, OAuth profiles, `auth-profiles.json`, auth order, and related provider auth profiles and api key health behavior.'
+            description: "Covers API Key Health across provider credentials and auth health as a security/secrets surface: API keys, OAuth profiles, `auth-profiles.json`, auth order, and related provider auth profiles and api key health behavior."
           - name: Secrets Storage
             description: Covers Secrets Storage across SecretRef contract and providers, runtime secret snapshots, gateway auth SecretRefs, auth-profile and generated model residues, and related secrets storage, redaction, and configuration hygiene behavior.
           - name: Redaction
@@ -1631,7 +1631,7 @@ surfaces:
         human_lts_override: true
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -1814,12 +1814,12 @@ surfaces:
         human_lts_override: true
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
   - id: automation-cron-hooks-tasks-polling
-    name: 'Automation: cron, hooks, tasks, polling'
+    name: "Automation: cron, hooks, tasks, polling"
     family: core
     level: beta
     level_code: M3
@@ -2096,7 +2096,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -2111,21 +2111,21 @@ surfaces:
       - name: Media Intake and Access
         features:
           - name: Local and remote media references
-            description: 'Covers Local and remote media references across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior.'
+            description: "Covers Local and remote media references across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior."
           - name: MIME and type detection
-            description: 'Covers MIME and type detection across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior.'
+            description: "Covers MIME and type detection across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior."
           - name: Size caps and bounded reads
-            description: 'Covers Size caps and bounded reads across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior.'
+            description: "Covers Size caps and bounded reads across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior."
           - name: Safe remote fetch
-            description: 'Covers Safe remote fetch across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior.'
+            description: "Covers Safe remote fetch across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior."
           - name: Local root policy
-            description: 'Covers Local root policy across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior.'
+            description: "Covers Local root policy across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior."
           - name: Inbound media store
-            description: 'Covers Inbound media store across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior.'
+            description: "Covers Inbound media store across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior."
           - name: PDF/document extraction dispatch
-            description: 'Covers PDF/document extraction dispatch across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior.'
+            description: "Covers PDF/document extraction dispatch across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior."
           - name: QR and media helper classification
-            description: 'Covers QR and media helper classification across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior.'
+            description: "Covers QR and media helper classification across Included: Local and remote media references, including plain paths, `file://`, HTTP(S), and related media file intake, storage, and secure access behavior."
         docs:
           - docs/tools/media-overview.md
           - docs/nodes/media-understanding.md
@@ -2324,7 +2324,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -2491,7 +2491,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -2630,15 +2630,15 @@ surfaces:
       - name: WebChat Conversations
         features:
           - name: Send and abort
-            description: 'Covers Send and abort across browser chat composition and display UX after an authenticated Gateway connection exists: composer controls, slash commands, session and agent filtering, model/thinking overrides, and related chat composer and message rendering behavior.'
+            description: "Covers Send and abort across browser chat composition and display UX after an authenticated Gateway connection exists: composer controls, slash commands, session and agent filtering, model/thinking overrides, and related chat composer and message rendering behavior."
           - name: Session and agent picker
-            description: 'Covers Session and agent picker across browser chat composition and display UX after an authenticated Gateway connection exists: composer controls, slash commands, session and agent filtering, model/thinking overrides, and related chat composer and message rendering behavior.'
+            description: "Covers Session and agent picker across browser chat composition and display UX after an authenticated Gateway connection exists: composer controls, slash commands, session and agent filtering, model/thinking overrides, and related chat composer and message rendering behavior."
           - name: Model/thinking controls
-            description: 'Covers Model/thinking controls across browser chat composition and display UX after an authenticated Gateway connection exists: composer controls, slash commands, session and agent filtering, model/thinking overrides, and related chat composer and message rendering behavior.'
+            description: "Covers Model/thinking controls across browser chat composition and display UX after an authenticated Gateway connection exists: composer controls, slash commands, session and agent filtering, model/thinking overrides, and related chat composer and message rendering behavior."
           - name: Attachments
-            description: 'Covers Attachments across browser chat composition and display UX after an authenticated Gateway connection exists: composer controls, slash commands, session and agent filtering, model/thinking overrides, and related chat composer and message rendering behavior.'
+            description: "Covers Attachments across browser chat composition and display UX after an authenticated Gateway connection exists: composer controls, slash commands, session and agent filtering, model/thinking overrides, and related chat composer and message rendering behavior."
           - name: Markdown/tool/media rendering
-            description: 'Covers Markdown/tool/media rendering across browser chat composition and display UX after an authenticated Gateway connection exists: composer controls, slash commands, session and agent filtering, model/thinking overrides, and related chat composer and message rendering behavior.'
+            description: "Covers Markdown/tool/media rendering across browser chat composition and display UX after an authenticated Gateway connection exists: composer controls, slash commands, session and agent filtering, model/thinking overrides, and related chat composer and message rendering behavior."
           - name: chat.history projection
             description: Covers chat.history projection across Gateway WebChat RPC/runtime contract, durable transcript projection, active run lifecycle, abort and partial retention, and related webchat runtime and session continuity behavior.
           - name: chat.send lifecycle
@@ -2699,15 +2699,15 @@ surfaces:
           - name: RPC timing telemetry
             description: Covers RPC timing telemetry across Debug, Logs, Update, Activity, and related diagnostics, logs, update, and activity behavior.
           - name: Channels/login
-            description: 'Covers Channels/login across non-config operator panels in the browser Control UI: channels and login, instances/presence, sessions, cron jobs, skills, nodes, exec approvals, agents, usage, dreams, and the dashboard navigation that surfaces them.'
+            description: "Covers Channels/login across non-config operator panels in the browser Control UI: channels and login, instances/presence, sessions, cron jobs, skills, nodes, exec approvals, agents, usage, dreams, and the dashboard navigation that surfaces them."
           - name: Session manager and history
             description: Covers browser Control UI session manager, session history, instance presence, approvals, diagnostics, and log tabs.
           - name: Cron
-            description: 'Covers Cron across non-config operator panels in the browser Control UI: channels and login, instances/presence, sessions, cron jobs, skills, nodes, exec approvals, agents, usage, dreams, and the dashboard navigation that surfaces them.'
+            description: "Covers Cron across non-config operator panels in the browser Control UI: channels and login, instances/presence, sessions, cron jobs, skills, nodes, exec approvals, agents, usage, dreams, and the dashboard navigation that surfaces them."
           - name: Skills/nodes
-            description: 'Covers Skills/nodes across non-config operator panels in the browser Control UI: channels and login, instances/presence, sessions, cron jobs, skills, nodes, exec approvals, agents, usage, dreams, and the dashboard navigation that surfaces them.'
+            description: "Covers Skills/nodes across non-config operator panels in the browser Control UI: channels and login, instances/presence, sessions, cron jobs, skills, nodes, exec approvals, agents, usage, dreams, and the dashboard navigation that surfaces them."
           - name: Exec approvals/agents
-            description: 'Covers Exec approvals/agents across non-config operator panels in the browser Control UI: channels and login, instances/presence, sessions, cron jobs, skills, nodes, exec approvals, agents, usage, dreams, and the dashboard navigation that surfaces them.'
+            description: "Covers Exec approvals/agents across non-config operator panels in the browser Control UI: channels and login, instances/presence, sessions, cron jobs, skills, nodes, exec approvals, agents, usage, dreams, and the dashboard navigation that surfaces them."
         docs:
           - docs/web/control-ui.md
           - docs/gateway/health.md
@@ -2732,7 +2732,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -2884,9 +2884,9 @@ surfaces:
           - name: Tool Cards
             description: Covers Tool Cards across chat log rendering, assistant stream assembly, final/error resolution, thinking visibility, and related streaming message rendering and tool cards behavior.
           - name: Terminal Rendering Primitives
-            description: 'Covers Terminal Rendering Primitives across shared terminal output helpers used by CLI/TUI surfaces: safe stream writing, text sanitization, ANSI/OSC handling, table wrapping, and related terminal rendering primitives and output safety behavior.'
+            description: "Covers Terminal Rendering Primitives across shared terminal output helpers used by CLI/TUI surfaces: safe stream writing, text sanitization, ANSI/OSC handling, table wrapping, and related terminal rendering primitives and output safety behavior."
           - name: Output Safety
-            description: 'Covers Output Safety across shared terminal output helpers used by CLI/TUI surfaces: safe stream writing, text sanitization, ANSI/OSC handling, table wrapping, and related terminal rendering primitives and output safety behavior.'
+            description: "Covers Output Safety across shared terminal output helpers used by CLI/TUI surfaces: safe stream writing, text sanitization, ANSI/OSC handling, table wrapping, and related terminal rendering primitives and output safety behavior."
         docs:
           - docs/web/tui.md
           - docs/cli/qr.md
@@ -2905,7 +2905,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -3098,7 +3098,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -3260,7 +3260,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-06-01'
+      completed_at: "2026-06-01"
       by: codex
       source_ref: openclaw@29dd7847fd
       process_version: 3
@@ -3447,7 +3447,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -3637,7 +3637,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -3787,7 +3787,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -3927,7 +3927,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -4069,7 +4069,7 @@ surfaces:
           - Gateway authentication
           - SecretRef
           - Remote URL credential precedence
-          - 'Advanced: expose WSL services over LAN (portproxy)'
+          - "Advanced: expose WSL services over LAN (portproxy)"
           - portproxy
           - WSL2 IPv4
         category_note: auth-secrets-and-exposure-posture.md
@@ -4125,7 +4125,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -4257,7 +4257,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -4387,7 +4387,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -4500,7 +4500,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -4644,7 +4644,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -4762,7 +4762,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -4945,7 +4945,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -5063,7 +5063,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -5177,7 +5177,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-06-01'
+      completed_at: "2026-06-01"
       by: codex
       source_ref: openclaw@29dd7847fd
       process_version: 3
@@ -5325,7 +5325,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -5383,17 +5383,17 @@ surfaces:
       - name: Access and Identity
         features:
           - name: DM policy modes
-            description: 'Covers DM policy modes across Discord direct-message `dmPolicy` modes: `pairing`, `allowlist`, `open`, and `disabled`. Canonical and legacy `allowFrom` resolution across top-level Discord config, and related dm pairing and sender authorization behavior.'
+            description: "Covers DM policy modes across Discord direct-message `dmPolicy` modes: `pairing`, `allowlist`, `open`, and `disabled`. Canonical and legacy `allowFrom` resolution across top-level Discord config, and related dm pairing and sender authorization behavior."
           - name: Allowlist inheritance
-            description: 'Covers Allowlist inheritance across Discord direct-message `dmPolicy` modes: `pairing`, `allowlist`, `open`, and `disabled`. Canonical and legacy `allowFrom` resolution across top-level Discord config, and related dm pairing and sender authorization behavior.'
+            description: "Covers Allowlist inheritance across Discord direct-message `dmPolicy` modes: `pairing`, `allowlist`, `open`, and `disabled`. Canonical and legacy `allowFrom` resolution across top-level Discord config, and related dm pairing and sender authorization behavior."
           - name: Pairing-code approval
-            description: 'Covers Pairing-code approval across Discord direct-message `dmPolicy` modes: `pairing`, `allowlist`, `open`, and `disabled`. Canonical and legacy `allowFrom` resolution across top-level Discord config, and related dm pairing and sender authorization behavior.'
+            description: "Covers Pairing-code approval across Discord direct-message `dmPolicy` modes: `pairing`, `allowlist`, `open`, and `disabled`. Canonical and legacy `allowFrom` resolution across top-level Discord config, and related dm pairing and sender authorization behavior."
           - name: Sender authorization
-            description: 'Covers Sender authorization across Discord direct-message `dmPolicy` modes: `pairing`, `allowlist`, `open`, and `disabled`. Canonical and legacy `allowFrom` resolution across top-level Discord config, and related dm pairing and sender authorization behavior.'
+            description: "Covers Sender authorization across Discord direct-message `dmPolicy` modes: `pairing`, `allowlist`, `open`, and `disabled`. Canonical and legacy `allowFrom` resolution across top-level Discord config, and related dm pairing and sender authorization behavior."
           - name: Access-group authorization
-            description: 'Covers Access-group authorization across Discord direct-message `dmPolicy` modes: `pairing`, `allowlist`, `open`, and `disabled`. Canonical and legacy `allowFrom` resolution across top-level Discord config, and related dm pairing and sender authorization behavior.'
+            description: "Covers Access-group authorization across Discord direct-message `dmPolicy` modes: `pairing`, `allowlist`, `open`, and `disabled`. Canonical and legacy `allowFrom` resolution across top-level Discord config, and related dm pairing and sender authorization behavior."
           - name: Group DM authorization
-            description: 'Covers Group DM authorization across Discord direct-message `dmPolicy` modes: `pairing`, `allowlist`, `open`, and `disabled`. Canonical and legacy `allowFrom` resolution across top-level Discord config, and related dm pairing and sender authorization behavior.'
+            description: "Covers Group DM authorization across Discord direct-message `dmPolicy` modes: `pairing`, `allowlist`, `open`, and `disabled`. Canonical and legacy `allowFrom` resolution across top-level Discord config, and related dm pairing and sender authorization behavior."
         docs:
           - docs/channels/discord.md
           - docs/channels/pairing.md
@@ -5421,19 +5421,19 @@ surfaces:
           - name: Inbound context visibility
             description: Covers Inbound context visibility across Guild allowlist and `groupPolicy` admission for Discord guild channels and threads. `requireMention`, bot-loop prevention, command/mention bypasses, and unmentioned room-event history. Channel, and related guild channel routing and session isolation behavior.
           - name: Forum and media-channel thread posts
-            description: 'Covers Forum and media-channel thread posts across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior.'
+            description: "Covers Forum and media-channel thread posts across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior."
           - name: Thread actions
-            description: 'Covers Thread actions across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior.'
+            description: "Covers Thread actions across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior."
           - name: Target parsing
-            description: 'Covers Target parsing across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior.'
+            description: "Covers Target parsing across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior."
           - name: Thread context resolution
-            description: 'Covers Thread context resolution across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior.'
+            description: "Covers Thread context resolution across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior."
           - name: Thread-bound session routing
-            description: 'Covers Thread-bound session routing across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior.'
+            description: "Covers Thread-bound session routing across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior."
           - name: ACP agent routing
-            description: 'Covers ACP bindings across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior.'
+            description: "Covers ACP bindings across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior."
           - name: Routing lifecycle
-            description: 'Covers Binding lifecycle across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior.'
+            description: "Covers Binding lifecycle across Discord forum/media channel posts created as threads from parent channel targets. CLI and message-tool thread actions: `thread-create`, `thread-list`, and `thread-reply`. Discord target parsing for `channel:<id>`, user targets, and related threads, forums, and delegated-agent bindings behavior."
         docs:
           - docs/channels/discord.md
           - docs/channels/channel-routing.md
@@ -5515,7 +5515,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -5567,7 +5567,7 @@ surfaces:
           - name: Pairing-code approval
             description: Pairing-code approval, first-owner bootstrap, and commands.ownerAllowFrom
           - name: Numeric Telegram user ID normalization with telegram
-            description: 'and tg: prefixes'
+            description: "and tg: prefixes"
           - name: allowFrom
             description: allowFrom, groupAllowFrom, access groups, and DM-versus-group boundaries
           - name: Unauthorized DM
@@ -5653,7 +5653,7 @@ surfaces:
         human_lts_override: true
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -5766,7 +5766,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -5920,7 +5920,7 @@ surfaces:
         human_lts_override: true
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -6080,7 +6080,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -6223,7 +6223,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -6445,7 +6445,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -6569,7 +6569,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -6739,7 +6739,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -6793,7 +6793,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -6825,8 +6825,8 @@ surfaces:
           - docs/plugins/reference/feishu.md
           - docs/plugins/architecture-internals.md
         search_anchors:
-          - 'feishu, qq bot, wechat, yuanbao, zalo, zalo personal, regional channels feishu, qq bot, wechat, yuanbao, zalo, zalo personal, regional channels feature matrix: shared regional channel catalog, install, and status'
-          - 'feishu, qq bot, wechat, yuanbao, zalo, zalo personal, regional channels feature matrix: shared regional channel catalog, install, and status'
+          - "feishu, qq bot, wechat, yuanbao, zalo, zalo personal, regional channels feishu, qq bot, wechat, yuanbao, zalo, zalo personal, regional channels feature matrix: shared regional channel catalog, install, and status"
+          - "feishu, qq bot, wechat, yuanbao, zalo, zalo personal, regional channels feature matrix: shared regional channel catalog, install, and status"
         category_note: shared-regional-channel-catalog-install-status.md
         human_lts_override: false
       - name: Access and Identity
@@ -6861,7 +6861,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -6884,10 +6884,10 @@ surfaces:
           - docs/plugins/voice-call.md
           - docs/gateway/protocol.md
         search_anchors:
-          - 'voice call channel voice call channel: cli, gateway rpc, and agent tool'
-          - 'voice call channel: cli, gateway rpc, and agent tool'
-          - 'voice call channel voice call channel: setup, configuration, and smoke'
-          - 'voice call channel: setup, configuration, and smoke'
+          - "voice call channel voice call channel: cli, gateway rpc, and agent tool"
+          - "voice call channel: cli, gateway rpc, and agent tool"
+          - "voice call channel voice call channel: setup, configuration, and smoke"
+          - "voice call channel: setup, configuration, and smoke"
         category_note: setup-configuration-and-smoke.md
         human_lts_override: false
       - name: Access and Identity
@@ -6898,8 +6898,8 @@ surfaces:
           - docs/plugins/voice-call.md
           - docs/cli/voicecall.md
         search_anchors:
-          - 'voice call channel voice call channel: webhook exposure and security'
-          - 'voice call channel: webhook exposure and security'
+          - "voice call channel voice call channel: webhook exposure and security"
+          - "voice call channel: webhook exposure and security"
         category_note: webhook-exposure-and-security.md
         human_lts_override: false
       - name: Conversation Routing and Delivery
@@ -6909,8 +6909,8 @@ surfaces:
         docs:
           - docs/plugins/voice-call.md
         search_anchors:
-          - 'voice call channel voice call channel: inbound routing, sessions, and lifecycle'
-          - 'voice call channel: inbound routing, sessions, and lifecycle'
+          - "voice call channel voice call channel: inbound routing, sessions, and lifecycle"
+          - "voice call channel: inbound routing, sessions, and lifecycle"
         category_note: inbound-routing-sessions-and-lifecycle.md
         human_lts_override: false
       - name: Media and Rich Content
@@ -6923,10 +6923,10 @@ surfaces:
           - docs/plugins/voice-call.md
           - docs/plugins/plugin-inventory.md
         search_anchors:
-          - 'voice call channel voice call channel: provider transports and call control'
-          - 'voice call channel: provider transports and call control'
-          - 'voice call channel voice call channel: telephony tts, playback, dtmf, and audio'
-          - 'voice call channel: telephony tts, playback, dtmf, and audio'
+          - "voice call channel voice call channel: provider transports and call control"
+          - "voice call channel: provider transports and call control"
+          - "voice call channel voice call channel: telephony tts, playback, dtmf, and audio"
+          - "voice call channel: telephony tts, playback, dtmf, and audio"
         category_note: provider-transports-and-call-control.md
         human_lts_override: false
       - name: Realtime Voice and Calls
@@ -6938,15 +6938,15 @@ surfaces:
         docs:
           - docs/plugins/voice-call.md
         search_anchors:
-          - 'voice call channel voice call channel: realtime voice and agent consult'
-          - 'voice call channel: realtime voice and agent consult'
-          - 'voice call channel voice call channel: streaming transcription and auto-response'
-          - 'voice call channel: streaming transcription and auto-response'
+          - "voice call channel voice call channel: realtime voice and agent consult"
+          - "voice call channel: realtime voice and agent consult"
+          - "voice call channel voice call channel: streaming transcription and auto-response"
+          - "voice call channel: streaming transcription and auto-response"
         category_note: realtime-voice-and-agent-consult.md
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -6961,17 +6961,17 @@ surfaces:
       - name: Model and Auth
         features:
           - name: Canonical OpenAI Model Routing
-            description: 'Covers Canonical OpenAI Model Routing across user/operator-facing model route contract: canonical `openai/gpt-*` refs, legacy `openai-codex/*` model refs, model catalog rows, context limits, and related canonical openai model routing and catalog behavior.'
+            description: "Covers Canonical OpenAI Model Routing across user/operator-facing model route contract: canonical `openai/gpt-*` refs, legacy `openai-codex/*` model refs, model catalog rows, context limits, and related canonical openai model routing and catalog behavior."
           - name: Catalog
-            description: 'Covers Catalog across user/operator-facing model route contract: canonical `openai/gpt-*` refs, legacy `openai-codex/*` model refs, model catalog rows, context limits, and related canonical openai model routing and catalog behavior.'
+            description: "Covers Catalog across user/operator-facing model route contract: canonical `openai/gpt-*` refs, legacy `openai-codex/*` model refs, model catalog rows, context limits, and related canonical openai model routing and catalog behavior."
           - name: Codex OAuth Profiles
             description: Covers Codex OAuth Profiles across `openai-codex` auth profiles, profile ordering, profile metadata repair, token refresh, account-id propagation, usage/cooldown handling, and auth selection for Codex-backed OpenAI agent turns.
           - name: Subscription Usage
             description: Covers Subscription Usage across `openai-codex` auth profiles, profile ordering, profile metadata repair, token refresh, account-id propagation, usage/cooldown handling, and auth selection for Codex-backed OpenAI agent turns.
           - name: Doctor Diagnostics
-            description: 'Covers Doctor Diagnostics across operator-facing repair and diagnosis for OpenAI/Codex provider path problems: stale route migration, persisted session pins, runtime pins, auth-profile sidecars, profile metadata, status/probe output, and recovery commands.'
+            description: "Covers Doctor Diagnostics across operator-facing repair and diagnosis for OpenAI/Codex provider path problems: stale route migration, persisted session pins, runtime pins, auth-profile sidecars, profile metadata, status/probe output, and recovery commands."
           - name: Operator Repair
-            description: 'Covers Operator Repair across operator-facing repair and diagnosis for OpenAI/Codex provider path problems: stale route migration, persisted session pins, runtime pins, auth-profile sidecars, profile metadata, status/probe output, and recovery commands.'
+            description: "Covers Operator Repair across operator-facing repair and diagnosis for OpenAI/Codex provider path problems: stale route migration, persisted session pins, runtime pins, auth-profile sidecars, profile metadata, status/probe output, and recovery commands."
         docs:
           - docs/providers/openai.md
           - docs/plugins/codex-harness.md
@@ -7074,7 +7074,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -7089,23 +7089,23 @@ surfaces:
       - name: Provider Auth and Recovery
         features:
           - name: API-key onboarding
-            description: 'Covers API-key onboarding across Anthropic credential surface before a model request is made: onboarding choices, API-key storage, Claude CLI credential migration, setup-token validation, and related credential setup and health behavior.'
+            description: "Covers API-key onboarding across Anthropic credential surface before a model request is made: onboarding choices, API-key storage, Claude CLI credential migration, setup-token validation, and related credential setup and health behavior."
           - name: Claude CLI credential reuse
-            description: 'Covers Claude CLI credential reuse across Anthropic credential surface before a model request is made: onboarding choices, API-key storage, Claude CLI credential migration, setup-token validation, and related credential setup and health behavior.'
+            description: "Covers Claude CLI credential reuse across Anthropic credential surface before a model request is made: onboarding choices, API-key storage, Claude CLI credential migration, setup-token validation, and related credential setup and health behavior."
           - name: Setup-token auth
-            description: 'Covers Setup-token auth across Anthropic credential surface before a model request is made: onboarding choices, API-key storage, Claude CLI credential migration, setup-token validation, and related credential setup and health behavior.'
+            description: "Covers Setup-token auth across Anthropic credential surface before a model request is made: onboarding choices, API-key storage, Claude CLI credential migration, setup-token validation, and related credential setup and health behavior."
           - name: Auth profile health
-            description: 'Covers Auth profile health across Anthropic credential surface before a model request is made: onboarding choices, API-key storage, Claude CLI credential migration, setup-token validation, and related credential setup and health behavior.'
+            description: "Covers Auth profile health across Anthropic credential surface before a model request is made: onboarding choices, API-key storage, Claude CLI credential migration, setup-token validation, and related credential setup and health behavior."
           - name: Model status
-            description: 'Covers Model status across operator diagnostics and recovery for Anthropic provider failures: status output, usage windows, auth profile source reporting, cooldown and disabled profile reporting, and related diagnostics and recovery behavior.'
+            description: "Covers Model status across operator diagnostics and recovery for Anthropic provider failures: status output, usage windows, auth profile source reporting, cooldown and disabled profile reporting, and related diagnostics and recovery behavior."
           - name: Usage windows
-            description: 'Covers Usage windows across operator diagnostics and recovery for Anthropic provider failures: status output, usage windows, auth profile source reporting, cooldown and disabled profile reporting, and related diagnostics and recovery behavior.'
+            description: "Covers Usage windows across operator diagnostics and recovery for Anthropic provider failures: status output, usage windows, auth profile source reporting, cooldown and disabled profile reporting, and related diagnostics and recovery behavior."
           - name: Cooldown/profile reporting
-            description: 'Covers Cooldown/profile reporting across operator diagnostics and recovery for Anthropic provider failures: status output, usage windows, auth profile source reporting, cooldown and disabled profile reporting, and related diagnostics and recovery behavior.'
+            description: "Covers Cooldown/profile reporting across operator diagnostics and recovery for Anthropic provider failures: status output, usage windows, auth profile source reporting, cooldown and disabled profile reporting, and related diagnostics and recovery behavior."
           - name: Long-context recovery
-            description: 'Covers Long-context recovery across operator diagnostics and recovery for Anthropic provider failures: status output, usage windows, auth profile source reporting, cooldown and disabled profile reporting, and related diagnostics and recovery behavior.'
+            description: "Covers Long-context recovery across operator diagnostics and recovery for Anthropic provider failures: status output, usage windows, auth profile source reporting, cooldown and disabled profile reporting, and related diagnostics and recovery behavior."
           - name: Fallback guidance
-            description: 'Covers Fallback guidance across operator diagnostics and recovery for Anthropic provider failures: status output, usage windows, auth profile source reporting, cooldown and disabled profile reporting, and related diagnostics and recovery behavior.'
+            description: "Covers Fallback guidance across operator diagnostics and recovery for Anthropic provider failures: status output, usage windows, auth profile source reporting, cooldown and disabled profile reporting, and related diagnostics and recovery behavior."
         docs:
           - docs/providers/anthropic.md
           - docs/gateway/doctor.md
@@ -7127,25 +7127,25 @@ surfaces:
       - name: Model and Runtime Selection
         features:
           - name: Bundled Claude catalog
-            description: 'Covers Bundled Claude catalog across Anthropic model catalog and policy layer: bundled model rows, model aliases, current and future Claude model id normalization, runtime-provider selection, and related model catalog and policy behavior.'
+            description: "Covers Bundled Claude catalog across Anthropic model catalog and policy layer: bundled model rows, model aliases, current and future Claude model id normalization, runtime-provider selection, and related model catalog and policy behavior."
           - name: Canonical anthropic refs
-            description: 'Covers Canonical anthropic refs across Anthropic model catalog and policy layer: bundled model rows, model aliases, current and future Claude model id normalization, runtime-provider selection, and related model catalog and policy behavior.'
+            description: "Covers Canonical anthropic refs across Anthropic model catalog and policy layer: bundled model rows, model aliases, current and future Claude model id normalization, runtime-provider selection, and related model catalog and policy behavior."
           - name: Claude CLI compatibility
-            description: 'Covers Claude CLI compatibility across Anthropic model catalog and policy layer: bundled model rows, model aliases, current and future Claude model id normalization, runtime-provider selection, and related model catalog and policy behavior.'
+            description: "Covers Claude CLI compatibility across Anthropic model catalog and policy layer: bundled model rows, model aliases, current and future Claude model id normalization, runtime-provider selection, and related model catalog and policy behavior."
           - name: Model picker availability
-            description: 'Covers Model picker availability across Anthropic model catalog and policy layer: bundled model rows, model aliases, current and future Claude model id normalization, runtime-provider selection, and related model catalog and policy behavior.'
+            description: "Covers Model picker availability across Anthropic model catalog and policy layer: bundled model rows, model aliases, current and future Claude model id normalization, runtime-provider selection, and related model catalog and policy behavior."
           - name: Capability metadata
-            description: 'Covers Capability metadata across Anthropic model catalog and policy layer: bundled model rows, model aliases, current and future Claude model id normalization, runtime-provider selection, and related model catalog and policy behavior.'
+            description: "Covers Capability metadata across Anthropic model catalog and policy layer: bundled model rows, model aliases, current and future Claude model id normalization, runtime-provider selection, and related model catalog and policy behavior."
           - name: Runtime selection
-            description: 'Covers Runtime selection across OpenClaw''s host-local Claude CLI path after auth is available: the `claude-cli` backend, its command/args/env defaults, MCP tool bridge, native tool mode, and related claude cli backend behavior.'
+            description: "Covers Runtime selection across OpenClaw's host-local Claude CLI path after auth is available: the `claude-cli` backend, its command/args/env defaults, MCP tool bridge, native tool mode, and related claude cli backend behavior."
           - name: Session continuity
-            description: 'Covers Session continuity across OpenClaw''s host-local Claude CLI path after auth is available: the `claude-cli` backend, its command/args/env defaults, MCP tool bridge, native tool mode, and related claude cli backend behavior.'
+            description: "Covers Session continuity across OpenClaw's host-local Claude CLI path after auth is available: the `claude-cli` backend, its command/args/env defaults, MCP tool bridge, native tool mode, and related claude cli backend behavior."
           - name: MCP/tool bridge
-            description: 'Covers MCP/tool bridge across OpenClaw''s host-local Claude CLI path after auth is available: the `claude-cli` backend, its command/args/env defaults, MCP tool bridge, native tool mode, and related claude cli backend behavior.'
+            description: "Covers MCP/tool bridge across OpenClaw's host-local Claude CLI path after auth is available: the `claude-cli` backend, its command/args/env defaults, MCP tool bridge, native tool mode, and related claude cli backend behavior."
           - name: Permission-mode mapping
-            description: 'Covers Permission-mode mapping across OpenClaw''s host-local Claude CLI path after auth is available: the `claude-cli` backend, its command/args/env defaults, MCP tool bridge, native tool mode, and related claude cli backend behavior.'
+            description: "Covers Permission-mode mapping across OpenClaw's host-local Claude CLI path after auth is available: the `claude-cli` backend, its command/args/env defaults, MCP tool bridge, native tool mode, and related claude cli backend behavior."
           - name: Fallback prelude
-            description: 'Covers Fallback prelude across OpenClaw''s host-local Claude CLI path after auth is available: the `claude-cli` backend, its command/args/env defaults, MCP tool bridge, native tool mode, and related claude cli backend behavior.'
+            description: "Covers Fallback prelude across OpenClaw's host-local Claude CLI path after auth is available: the `claude-cli` backend, its command/args/env defaults, MCP tool bridge, native tool mode, and related claude cli backend behavior."
         docs:
           - docs/providers/anthropic.md
           - docs/gateway/config-agents.md
@@ -7177,15 +7177,15 @@ surfaces:
           - name: Abort/error handling
             description: 'Covers Abort/error handling across direct Anthropic `api: "anthropic-messages"` request and stream behavior: API-key and OAuth transport setup, Anthropic beta headers, model-id normalization for direct hosts, payload construction, and related direct anthropic api behavior.'
           - name: Tool-use blocks
-            description: 'Covers Tool-use blocks across Anthropic-specific turn semantics inside agent runs: tool declarations, tool-use block conversion, tool-result conversion, tool-call id normalization, and related tools and thinking behavior.'
+            description: "Covers Tool-use blocks across Anthropic-specific turn semantics inside agent runs: tool declarations, tool-use block conversion, tool-result conversion, tool-call id normalization, and related tools and thinking behavior."
           - name: Tool-result replay
-            description: 'Covers Tool-result replay across Anthropic-specific turn semantics inside agent runs: tool declarations, tool-use block conversion, tool-result conversion, tool-call id normalization, and related tools and thinking behavior.'
+            description: "Covers Tool-result replay across Anthropic-specific turn semantics inside agent runs: tool declarations, tool-use block conversion, tool-result conversion, tool-call id normalization, and related tools and thinking behavior."
           - name: Partial JSON recovery
-            description: 'Covers Partial JSON recovery across Anthropic-specific turn semantics inside agent runs: tool declarations, tool-use block conversion, tool-result conversion, tool-call id normalization, and related tools and thinking behavior.'
+            description: "Covers Partial JSON recovery across Anthropic-specific turn semantics inside agent runs: tool declarations, tool-use block conversion, tool-result conversion, tool-call id normalization, and related tools and thinking behavior."
           - name: Native thinking
-            description: 'Covers Native thinking across Anthropic-specific turn semantics inside agent runs: tool declarations, tool-use block conversion, tool-result conversion, tool-call id normalization, and related tools and thinking behavior.'
+            description: "Covers Native thinking across Anthropic-specific turn semantics inside agent runs: tool declarations, tool-use block conversion, tool-result conversion, tool-call id normalization, and related tools and thinking behavior."
           - name: Signed/redacted thinking replay
-            description: 'Covers Signed/redacted thinking replay across Anthropic-specific turn semantics inside agent runs: tool declarations, tool-use block conversion, tool-result conversion, tool-call id normalization, and related tools and thinking behavior.'
+            description: "Covers Signed/redacted thinking replay across Anthropic-specific turn semantics inside agent runs: tool declarations, tool-use block conversion, tool-result conversion, tool-call id normalization, and related tools and thinking behavior."
         docs:
           - docs/providers/anthropic.md
           - docs/reference/prompt-caching.md
@@ -7208,15 +7208,15 @@ surfaces:
       - name: Prompt Cache and Context
         features:
           - name: Cache retention
-            description: 'Covers Cache retention across Anthropic-specific request knobs outside the core content stream: prompt cache retention, cache-control markers, system-prompt cache boundary, 1M context sizing, and related prompt cache and context behavior.'
+            description: "Covers Cache retention across Anthropic-specific request knobs outside the core content stream: prompt cache retention, cache-control markers, system-prompt cache boundary, 1M context sizing, and related prompt cache and context behavior."
           - name: System-prompt cache boundary
-            description: 'Covers System-prompt cache boundary across Anthropic-specific request knobs outside the core content stream: prompt cache retention, cache-control markers, system-prompt cache boundary, 1M context sizing, and related prompt cache and context behavior.'
+            description: "Covers System-prompt cache boundary across Anthropic-specific request knobs outside the core content stream: prompt cache retention, cache-control markers, system-prompt cache boundary, 1M context sizing, and related prompt cache and context behavior."
           - name: 1M context
-            description: 'Covers 1M context across Anthropic-specific request knobs outside the core content stream: prompt cache retention, cache-control markers, system-prompt cache boundary, 1M context sizing, and related prompt cache and context behavior.'
+            description: "Covers 1M context across Anthropic-specific request knobs outside the core content stream: prompt cache retention, cache-control markers, system-prompt cache boundary, 1M context sizing, and related prompt cache and context behavior."
           - name: Fast mode/service tier
-            description: 'Covers Fast mode/service tier across Anthropic-specific request knobs outside the core content stream: prompt cache retention, cache-control markers, system-prompt cache boundary, 1M context sizing, and related prompt cache and context behavior.'
+            description: "Covers Fast mode/service tier across Anthropic-specific request knobs outside the core content stream: prompt cache retention, cache-control markers, system-prompt cache boundary, 1M context sizing, and related prompt cache and context behavior."
           - name: Cache diagnostics
-            description: 'Covers Cache diagnostics across Anthropic-specific request knobs outside the core content stream: prompt cache retention, cache-control markers, system-prompt cache boundary, 1M context sizing, and related prompt cache and context behavior.'
+            description: "Covers Cache diagnostics across Anthropic-specific request knobs outside the core content stream: prompt cache retention, cache-control markers, system-prompt cache boundary, 1M context sizing, and related prompt cache and context behavior."
         docs:
           - docs/providers/anthropic.md
           - docs/reference/prompt-caching.md
@@ -7233,13 +7233,13 @@ surfaces:
       - name: Media Inputs
         features:
           - name: Image input
-            description: 'Covers Image input across Anthropic media understanding as part of the provider path: image input support, PDF native document input metadata, default media model selection, auto-priority, and related media inputs behavior.'
+            description: "Covers Image input across Anthropic media understanding as part of the provider path: image input support, PDF native document input metadata, default media model selection, auto-priority, and related media inputs behavior."
           - name: PDF document input
-            description: 'Covers PDF document input across Anthropic media understanding as part of the provider path: image input support, PDF native document input metadata, default media model selection, auto-priority, and related media inputs behavior.'
+            description: "Covers PDF document input across Anthropic media understanding as part of the provider path: image input support, PDF native document input metadata, default media model selection, auto-priority, and related media inputs behavior."
           - name: Media model fallback
-            description: 'Covers Media model fallback across Anthropic media understanding as part of the provider path: image input support, PDF native document input metadata, default media model selection, auto-priority, and related media inputs behavior.'
+            description: "Covers Media model fallback across Anthropic media understanding as part of the provider path: image input support, PDF native document input metadata, default media model selection, auto-priority, and related media inputs behavior."
           - name: Image tool results
-            description: 'Covers Image tool results across Anthropic media understanding as part of the provider path: image input support, PDF native document input metadata, default media model selection, auto-priority, and related media inputs behavior.'
+            description: "Covers Image tool results across Anthropic media understanding as part of the provider path: image input support, PDF native document input metadata, default media model selection, auto-priority, and related media inputs behavior."
         docs:
           - docs/providers/anthropic.md
           - docs/gateway/config-agents.md
@@ -7252,7 +7252,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -7345,15 +7345,15 @@ surfaces:
       - name: Direct Gemini Runtime
         features:
           - name: Direct Gemini chat
-            description: 'Covers Direct Gemini chat across direct `google-generative-ai` Gemini transport and shared Google message/stream conversion: request URL construction, request config, text/image/audio/video/tool payload conversion, function response handling, and related direct gemini api behavior.'
+            description: "Covers Direct Gemini chat across direct `google-generative-ai` Gemini transport and shared Google message/stream conversion: request URL construction, request config, text/image/audio/video/tool payload conversion, function response handling, and related direct gemini api behavior."
           - name: Multimodal inputs
-            description: 'Covers Multimodal inputs across direct `google-generative-ai` Gemini transport and shared Google message/stream conversion: request URL construction, request config, text/image/audio/video/tool payload conversion, function response handling, and related direct gemini api behavior.'
+            description: "Covers Multimodal inputs across direct `google-generative-ai` Gemini transport and shared Google message/stream conversion: request URL construction, request config, text/image/audio/video/tool payload conversion, function response handling, and related direct gemini api behavior."
           - name: Tool-call streaming
-            description: 'Covers Tool-call streaming across direct `google-generative-ai` Gemini transport and shared Google message/stream conversion: request URL construction, request config, text/image/audio/video/tool payload conversion, function response handling, and related direct gemini api behavior.'
+            description: "Covers Tool-call streaming across direct `google-generative-ai` Gemini transport and shared Google message/stream conversion: request URL construction, request config, text/image/audio/video/tool payload conversion, function response handling, and related direct gemini api behavior."
           - name: Usage and stop reasons
-            description: 'Covers Usage and stop reasons across direct `google-generative-ai` Gemini transport and shared Google message/stream conversion: request URL construction, request config, text/image/audio/video/tool payload conversion, function response handling, and related direct gemini api behavior.'
+            description: "Covers Usage and stop reasons across direct `google-generative-ai` Gemini transport and shared Google message/stream conversion: request URL construction, request config, text/image/audio/video/tool payload conversion, function response handling, and related direct gemini api behavior."
           - name: Thought-signature replay
-            description: 'Covers Thought-signature replay across direct `google-generative-ai` Gemini transport and shared Google message/stream conversion: request URL construction, request config, text/image/audio/video/tool payload conversion, function response handling, and related direct gemini api behavior.'
+            description: "Covers Thought-signature replay across direct `google-generative-ai` Gemini transport and shared Google message/stream conversion: request URL construction, request config, text/image/audio/video/tool payload conversion, function response handling, and related direct gemini api behavior."
           - name: Thinking-level mapping
             description: Covers Thinking-level mapping across Gemini thinking-level mapping, adaptive thinking request shape, `thoughtSignature` capture/replay/sanitization, Google replay policy, and related thinking and turn recovery behavior.
           - name: Thought-signature replay
@@ -7446,7 +7446,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -7461,13 +7461,13 @@ surfaces:
       - name: Provider Setup and Auth
         features:
           - name: First-run setup
-            description: 'Covers First-run setup across user-facing setup and provider registration: the `/providers/openrouter` docs, plugin manifest, provider registration hook, default model registration, and related operator setup and model selection behavior.'
+            description: "Covers First-run setup across user-facing setup and provider registration: the `/providers/openrouter` docs, plugin manifest, provider registration hook, default model registration, and related operator setup and model selection behavior."
           - name: Default model selection
-            description: 'Covers Default model selection across user-facing setup and provider registration: the `/providers/openrouter` docs, plugin manifest, provider registration hook, default model registration, and related operator setup and model selection behavior.'
+            description: "Covers Default model selection across user-facing setup and provider registration: the `/providers/openrouter` docs, plugin manifest, provider registration hook, default model registration, and related operator setup and model selection behavior."
           - name: Provider plugin registration
-            description: 'Covers Provider plugin registration across user-facing setup and provider registration: the `/providers/openrouter` docs, plugin manifest, provider registration hook, default model registration, and related operator setup and model selection behavior.'
+            description: "Covers Provider plugin registration across user-facing setup and provider registration: the `/providers/openrouter` docs, plugin manifest, provider registration hook, default model registration, and related operator setup and model selection behavior."
           - name: Model-ref examples
-            description: 'Covers Model-ref examples across user-facing setup and provider registration: the `/providers/openrouter` docs, plugin manifest, provider registration hook, default model registration, and related operator setup and model selection behavior.'
+            description: "Covers Model-ref examples across user-facing setup and provider registration: the `/providers/openrouter` docs, plugin manifest, provider registration hook, default model registration, and related operator setup and model selection behavior."
           - name: OPENROUTER_API_KEY
             description: Covers OPENROUTER_API_KEY across `OPENROUTER_API_KEY` discovery, onboarding/auth-choice storage, `auth-profiles.json`, status/probe visibility, and related credentials and auth profiles behavior.
           - name: Auth profiles and auth order
@@ -7626,12 +7626,12 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
   - id: local-model-providers-ollama-vllm-sglang-lm-studio
-    name: 'Local model providers: Ollama, vLLM, SGLang, LM Studio'
+    name: "Local model providers: Ollama, vLLM, SGLang, LM Studio"
     family: provider-tool
     level: alpha
     level_code: M2
@@ -7676,7 +7676,7 @@ surfaces:
         search_anchors:
           - Provider Selection
           - Onboarding
-          - 'local model providers: ollama, vllm, sglang, lm studio provider selection and onboarding'
+          - "local model providers: ollama, vllm, sglang, lm studio provider selection and onboarding"
           - provider selection and onboarding
           - localService configuration
           - Process startup and readiness
@@ -7760,7 +7760,7 @@ surfaces:
           - SGLang compatibility guidance
           - Request Stream Compatibility
           - Tool Calling
-          - 'local model providers: ollama, vllm, sglang, lm studio request stream compatibility and tool calling'
+          - "local model providers: ollama, vllm, sglang, lm studio request stream compatibility and tool calling"
           - request stream compatibility and tool calling
         category_note: request-stream-compatibility-and-tool-calling.md
         human_lts_override: false
@@ -7800,13 +7800,13 @@ surfaces:
         search_anchors:
           - Safety Network
           - Prompt Pressure Controls
-          - 'local model providers: ollama, vllm, sglang, lm studio safety network and prompt pressure controls'
+          - "local model providers: ollama, vllm, sglang, lm studio safety network and prompt pressure controls"
           - safety network and prompt pressure controls
         category_note: safety-network-and-prompt-pressure-controls.md
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -7829,13 +7829,13 @@ surfaces:
           - name: Proxy capability diagnostics
             description: Covers Proxy capability diagnostics across Amazon Bedrock, Bedrock Mantle, Cloudflare AI Gateway, Vercel AI Gateway, and related cloud and gateway providers behavior.
           - name: Hosted text completion
-            description: 'Covers Hosted text completion across hosted text providers that mostly use OpenAI-compatible routes or close variants: DeepSeek, Groq, Mistral, Together, and related openai-compatible hosted text providers behavior.'
+            description: "Covers Hosted text completion across hosted text providers that mostly use OpenAI-compatible routes or close variants: DeepSeek, Groq, Mistral, Together, and related openai-compatible hosted text providers behavior."
           - name: Tool-call and streaming compatibility
-            description: 'Covers Tool-call and streaming compatibility across hosted text providers that mostly use OpenAI-compatible routes or close variants: DeepSeek, Groq, Mistral, Together, and related openai-compatible hosted text providers behavior.'
+            description: "Covers Tool-call and streaming compatibility across hosted text providers that mostly use OpenAI-compatible routes or close variants: DeepSeek, Groq, Mistral, Together, and related openai-compatible hosted text providers behavior."
           - name: Model catalog resolution
-            description: 'Covers Model catalog resolution across hosted text providers that mostly use OpenAI-compatible routes or close variants: DeepSeek, Groq, Mistral, Together, and related openai-compatible hosted text providers behavior.'
+            description: "Covers Model catalog resolution across hosted text providers that mostly use OpenAI-compatible routes or close variants: DeepSeek, Groq, Mistral, Together, and related openai-compatible hosted text providers behavior."
           - name: Provider-specific request shaping
-            description: 'Covers Provider-specific request shaping across hosted text providers that mostly use OpenAI-compatible routes or close variants: DeepSeek, Groq, Mistral, Together, and related openai-compatible hosted text providers behavior.'
+            description: "Covers Provider-specific request shaping across hosted text providers that mostly use OpenAI-compatible routes or close variants: DeepSeek, Groq, Mistral, Together, and related openai-compatible hosted text providers behavior."
           - name: Regional provider setup
             description: Covers Regional provider setup across Qwen, Alibaba, Tencent, Qianfan, and related regional hosted llm providers behavior.
           - name: Region and plan routing
@@ -7946,7 +7946,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -8147,7 +8147,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -8275,7 +8275,7 @@ surfaces:
         human_lts_override: true
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3
@@ -8358,15 +8358,15 @@ surfaces:
       - name: Image Generation
         features:
           - name: text-to-image
-            description: 'Covers text-to-image across image generation and editing runtime behavior after a provider candidate has been selected: request normalization, timeout handling, reference-image inputs, image response parsing, and related image generation and editing behavior.'
+            description: "Covers text-to-image across image generation and editing runtime behavior after a provider candidate has been selected: request normalization, timeout handling, reference-image inputs, image response parsing, and related image generation and editing behavior."
           - name: reference-image editing
-            description: 'Covers reference-image editing across image generation and editing runtime behavior after a provider candidate has been selected: request normalization, timeout handling, reference-image inputs, image response parsing, and related image generation and editing behavior.'
+            description: "Covers reference-image editing across image generation and editing runtime behavior after a provider candidate has been selected: request normalization, timeout handling, reference-image inputs, image response parsing, and related image generation and editing behavior."
           - name: output hints
-            description: 'Covers output hints across image generation and editing runtime behavior after a provider candidate has been selected: request normalization, timeout handling, reference-image inputs, image response parsing, and related image generation and editing behavior.'
+            description: "Covers output hints across image generation and editing runtime behavior after a provider candidate has been selected: request normalization, timeout handling, reference-image inputs, image response parsing, and related image generation and editing behavior."
           - name: action=status
-            description: 'Covers action=status across image generation and editing runtime behavior after a provider candidate has been selected: request normalization, timeout handling, reference-image inputs, image response parsing, and related image generation and editing behavior.'
+            description: "Covers action=status across image generation and editing runtime behavior after a provider candidate has been selected: request normalization, timeout handling, reference-image inputs, image response parsing, and related image generation and editing behavior."
           - name: provider attempt metadata
-            description: 'Covers provider attempt metadata across image generation and editing runtime behavior after a provider candidate has been selected: request normalization, timeout handling, reference-image inputs, image response parsing, and related image generation and editing behavior.'
+            description: "Covers provider attempt metadata across image generation and editing runtime behavior after a provider candidate has been selected: request normalization, timeout handling, reference-image inputs, image response parsing, and related image generation and editing behavior."
           - name: OpenAI/Codex OAuth
             description: Covers OpenAI/Codex OAuth across provider registrations and auth paths for image generation and editing, including OpenAI/Codex OAuth, OpenRouter, xAI, and related image providers and auth behavior.
           - name: API-key OpenAI
@@ -8394,27 +8394,27 @@ surfaces:
       - name: Video Generation
         features:
           - name: text-to-video
-            description: 'Covers text-to-video across video generation request normalization before provider execution: `generate`, `imageToVideo`, and `videoToVideo` modes, reference media typing and roles, and related video generation modes behavior.'
+            description: "Covers text-to-video across video generation request normalization before provider execution: `generate`, `imageToVideo`, and `videoToVideo` modes, reference media typing and roles, and related video generation modes behavior."
           - name: image-to-video
-            description: 'Covers image-to-video across video generation request normalization before provider execution: `generate`, `imageToVideo`, and `videoToVideo` modes, reference media typing and roles, and related video generation modes behavior.'
+            description: "Covers image-to-video across video generation request normalization before provider execution: `generate`, `imageToVideo`, and `videoToVideo` modes, reference media typing and roles, and related video generation modes behavior."
           - name: video-to-video
-            description: 'Covers video-to-video across video generation request normalization before provider execution: `generate`, `imageToVideo`, and `videoToVideo` modes, reference media typing and roles, and related video generation modes behavior.'
+            description: "Covers video-to-video across video generation request normalization before provider execution: `generate`, `imageToVideo`, and `videoToVideo` modes, reference media typing and roles, and related video generation modes behavior."
           - name: reference role validation
-            description: 'Covers reference role validation across video generation request normalization before provider execution: `generate`, `imageToVideo`, and `videoToVideo` modes, reference media typing and roles, and related video generation modes behavior.'
+            description: "Covers reference role validation across video generation request normalization before provider execution: `generate`, `imageToVideo`, and `videoToVideo` modes, reference media typing and roles, and related video generation modes behavior."
           - name: audio refs
-            description: 'Covers audio refs across video generation request normalization before provider execution: `generate`, `imageToVideo`, and `videoToVideo` modes, reference media typing and roles, and related video generation modes behavior.'
+            description: "Covers audio refs across video generation request normalization before provider execution: `generate`, `imageToVideo`, and `videoToVideo` modes, reference media typing and roles, and related video generation modes behavior."
           - name: typed providerOptions
-            description: 'Covers typed providerOptions across video generation request normalization before provider execution: `generate`, `imageToVideo`, and `videoToVideo` modes, reference media typing and roles, and related video generation modes behavior.'
+            description: "Covers typed providerOptions across video generation request normalization before provider execution: `generate`, `imageToVideo`, and `videoToVideo` modes, reference media typing and roles, and related video generation modes behavior."
           - name: queue-backed jobs
-            description: 'Covers queue-backed jobs across provider integration and async polling for video generation after request normalization: OpenAI Sora, OpenRouter, fal, Runway, and related video providers and polling behavior.'
+            description: "Covers queue-backed jobs across provider integration and async polling for video generation after request normalization: OpenAI Sora, OpenRouter, fal, Runway, and related video providers and polling behavior."
           - name: polling/timeout handling
-            description: 'Covers polling/timeout handling across provider integration and async polling for video generation after request normalization: OpenAI Sora, OpenRouter, fal, Runway, and related video providers and polling behavior.'
+            description: "Covers polling/timeout handling across provider integration and async polling for video generation after request normalization: OpenAI Sora, OpenRouter, fal, Runway, and related video providers and polling behavior."
           - name: Hosted URL download
-            description: 'Covers hosted URL download across provider integration and async polling for video generation after request normalization: OpenAI Sora, OpenRouter, fal, Runway, and related video providers and polling behavior.'
+            description: "Covers hosted URL download across provider integration and async polling for video generation after request normalization: OpenAI Sora, OpenRouter, fal, Runway, and related video providers and polling behavior."
           - name: provider skip explanations
-            description: 'Covers provider skip explanations across provider integration and async polling for video generation after request normalization: OpenAI Sora, OpenRouter, fal, Runway, and related video providers and polling behavior.'
+            description: "Covers provider skip explanations across provider integration and async polling for video generation after request normalization: OpenAI Sora, OpenRouter, fal, Runway, and related video providers and polling behavior."
           - name: returned asset metadata
-            description: 'Covers returned asset metadata across provider integration and async polling for video generation after request normalization: OpenAI Sora, OpenRouter, fal, Runway, and related video providers and polling behavior.'
+            description: "Covers returned asset metadata across provider integration and async polling for video generation after request normalization: OpenAI Sora, OpenRouter, fal, Runway, and related video providers and polling behavior."
         docs:
           - docs/tools/video-generation.md
           - docs/providers/runway.md
@@ -8462,7 +8462,7 @@ surfaces:
         human_lts_override: false
     last_score_run:
       status: complete
-      completed_at: '2026-05-30'
+      completed_at: "2026-05-30"
       by: codex
       source_ref: null
       process_version: 3

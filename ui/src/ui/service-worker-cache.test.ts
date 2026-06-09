@@ -22,6 +22,6 @@ describe("Control UI service worker cache versioning", () => {
     expect(serviceWorkerSource).toContain("slice(-priorCacheLimit)");
     expect(serviceWorkerSource).toContain("caches.delete");
     expect(viteConfigSource).toContain("source.replace(placeholder, JSON.stringify(buildId))");
-    expect(serviceWorkerSource).not.toContain('const CACHE_NAME = "openclaw-control-v1"');
+    expect(serviceWorkerSource).not.toContain('const CACHE_NAME = "intellisoins-control-v1"');
   });
 });

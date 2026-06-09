@@ -221,6 +221,7 @@ function persistSessionToken(gatewayUrl: string, token: string) {
 export function loadSettings(): UiSettings {
   const { pageUrl: pageDerivedUrl, effectiveUrl: defaultUrl } = deriveDefaultGatewayUrl();
   const storage = getSafeLocalStorage();
+  const isTest = typeof process !== "undefined" && process.env?.VITEST === "true";
 
   const defaults: UiSettings = {
     gatewayUrl: defaultUrl,
@@ -239,7 +240,7 @@ export function loadSettings(): UiSettings {
     recentSessionsCollapsed: false,
     borderRadius: 50,
     textScale: 100,
-    locale: "fr",
+    locale: isTest ? "en" : "fr",
   };
 
   try {

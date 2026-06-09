@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>OpenClaw Control</title>
+    <title>IntelliSoins Control</title>
     <meta name="color-scheme" content="dark light" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
@@ -63,7 +63,7 @@
       })();
     </script>
     <style>
-      body.openclaw-mount-fallback-active {
+      body.intellisoins-mount-fallback-active {
         margin: 0;
         min-width: 320px;
         color: #eef4f8;
@@ -78,7 +78,7 @@
           sans-serif;
       }
 
-      body.openclaw-mount-fallback-active openclaw-app {
+      body.intellisoins-mount-fallback-active intellisoins-app {
         display: none;
       }
 
@@ -174,7 +174,7 @@
         outline-offset: 3px;
       }
 
-      html[data-theme-mode="light"] body.openclaw-mount-fallback-active {
+      html[data-theme-mode="light"] body.intellisoins-mount-fallback-active {
         color: #151b21;
         background: #f5f7fa;
       }
@@ -197,26 +197,31 @@
     </style>
   </head>
   <body>
-    <openclaw-app></openclaw-app>
+    <intellisoins-app></intellisoins-app>
     <section
-      id="openclaw-mount-fallback"
+      id="intellisoins-mount-fallback"
       class="mount-fallback"
-      data-openclaw-mount-timeout-ms="12000"
+      data-intellisoins-mount-timeout-ms="12000"
       role="alert"
-      aria-labelledby="openclaw-mount-fallback-title"
+      aria-labelledby="intellisoins-mount-fallback-title"
       hidden
     >
       <div class="mount-fallback__panel" tabindex="-1">
-        <p class="mount-fallback__eyebrow">OpenClaw Control UI</p>
-        <h1 id="openclaw-mount-fallback-title">L'interface de contrôle ne s'est pas lancée</h1>
+        <p class="mount-fallback__eyebrow">IntelliSoins Control UI</p>
+        <h1 id="intellisoins-mount-fallback-title">L'interface de contrôle ne s'est pas lancée</h1>
         <p>
           Le navigateur a chargé la page statique, mais le pack d'application n'a pas enregistré le
-          composant web <code>openclaw-app</code>. Une extension de navigateur ou un script de contenu précoce
-          bloque peut-être l'exécution du module.
+          composant web <code>intellisoins-app</code>. Une extension de navigateur ou un script de
+          contenu précoce bloque peut-être l'exécution du module.
         </p>
         <ul>
-          <li>Réessayez dans un profil de navigateur propre ou dans une fenêtre de navigation privée.</li>
-          <li>Désactivez les extensions qui s'exécutent sur toutes les pages, puis rechargez ce tableau de bord.</li>
+          <li>
+            Réessayez dans un profil de navigateur propre ou dans une fenêtre de navigation privée.
+          </li>
+          <li>
+            Désactivez les extensions qui s'exécutent sur toutes les pages, puis rechargez ce
+            tableau de bord.
+          </li>
           <li>
             Voir les
             <a
@@ -230,12 +235,12 @@
         <div class="mount-fallback__actions">
           <button
             type="button"
-            id="openclaw-mount-retry"
+            id="intellisoins-mount-retry"
             class="mount-fallback__button mount-fallback__button--primary"
           >
             Réessayer
           </button>
-          <button type="button" id="openclaw-mount-wait" class="mount-fallback__button">
+          <button type="button" id="intellisoins-mount-wait" class="mount-fallback__button">
             Continuer d'attendre
           </button>
         </div>
@@ -243,15 +248,15 @@
     </section>
     <script>
       (function () {
-        var tagName = "openclaw-app";
+        var tagName = "intellisoins-app";
         var app = document.querySelector(tagName);
-        var fallback = document.getElementById("openclaw-mount-fallback");
+        var fallback = document.getElementById("intellisoins-mount-fallback");
         if (!app || !fallback) return;
 
         var panel = fallback.querySelector(".mount-fallback__panel");
-        var retry = document.getElementById("openclaw-mount-retry");
-        var wait = document.getElementById("openclaw-mount-wait");
-        var rawDelay = Number(fallback.getAttribute("data-openclaw-mount-timeout-ms"));
+        var retry = document.getElementById("intellisoins-mount-retry");
+        var wait = document.getElementById("intellisoins-mount-wait");
+        var rawDelay = Number(fallback.getAttribute("data-intellisoins-mount-timeout-ms"));
         var delay = Number.isFinite(rawDelay) && rawDelay > 0 ? rawDelay : 12000;
         var timer;
 
@@ -270,13 +275,13 @@
 
         function hideFallback() {
           fallback.hidden = true;
-          document.body.classList.remove("openclaw-mount-fallback-active");
+          document.body.classList.remove("intellisoins-mount-fallback-active");
         }
 
         function showFallback() {
           if (appMounted()) return;
           fallback.hidden = false;
-          document.body.classList.add("openclaw-mount-fallback-active");
+          document.body.classList.add("intellisoins-mount-fallback-active");
           if (panel && typeof panel.focus === "function") {
             try {
               panel.focus({ preventScroll: true });

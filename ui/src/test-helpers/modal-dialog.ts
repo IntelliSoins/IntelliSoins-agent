@@ -43,10 +43,10 @@ export function installDialogPolyfill(): () => void {
 }
 
 export async function getRenderedModalDialog(container: HTMLElement) {
-  const modal = container.querySelector<OpenClawModalDialog>("openclaw-modal-dialog");
+  const modal = container.querySelector<OpenClawModalDialog>("intellisoins-modal-dialog");
   expect(modal).toBeInstanceOf(HTMLElement);
   if (!modal) {
-    throw new Error("Expected openclaw-modal-dialog");
+    throw new Error("Expected intellisoins-modal-dialog");
   }
   await modal.updateComplete;
   await nextFrame();

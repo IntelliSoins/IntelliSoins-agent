@@ -66,8 +66,8 @@ function quoteShellArg(value: string): string {
 
 function renderServerRow(props: McpViewProps, server: McpServerRow) {
   const quotedName = quoteShellArg(server.name);
-  const probeCommand = `openclaw mcp probe ${quotedName}`;
-  const loginCommand = `openclaw mcp login ${quotedName}`;
+  const probeCommand = `intellisoins mcp probe ${quotedName}`;
+  const loginCommand = `intellisoins mcp login ${quotedName}`;
   return html`
     <article class="mcp-server-row">
       <div class="mcp-server-row__main">
@@ -138,10 +138,10 @@ export function renderMcp(props: McpViewProps) {
           <div class="card-sub">Status, diagnostics, auth, probing, and runtime reload.</div>
         </div>
         <div class="mcp-command-card__grid">
-          <code>openclaw mcp status --verbose</code>
-          <code>openclaw mcp doctor --probe</code>
-          <code>openclaw mcp login &lt;name&gt;</code>
-          <code>openclaw mcp reload</code>
+          <code>intellisoins mcp status --verbose</code>
+          <code>intellisoins mcp doctor --probe</code>
+          <code>intellisoins mcp login &lt;name&gt;</code>
+          <code>intellisoins mcp reload</code>
         </div>
       </section>
 

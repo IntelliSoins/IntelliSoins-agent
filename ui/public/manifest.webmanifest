@@ -1,6 +1,6 @@
 {
-  "name": "OpenClaw Control",
-  "short_name": "OpenClaw",
+  "name": "IntelliSoins Control",
+  "short_name": "IntelliSoins",
   "description": "Multi-channel AI gateway control panel",
   "start_url": "./",
   "display": "standalone",

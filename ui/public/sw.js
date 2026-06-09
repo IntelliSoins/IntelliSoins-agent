@@ -1,7 +1,7 @@
-// OpenClaw Control – Service Worker
+// IntelliSoins Control – Service Worker
 // Handles offline caching and push notifications.
 
-const CACHE_PREFIX = "openclaw-control-";
+const CACHE_PREFIX = "intellisoins-control-";
 const EMBEDDED_CACHE_VERSION = "__OPENCLAW_CONTROL_UI_BUILD_ID__";
 const URL_CACHE_VERSION = new URL(self.location.href).searchParams
   .get("v")
@@ -107,15 +107,15 @@ self.addEventListener("push", (event) => {
   try {
     data = event.data.json();
   } catch {
-    data = { title: "OpenClaw", body: event.data.text() };
+    data = { title: "IntelliSoins", body: event.data.text() };
   }
 
-  const title = data.title || "OpenClaw";
+  const title = data.title || "IntelliSoins";
   const options = {
     body: data.body || "",
     icon: "./apple-touch-icon.png",
     badge: "./favicon-32.png",
-    tag: data.tag || "openclaw-notification",
+    tag: data.tag || "intellisoins-notification",
     data: { url: data.url || "./" },
   };
 
