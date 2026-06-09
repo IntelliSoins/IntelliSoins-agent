@@ -1,437 +1,404 @@
 model_list:
-- model_name: mlxcel-llama32-3b
-  litellm_params:
-    model: openai/mlx-community/Llama-3.2-3B-Instruct-4bit
-    api_key: dummy
-    api_base: http://127.0.0.1:8097/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 11111111-2222-3333-4444-555555555555
-    db_model: false
-- model_name: claude-local-qwen35-35b
-  litellm_params:
-    model: openai/mlx-community/Qwen3.5-35B-A3B-4bit
-    api_key: dummy
-    api_base: http://127.0.0.1:8087/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 02d88f66-2b64-5421-b70d-068206da3b5d
-    db_model: false
-- model_name: claude-local-ollama
-  litellm_params:
-    model: openai/llama3.2
-    api_key: dummy
-    api_base: http://127.0.0.1:11434/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 0772c783-de76-54b2-89fc-144df98790bf
-    db_model: false
-- model_name: glm-5.1
-  litellm_params:
-    model: together_ai/zai-org/GLM-5.1
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 122c9869-0950-5947-90fd-35ae7915341a
-    db_model: false
-- model_name: claude-together-deepseek-v3-1
-  litellm_params:
-    model: together_ai/deepseek-ai/DeepSeek-V3.1
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 1443dff3-5075-5834-bdfd-3a8bc35499fd
-    db_model: false
-- model_name: claude-together-deepseek-r1
-  litellm_params:
-    model: together_ai/deepseek-ai/DeepSeek-R1
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 1a9ab5fc-5f7b-5629-b370-aa5d5172f08d
-    db_model: false
-- model_name: gpt-4o
-  litellm_params:
-    model: openai/gpt-4o
-    api_key: os.environ/OPENAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 20bfa9c5-0ebf-59f8-bda9-f39d894e2552
-    db_model: false
-- model_name: ollama-default
-  litellm_params:
-    model: openai/llama3.2
-    api_key: dummy
-    api_base: http://127.0.0.1:11434/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 2834aeb4-dd49-5635-81fc-2b24750aef9e
-    db_model: false
-- model_name: qwen3-235b
-  litellm_params:
-    model: together_ai/Qwen/Qwen3-235B-A22B-Instruct-2507-tput
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 29f9e474-33f1-5ce6-8c33-7cc9bce43718
-    db_model: false
-- model_name: claude-together-kimi-k2-6
-  litellm_params:
-    model: together_ai/moonshotai/Kimi-K2.6
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 2de136a1-efcd-5db5-a8b6-2915009ae508
-    db_model: false
-- model_name: anthropic-claude-opus-4-7-1m
-  litellm_params:
-    model: anthropic/claude-opus-4-7
-    extra_headers:
-      anthropic-beta: context-1m-2025-08-07
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 39222e4e-8c40-5b6b-a56e-67639085b6da
-    db_model: false
-- model_name: anthropic-claude-opus
-  litellm_params:
-    model: anthropic/claude-opus-4-7
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 3c08e9b3-8676-5988-bf5c-90ed2727610a
-    db_model: false
-- model_name: claude-together-glm-5-1
-  litellm_params:
-    model: together_ai/zai-org/GLM-5.1
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 476dda38-1472-55e4-8143-3fc8dbda18f7
-    db_model: false
-- model_name: claude-opus-4-6
-  litellm_params:
-    model: together_ai/moonshotai/Kimi-K2.6
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 591c9da0-f371-5f0b-b6a7-d673f3439978
-    db_model: false
-- model_name: claude-together-qwen3-coder-480b
-  litellm_params:
-    model: together_ai/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 6a7d5334-9406-53d2-a14b-3141a38ff9c2
-    db_model: false
-- model_name: omlx-coder
-  litellm_params:
-    model: custom_openai/mlx-community/Qwen3.5-9B-MLX-4bit
-    api_key: os.environ/OMLX_API_KEY
-    api_base: http://127.0.0.1:8010/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 6f7f5b66-1551-511b-aca1-84c218efc445
-    db_model: false
-- model_name: qwen35-35b
-  litellm_params:
-    model: openai/mlx-community/Qwen3.5-35B-A3B-4bit
-    api_key: dummy
-    api_base: http://127.0.0.1:8087/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 71bb17b0-8089-54b9-a706-1410c2256742
-    db_model: false
-- model_name: gemma4-12b-mlx
-  litellm_params:
-    model: openai/gemma4-12b
-    api_key: dummy
-    api_base: http://127.0.0.1:8098/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 1ec801ec-c42b-5ef8-9f3a-7dcc041e7d7f
-    db_model: false
-- model_name: gemma4-12b
-  litellm_params:
-    model: openai/gemma4-12b
-    api_key: dummy
-    api_base: http://127.0.0.1:8098/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 12f2845c-158f-5ece-b2fe-ebff88ee2108
-    db_model: false
-- model_name: bge-reranker-v2-m3
-  litellm_params:
-    model: openai/bge-reranker-v2-m3
-    api_key: dummy
-    api_base: http://127.0.0.1:8085/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 727aa42e-f43a-56c1-9366-7ba1e8f5d103
-    db_model: false
-- model_name: claude-haiku-4-5
-  litellm_params:
-    model: openai/gpt-4o
-    api_key: os.environ/OPENAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 7ecc1137-b03d-57d4-9710-6abf7829d127
-    db_model: false
-- model_name: anthropic-claude-sonnet
-  litellm_params:
-    model: anthropic/claude-sonnet-4-6
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 82faae23-ba11-5dc3-8e0c-4bb2f544c9a4
-    db_model: false
-- model_name: claude-opus-4-8[1m]
-  litellm_params:
-    model: anthropic/claude-opus-4-8
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 86d5ab38-de0b-5f21-81ca-7513d7d6f870
-    db_model: false
-- model_name: gpt-5.5
-  litellm_params:
-    model: openai/gpt-5.5
-    api_key: os.environ/OPENAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 8a2e91b0-7dbf-5b22-b651-ae5dc8b034d1
-    db_model: false
-- model_name: voxtral-tts
-  litellm_params:
-    model: openai/mlx-community/Voxtral-4B-TTS-2603-mlx-4bit
-    api_key: dummy
-    api_base: http://127.0.0.1:8880/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 8b21dcd3-a795-5021-ae80-a68180430433
-    db_model: false
-- model_name: kimi-k2.6
-  litellm_params:
-    model: together_ai/moonshotai/Kimi-K2.6
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 8b66d1a6-72c0-567f-abda-409aebf55be9
-    db_model: false
-- model_name: claude-together-qwen3-235b
-  litellm_params:
-    model: together_ai/Qwen/Qwen3-235B-A22B-Instruct-2507-tput
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 8d35f577-8a91-5e06-8556-f66505d8af75
-    db_model: false
-- model_name: claude-sonnet-4-6
-  litellm_params:
-    model: together_ai/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 92350cab-bce7-54d2-90a5-f354f97a1579
-    db_model: false
-- model_name: deepseek-r1
-  litellm_params:
-    model: together_ai/deepseek-ai/DeepSeek-R1
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 9558c327-265c-5d60-a137-0dd52dfce4db
-    db_model: false
-- model_name: whisper-stt
-  litellm_params:
-    model: openai/whisper-large-v3-turbo
-    api_key: dummy
-    api_base: http://127.0.0.1:2022/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 9bcb9d56-ce4b-5112-8844-e9e7512cf1a7
-    db_model: false
-- model_name: deepseek-v3.1
-  litellm_params:
-    model: together_ai/deepseek-ai/DeepSeek-V3.1
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: aaec9e51-7f1b-585a-9de4-7c3b08a81e9d
-    db_model: false
-- model_name: claude-openai-gpt-4o
-  litellm_params:
-    model: openai/gpt-4o
-    api_key: os.environ/OPENAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: b511e1ba-4fa3-530a-a307-e0c906ea1b49
-    db_model: false
-- model_name: Kimi-K2.6
-  litellm_params:
-    model: together_ai/moonshotai/Kimi-K2.6
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: bc85fc61-3daa-5346-9097-940824893044
-    db_model: false
-- model_name: kokoro-tts
-  litellm_params:
-    model: openai/mlx-community/Kokoro-82M-bf16
-    api_key: dummy
-    api_base: http://127.0.0.1:8880/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: c2792f22-c250-5868-80a1-0e1d158ddc0f
-    db_model: false
-- model_name: vibevoice-tts
-  litellm_params:
-    model: openai//Users/michaelahern/nlp/whisper-finetune/datasets/vibevoice-fused
-    api_key: dummy
-    api_base: http://127.0.0.1:8882/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: d883e590-7459-4b88-9ca3-78559865f084
-    db_model: false
-- model_name: qwen3-coder-480b
-  litellm_params:
-    model: together_ai/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8
-    api_key: os.environ/TOGETHERAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: c6a1817b-5a86-5889-9ded-04fc677b723b
-    db_model: false
-- model_name: qwen35-9b-vision
-  litellm_params:
-    model: openai/qwen3.5-9b-vision
-    api_key: dummy
-    api_base: http://127.0.0.1:8089/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: caa7a5fc-e06f-5b76-b057-4984fbe19c14
-    db_model: false
-- model_name: qwen3-embedding
-  litellm_params:
-    model: openai/qwen3-embedding
-    api_key: dummy
-    api_base: http://127.0.0.1:8084/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: cbc18fe2-3c31-5251-9ccb-6f9dc5dc13f0
-    db_model: false
-- model_name: anthropic-claude-opus-4-8
-  litellm_params:
-    model: anthropic/claude-opus-4-8
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: d2941874-84c0-5c9c-8b0a-d1508668bea2
-    db_model: false
-- model_name: claude-opus-4-7[1m]
-  litellm_params:
-    model: anthropic/claude-opus-4-7
-    extra_headers:
-      anthropic-beta: context-1m-2025-08-07
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: d9131983-ca41-5ee5-b3ae-f1b7ee52dff3
-    db_model: false
-- model_name: claude-openai-gpt-5-5
-  litellm_params:
-    model: openai/gpt-5.5
-    api_key: os.environ/OPENAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: d9b36e84-35be-54d2-8c87-f4b72ffaa8e2
-    db_model: false
-- model_name: claude-haiku-4-5-20251001
-  litellm_params:
-    model: openai/gpt-4o
-    api_key: os.environ/OPENAI_API_KEY
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: eb89fabc-1e5d-5a2d-bfed-a59cbce83382
-    db_model: false
+  - model_name: mlxcel-llama32-3b
+    litellm_params:
+      model: openai/mlx-community/Llama-3.2-3B-Instruct-4bit
+      api_key: dummy
+      api_base: http://127.0.0.1:8097/v1
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 11111111-2222-3333-4444-555555555555
+      db_model: false
+  - model_name: glm-5.1
+    litellm_params:
+      model: together_ai/zai-org/GLM-5.1
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 122c9869-0950-5947-90fd-35ae7915341a
+      db_model: false
+  - model_name: claude-together-deepseek-v3-1
+    litellm_params:
+      model: together_ai/deepseek-ai/DeepSeek-V3.1
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 1443dff3-5075-5834-bdfd-3a8bc35499fd
+      db_model: false
+  - model_name: claude-together-deepseek-r1
+    litellm_params:
+      model: together_ai/deepseek-ai/DeepSeek-R1
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 1a9ab5fc-5f7b-5629-b370-aa5d5172f08d
+      db_model: false
+  - model_name: gpt-4o
+    litellm_params:
+      model: openai/gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 20bfa9c5-0ebf-59f8-bda9-f39d894e2552
+      db_model: false
+  - model_name: ollama-default
+    litellm_params:
+      model: openai/llama3.2
+      api_key: dummy
+      api_base: http://127.0.0.1:11434/v1
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 2834aeb4-dd49-5635-81fc-2b24750aef9e
+      db_model: false
+  - model_name: qwen3-235b
+    litellm_params:
+      model: together_ai/Qwen/Qwen3-235B-A22B-Instruct-2507-tput
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 29f9e474-33f1-5ce6-8c33-7cc9bce43718
+      db_model: false
+  - model_name: claude-together-kimi-k2-6
+    litellm_params:
+      model: together_ai/moonshotai/Kimi-K2.6
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 2de136a1-efcd-5db5-a8b6-2915009ae508
+      db_model: false
+  - model_name: anthropic-claude-opus-4-7-1m
+    litellm_params:
+      model: anthropic/claude-opus-4-7
+      extra_headers:
+        anthropic-beta: context-1m-2025-08-07
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 39222e4e-8c40-5b6b-a56e-67639085b6da
+      db_model: false
+  - model_name: anthropic-claude-opus
+    litellm_params:
+      model: anthropic/claude-opus-4-7
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 3c08e9b3-8676-5988-bf5c-90ed2727610a
+      db_model: false
+  - model_name: claude-together-glm-5-1
+    litellm_params:
+      model: together_ai/zai-org/GLM-5.1
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 476dda38-1472-55e4-8143-3fc8dbda18f7
+      db_model: false
+  - model_name: claude-opus-4-6
+    litellm_params:
+      model: together_ai/moonshotai/Kimi-K2.6
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 591c9da0-f371-5f0b-b6a7-d673f3439978
+      db_model: false
+  - model_name: claude-together-qwen3-coder-480b
+    litellm_params:
+      model: together_ai/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 6a7d5334-9406-53d2-a14b-3141a38ff9c2
+      db_model: false
+  - model_name: omlx-coder
+    litellm_params:
+      model: custom_openai/mlx-community/Qwen3.5-9B-MLX-4bit
+      api_key: os.environ/OMLX_API_KEY
+      api_base: http://127.0.0.1:8010/v1
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 6f7f5b66-1551-511b-aca1-84c218efc445
+      db_model: false
+  - model_name: qwen35-35b
+    litellm_params:
+      model: openai/mlx-community/Qwen3.5-35B-A3B-4bit
+      api_key: dummy
+      api_base: http://127.0.0.1:8087/v1
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 71bb17b0-8089-54b9-a706-1410c2256742
+      db_model: false
+  - model_name: gemma4-12b
+    litellm_params:
+      model: openai/gemma4-12b
+      api_key: dummy
+      api_base: http://127.0.0.1:8098/v1
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 12f2845c-158f-5ece-b2fe-ebff88ee2108
+      db_model: false
+  - model_name: bge-reranker-v2-m3
+    litellm_params:
+      model: openai/bge-reranker-v2-m3
+      api_key: dummy
+      api_base: http://127.0.0.1:8085/v1
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 727aa42e-f43a-56c1-9366-7ba1e8f5d103
+      db_model: false
+  - model_name: claude-haiku-4-5
+    litellm_params:
+      model: openai/gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 7ecc1137-b03d-57d4-9710-6abf7829d127
+      db_model: false
+  - model_name: anthropic-claude-sonnet
+    litellm_params:
+      model: anthropic/claude-sonnet-4-6
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 82faae23-ba11-5dc3-8e0c-4bb2f544c9a4
+      db_model: false
+  - model_name: claude-opus-4-8[1m]
+    litellm_params:
+      model: anthropic/claude-opus-4-8
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 86d5ab38-de0b-5f21-81ca-7513d7d6f870
+      db_model: false
+  - model_name: gpt-5.5
+    litellm_params:
+      model: openai/gpt-5.5
+      api_key: os.environ/OPENAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 8a2e91b0-7dbf-5b22-b651-ae5dc8b034d1
+      db_model: false
+  - model_name: voxtral-tts
+    litellm_params:
+      model: openai/mlx-community/Voxtral-4B-TTS-2603-mlx-4bit
+      api_key: dummy
+      api_base: http://127.0.0.1:8880/v1
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 8b21dcd3-a795-5021-ae80-a68180430433
+      db_model: false
+  - model_name: kimi-k2.6
+    litellm_params:
+      model: together_ai/moonshotai/Kimi-K2.6
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 8b66d1a6-72c0-567f-abda-409aebf55be9
+      db_model: false
+  - model_name: claude-together-qwen3-235b
+    litellm_params:
+      model: together_ai/Qwen/Qwen3-235B-A22B-Instruct-2507-tput
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 8d35f577-8a91-5e06-8556-f66505d8af75
+      db_model: false
+  - model_name: claude-sonnet-4-6
+    litellm_params:
+      model: together_ai/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 92350cab-bce7-54d2-90a5-f354f97a1579
+      db_model: false
+  - model_name: deepseek-r1
+    litellm_params:
+      model: together_ai/deepseek-ai/DeepSeek-R1
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 9558c327-265c-5d60-a137-0dd52dfce4db
+      db_model: false
+  - model_name: whisper-stt
+    litellm_params:
+      model: openai/whisper-large-v3-turbo
+      api_key: dummy
+      api_base: http://127.0.0.1:2022/v1
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: 9bcb9d56-ce4b-5112-8844-e9e7512cf1a7
+      db_model: false
+  - model_name: deepseek-v3.1
+    litellm_params:
+      model: together_ai/deepseek-ai/DeepSeek-V3.1
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: aaec9e51-7f1b-585a-9de4-7c3b08a81e9d
+      db_model: false
+  - model_name: claude-openai-gpt-4o
+    litellm_params:
+      model: openai/gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: b511e1ba-4fa3-530a-a307-e0c906ea1b49
+      db_model: false
+  - model_name: Kimi-K2.6
+    litellm_params:
+      model: together_ai/moonshotai/Kimi-K2.6
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: bc85fc61-3daa-5346-9097-940824893044
+      db_model: false
+  - model_name: kokoro-tts
+    litellm_params:
+      model: openai/mlx-community/Kokoro-82M-bf16
+      api_key: dummy
+      api_base: http://127.0.0.1:8880/v1
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: c2792f22-c250-5868-80a1-0e1d158ddc0f
+      db_model: false
+  - model_name: vibevoice-tts
+    litellm_params:
+      model: openai//Users/michaelahern/nlp/whisper-finetune/datasets/vibevoice-fused
+      api_key: dummy
+      api_base: http://127.0.0.1:8882/v1
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: d883e590-7459-4b88-9ca3-78559865f084
+      db_model: false
+  - model_name: qwen3-coder-480b
+    litellm_params:
+      model: together_ai/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8
+      api_key: os.environ/TOGETHERAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: c6a1817b-5a86-5889-9ded-04fc677b723b
+      db_model: false
+  - model_name: qwen35-9b-vision
+    litellm_params:
+      model: openai/qwen3.5-9b-vision
+      api_key: dummy
+      api_base: http://127.0.0.1:8089/v1
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: caa7a5fc-e06f-5b76-b057-4984fbe19c14
+      db_model: false
+  - model_name: qwen3-embedding
+    litellm_params:
+      model: openai/qwen3-embedding
+      api_key: dummy
+      api_base: http://127.0.0.1:8084/v1
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: cbc18fe2-3c31-5251-9ccb-6f9dc5dc13f0
+      db_model: false
+  - model_name: anthropic-claude-opus-4-8
+    litellm_params:
+      model: anthropic/claude-opus-4-8
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: d2941874-84c0-5c9c-8b0a-d1508668bea2
+      db_model: false
+  - model_name: claude-opus-4-7[1m]
+    litellm_params:
+      model: anthropic/claude-opus-4-7
+      extra_headers:
+        anthropic-beta: context-1m-2025-08-07
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: d9131983-ca41-5ee5-b3ae-f1b7ee52dff3
+      db_model: false
+  - model_name: claude-openai-gpt-5-5
+    litellm_params:
+      model: openai/gpt-5.5
+      api_key: os.environ/OPENAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: d9b36e84-35be-54d2-8c87-f4b72ffaa8e2
+      db_model: false
+  - model_name: claude-haiku-4-5-20251001
+    litellm_params:
+      model: openai/gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+      use_litellm_proxy: false
+      use_in_pass_through: false
+      merge_reasoning_content_in_choices: false
+    model_info:
+      id: eb89fabc-1e5d-5a2d-bfed-a59cbce83382
+      db_model: false
 router_settings:
   routing_strategy: simple-shuffle
   model_group_alias:
@@ -443,13 +410,16 @@ router_settings:
     claude-sonnet-4-6-together-deepseek-r1: claude-together-deepseek-r1
     claude-sonnet-4-6-together-glm-5-1: claude-together-glm-5-1
     claude-haiku-4-5-openai-gpt-4o: claude-openai-gpt-4o
-    claude-sonnet-4-6-local-qwen35-35b: claude-local-qwen35-35b
-    claude-sonnet-4-6-local-ollama: claude-local-ollama
-    pgml-auto-general: gemma4-12b-mlx
+    claude-sonnet-4-6-local-qwen35-35b: qwen35-35b
+    claude-sonnet-4-6-local-ollama: ollama-default
+    pgml-auto-general: gemma4-12b
     pgml-auto-code: qwen3-coder-480b
     pgml-auto-reasoning: deepseek-r1
-    pgml-auto-medical: gemma4-12b-mlx
+    pgml-auto-medical: gemma4-12b
     pgml-auto-vision: qwen35-9b-vision
+    claude-local-qwen35-35b: qwen35-35b
+    claude-local-ollama: ollama-default
+    gemma4-12b-mlx: gemma4-12b
   num_retries: 2
   timeout: 120
   allowed_fails: 3
@@ -462,108 +432,7 @@ litellm_settings:
   num_retries: 2
   request_timeout: 120
   force_ipv4: true
-  fallbacks:
-  - pgml-auto-general:
-    - qwen35-35b
-    - qwen3-coder-480b
-    - kimi-k2.6
-    - gpt-4o
-  - pgml-auto-code:
-    - omlx-coder
-    - gpt-5.5
-    - gpt-4o
-  - pgml-auto-reasoning:
-    - qwen3-235b
-    - gpt-5.5
-    - gpt-4o
-  - pgml-auto-medical:
-    - qwen35-35b
-    - gpt-5.5
-    - gpt-4o
-  - pgml-auto-vision:
-    - gpt-4o
-  - claude-opus-4-7:
-    - qwen3-coder-480b
-    - gpt-5.5
-    - gpt-4o
-  - claude-opus-4-6:
-    - qwen3-coder-480b
-    - gpt-5.5
-    - gpt-4o
-  - claude-sonnet-4-6:
-    - kimi-k2.6
-    - gpt-5.5
-    - gpt-4o
-  - claude-haiku-4-5:
-    - gpt-5.5
-    - qwen3-coder-480b
-    - kimi-k2.6
-  - claude-haiku-4-5-20251001:
-    - gpt-5.5
-    - qwen3-coder-480b
-    - kimi-k2.6
-  - gpt-5.5:
-    - gpt-4o
-    - qwen3-coder-480b
-    - kimi-k2.6
-  - gpt-4o:
-    - gpt-5.5
-    - qwen3-coder-480b
-    - kimi-k2.6
-  - deepseek-v3.1:
-    - qwen3-235b
-    - kimi-k2.6
-    - gpt-4o
-  - deepseek-r1:
-    - gpt-5.5
-    - qwen3-235b
-    - gpt-4o
-  - qwen3-235b:
-    - deepseek-v3.1
-    - kimi-k2.6
-    - gpt-4o
-  - qwen3-coder-480b:
-    - kimi-k2.6
-    - gpt-5.5
-    - gpt-4o
-  - glm-5.1:
-    - qwen3-235b
-    - kimi-k2.6
-    - gpt-4o
-  - kimi-k2.6:
-    - qwen3-coder-480b
-    - gpt-5.5
-    - gpt-4o
-  - qwen35-35b:
-    - qwen3-coder-480b
-    - kimi-k2.6
-    - gpt-4o
-  - gemma4-12b-mlx:
-    - qwen35-35b
-    - qwen3-coder-480b
-    - gpt-4o
-  - gemma4-12b:
-    - qwen35-35b
-    - qwen3-coder-480b
-    - gpt-4o
-  - ollama-default:
-    - gpt-4o
-  - qwen35-9b-vision:
-    - gpt-4o
-  context_window_fallbacks:
-  - gpt-4o:
-    - gpt-5.5
-  - qwen35-35b:
-    - qwen3-coder-480b
-    - gpt-5.5
-  - ollama-default:
-    - gpt-5.5
-    - gpt-4o
-  content_policy_fallbacks:
-  - gpt-4o:
-    - gpt-5.5
-  - gpt-5.5:
-    - gpt-4o
+
   cache: true
   cache_params:
     type: redis
@@ -575,12 +444,12 @@ litellm_settings:
   set_verbose: false
   model_group_settings:
     forward_client_headers_to_llm_api:
-    - anthropic-claude-sonnet
-    - anthropic-claude-opus
-    - anthropic-claude-opus-4-7-1m
-    - claude-opus-4-7[1m]
-    - anthropic-claude-opus-4-8
-    - claude-opus-4-8[1m]
+      - anthropic-claude-sonnet
+      - anthropic-claude-opus
+      - anthropic-claude-opus-4-7-1m
+      - claude-opus-4-7[1m]
+      - anthropic-claude-opus-4-8
+      - claude-opus-4-8[1m]
   turn_off_message_logging: true
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
@@ -593,9 +462,9 @@ general_settings:
   maximum_spend_logs_retention_interval: 1d
   disable_master_key_return: true
 vector_store_registry:
-- vector_store_name: pgvector-local-smoke
-  litellm_params:
-    vector_store_id: 7cb6eb11-f576-4929-9a3c-c5e2acbb6778
-    custom_llm_provider: pg_vector
-    api_base: http://127.0.0.1:8093
-    api_key: os.environ/PG_VECTOR_API_KEY
+  - vector_store_name: pgvector-local-smoke
+    litellm_params:
+      vector_store_id: 7cb6eb11-f576-4929-9a3c-c5e2acbb6778
+      custom_llm_provider: pg_vector
+      api_base: http://127.0.0.1:8093
+      api_key: os.environ/PG_VECTOR_API_KEY
