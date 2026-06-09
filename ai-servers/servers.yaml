@@ -152,7 +152,7 @@ servers:
     port: 8098
     host: 127.0.0.1
     launcher: launchers/gemma4-12b.sh
-    autostart: true
+    autostart: false
     keepalive: true
     requires_disk: true
     log_stdout: logs/gemma4-12b.log

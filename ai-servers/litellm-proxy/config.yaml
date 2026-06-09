@@ -144,9 +144,9 @@ model_list:
       db_model: false
   - model_name: qwen35-35b
     litellm_params:
-      model: openai/mlx-community/Qwen3.5-35B-A3B-4bit
-      api_key: dummy
-      api_base: http://127.0.0.1:8087/v1
+      model: openai/Qwen3.5-35B-A3B-4bit
+      api_key: os.environ/OMLX_API_KEY
+      api_base: http://127.0.0.1:8010/v1
       use_litellm_proxy: false
       use_in_pass_through: false
       merge_reasoning_content_in_choices: false

@@ -18,8 +18,8 @@ exec vmlx serve mlx-community/gemma-4-12B-it-4bit \
     --tool-call-parser gemma4 \
     --reasoning-parser gemma4 \
     --served-model-name gemma4-12b \
-    --default-enable-thinking false \
-    --chat-template-kwargs '{"enable_thinking": false}' \
+    --default-enable-thinking true \
+    --default-repetition-penalty 1.15 \
     --kv-cache-quantization none \
     --enable-prefix-cache \
     --prefix-cache-size 50 \
