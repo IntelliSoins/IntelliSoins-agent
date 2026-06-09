@@ -447,7 +447,7 @@
       "kind": "html-text",
       "name": "text",
       "path": "ui/src/ui/components/dashboard-header.ts",
-      "text": "IntelliSoins"
+      "text": "OpenIntellisoins"
     },
     {
       "count": 1,
@@ -4052,7 +4052,7 @@
       "kind": "html-text",
       "name": "text",
       "path": "ui/src/ui/views/login-gate.ts",
-      "text": "IntelliSoins"
+      "text": "OpenIntellisoins"
     },
     {
       "count": 1,
