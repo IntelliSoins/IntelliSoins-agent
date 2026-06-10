@@ -246,6 +246,17 @@ import {
 } from "./plugins.js";
 import { PushTestParamsSchema, PushTestResultSchema } from "./push.js";
 import {
+  RagIngestParamsSchema,
+  RagIngestResultSchema,
+  RagJobSchema,
+  RagJobsParamsSchema,
+  RagJobsResultSchema,
+  RagSearchParamsSchema,
+  RagSearchResultSchema,
+  RagSourcesParamsSchema,
+  RagSourcesResultSchema,
+} from "./rag.js";
+import {
   SecretsReloadParamsSchema,
   SecretsResolveAssignmentSchema,
   SecretsResolveParamsSchema,
@@ -358,6 +369,17 @@ export const ProtocolSchemas = {
   // Push and secret-resolution payloads used by mobile/control integrations.
   PushTestParams: PushTestParamsSchema,
   PushTestResult: PushTestResultSchema,
+
+  // Local RAG ingestion/search payloads (Intellisoins fork, pgvector sidecar).
+  RagIngestParams: RagIngestParamsSchema,
+  RagIngestResult: RagIngestResultSchema,
+  RagJob: RagJobSchema,
+  RagJobsParams: RagJobsParamsSchema,
+  RagJobsResult: RagJobsResultSchema,
+  RagSearchParams: RagSearchParamsSchema,
+  RagSearchResult: RagSearchResultSchema,
+  RagSourcesParams: RagSourcesParamsSchema,
+  RagSourcesResult: RagSourcesResultSchema,
   SecretsReloadParams: SecretsReloadParamsSchema,
   SecretsResolveParams: SecretsResolveParamsSchema,
   SecretsResolveAssignment: SecretsResolveAssignmentSchema,

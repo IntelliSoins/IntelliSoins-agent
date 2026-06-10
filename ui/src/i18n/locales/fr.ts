@@ -435,6 +435,7 @@ export const fr: TranslationMap = {
     debug: "Débogage",
     logs: "Journaux",
     dreams: "Rêves",
+    rag: "RAG",
   },
   subtitles: {
     agents: "Espaces de travail, outils, identités.",
@@ -461,6 +462,45 @@ export const fr: TranslationMap = {
     debug: "Captures, événements, RPC.",
     logs: "Journaux Gateway en direct.",
     dreams: "Consolidation de la mémoire pendant le sommeil.",
+    rag: "Ingestion de documents, indexation et recherche sémantique.",
+  },
+  rag: {
+    upload: {
+      title: "Téléverser des documents",
+      subtitle: "Types acceptés : {extensions}. Maximum {maxMb} Mo par fichier.",
+      busy: "Téléversement…",
+      fileTooLarge: "{fileName} dépasse la limite de {maxMb} Mo.",
+      unsupportedType: "{fileName} a un type de fichier non pris en charge.",
+    },
+    jobs: {
+      title: "Tâches d'indexation",
+      subtitle: "Tâches d'ingestion et leur statut.",
+      empty: "Aucune tâche d'ingestion pour le moment.",
+      file: "Fichier",
+      status: "Statut",
+      started: "Début",
+      finished: "Fin",
+      running: "Indexation…",
+      chunks: "{count} segments",
+      failed: "Échec de l'indexation.",
+    },
+    sources: {
+      title: "Documents indexés",
+      subtitle: "Documents disponibles pour la recherche sémantique.",
+      empty: "Aucun document indexé pour le moment.",
+      source: "Source",
+      chunks: "Segments",
+      lastIngested: "Dernière indexation",
+    },
+    search: {
+      title: "Recherche sémantique",
+      subtitle: "Interroger les documents indexés.",
+      placeholder: "Rechercher dans les documents indexés",
+      button: "Rechercher",
+      empty: "Aucun résultat.",
+      score: "Score {score}",
+      pages: "Pages : {pages}",
+    },
   },
   skillWorkshop: {
     header: {

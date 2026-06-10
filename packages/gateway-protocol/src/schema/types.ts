@@ -67,6 +67,17 @@ export type NodePendingEnqueueResult = SchemaType<"NodePendingEnqueueResult">;
 export type PushTestParams = SchemaType<"PushTestParams">;
 export type PushTestResult = SchemaType<"PushTestResult">;
 
+/** Local RAG ingestion/search payloads (Intellisoins fork, pgvector sidecar). */
+export type RagIngestParams = SchemaType<"RagIngestParams">;
+export type RagIngestResult = SchemaType<"RagIngestResult">;
+export type RagJob = SchemaType<"RagJob">;
+export type RagJobsParams = SchemaType<"RagJobsParams">;
+export type RagJobsResult = SchemaType<"RagJobsResult">;
+export type RagSearchParams = SchemaType<"RagSearchParams">;
+export type RagSearchResult = SchemaType<"RagSearchResult">;
+export type RagSourcesParams = SchemaType<"RagSourcesParams">;
+export type RagSourcesResult = SchemaType<"RagSourcesResult">;
+
 /** Session lifecycle, message routing, compaction, patch, and usage payloads. */
 export type SessionsListParams = SchemaType<"SessionsListParams">;
 export type SessionsCleanupParams = SchemaType<"SessionsCleanupParams">;

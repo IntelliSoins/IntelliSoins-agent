@@ -428,6 +428,7 @@ export const zh_CN: TranslationMap = {
     debug: "调试",
     logs: "日志",
     dreams: "梦境",
+    rag: "RAG",
   },
   subtitles: {
     agents: "工作区、工具、身份。",
@@ -453,6 +454,45 @@ export const zh_CN: TranslationMap = {
     debug: "快照、事件、RPC。",
     logs: "实时网关日志。",
     dreams: "睡眠时进行记忆巩固。",
+    rag: "Document ingestion, indexing, and semantic search.",
+  },
+  rag: {
+    upload: {
+      title: "Upload documents",
+      subtitle: "Allowed types: {extensions}. Max {maxMb} MB per file.",
+      busy: "Uploading…",
+      fileTooLarge: "{fileName} exceeds the {maxMb} MB limit.",
+      unsupportedType: "{fileName} has an unsupported file type.",
+    },
+    jobs: {
+      title: "Indexing jobs",
+      subtitle: "Ingestion jobs and their status.",
+      empty: "No ingestion jobs yet.",
+      file: "File",
+      status: "Status",
+      started: "Started",
+      finished: "Finished",
+      running: "Indexing…",
+      chunks: "{count} chunks",
+      failed: "Indexing failed.",
+    },
+    sources: {
+      title: "Indexed documents",
+      subtitle: "Documents available for semantic search.",
+      empty: "No documents indexed yet.",
+      source: "Source",
+      chunks: "Chunks",
+      lastIngested: "Last indexed",
+    },
+    search: {
+      title: "Semantic search",
+      subtitle: "Query the indexed documents.",
+      placeholder: "Search indexed documents",
+      button: "Search",
+      empty: "No results.",
+      score: "Score {score}",
+      pages: "Pages: {pages}",
+    },
   },
   skillWorkshop: {
     header: {

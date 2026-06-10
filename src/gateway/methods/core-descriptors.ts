@@ -129,6 +129,12 @@ export const CORE_GATEWAY_METHOD_SPECS: readonly CoreGatewayMethodSpec[] = [
   { name: "skills.proposals.apply", scope: "operator.admin" },
   { name: "skills.proposals.reject", scope: "operator.admin" },
   { name: "skills.proposals.quarantine", scope: "operator.admin" },
+  // Local RAG pipeline (Intellisoins fork): ingest is a mutating control-plane write,
+  // the rest are read-only views over the pgvector sidecar.
+  { name: "rag.ingest", scope: "operator.write", controlPlaneWrite: true },
+  { name: "rag.jobs", scope: "operator.read" },
+  { name: "rag.search", scope: "operator.read" },
+  { name: "rag.sources", scope: "operator.read" },
   { name: "update.status", scope: "operator.admin" },
   { name: "update.run", scope: "operator.admin", controlPlaneWrite: true },
   { name: "voicewake.get", scope: "operator.read" },

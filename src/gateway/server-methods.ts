@@ -149,6 +149,10 @@ const loadPushHandlers = lazyHandlerModule(
   () => import("./server-methods/push.js"),
   (module) => module.pushHandlers,
 );
+const loadRagHandlers = lazyHandlerModule(
+  () => import("./server-methods/rag.js"),
+  (module) => module.ragHandlers,
+);
 const loadRestartHandlers = lazyHandlerModule(
   () => import("./server-methods/restart.js"),
   (module) => module.restartHandlers,
@@ -536,6 +540,10 @@ export const coreGatewayHandlers: GatewayRequestHandlers = {
       "push.web.test",
     ],
     loadHandlers: loadPushHandlers,
+  }),
+  ...createLazyCoreHandlers({
+    methods: ["rag.ingest", "rag.jobs", "rag.search", "rag.sources"],
+    loadHandlers: loadRagHandlers,
   }),
   ...createLazyCoreHandlers({
     methods: ["gateway.restart.request", "gateway.restart.preflight"],

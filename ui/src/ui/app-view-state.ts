@@ -12,6 +12,7 @@ import type { CronModelSuggestionsState, CronState } from "./controllers/cron.ts
 import type { DevicePairingList } from "./controllers/devices.ts";
 import type { ExecApprovalRequest } from "./controllers/exec-approval.ts";
 import type { ExecApprovalsFile, ExecApprovalsSnapshot } from "./controllers/exec-approvals.ts";
+import type { RagState } from "./controllers/rag.ts";
 import type { SkillWorkshopState } from "./controllers/skill-workshop.ts";
 import type {
   ClawHubSearchResult,
@@ -455,6 +456,16 @@ export type AppViewState = {
     logsLimit: number;
     logsMaxBytes: number;
     logsAtBottom: boolean;
+    ragJobs: RagState["ragJobs"];
+    ragJobsLoading: boolean;
+    ragSources: RagState["ragSources"];
+    ragSourcesLoading: boolean;
+    ragSearchQuery: string;
+    ragSearchLoading: boolean;
+    ragSearchResults: RagState["ragSearchResults"];
+    ragUploadBusy: boolean;
+    ragError: string | null;
+    ragJobsPollTimer: RagState["ragJobsPollTimer"];
     updateAvailable: import("./types.js").UpdateAvailable | null;
     attentionItems: AttentionItem[];
     paletteOpen: boolean;

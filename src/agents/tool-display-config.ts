@@ -407,6 +407,11 @@ export const TOOL_DISPLAY_CONFIG: ToolDisplayConfig = {
       title: "Memory Get",
       detailKeys: ["path", "from", "lines"],
     },
+    rag_search: {
+      emoji: "📚",
+      title: "RAG Search",
+      detailKeys: ["action", "query"],
+    },
     web_search: {
       emoji: "🔎",
       title: "Web Search",

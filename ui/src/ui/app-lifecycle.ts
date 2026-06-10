@@ -24,6 +24,7 @@ import {
 import { persistChatComposerState, restoreChatComposerState } from "./chat/composer-persistence.ts";
 import { startControlUiResponsivenessObserver } from "./control-ui-performance.ts";
 import { loadControlUiBootstrapConfig } from "./controllers/control-ui-bootstrap.ts";
+import { stopRagJobsPolling } from "./controllers/rag.ts";
 import type { Tab } from "./navigation.ts";
 import type { ChatQueueItem } from "./ui-types.ts";
 
@@ -201,6 +202,7 @@ export function handleDisconnected(host: LifecycleHost) {
   stopNodesPolling(host as unknown as Parameters<typeof stopNodesPolling>[0]);
   stopLogsPolling(host as unknown as Parameters<typeof stopLogsPolling>[0]);
   stopDebugPolling(host as unknown as Parameters<typeof stopDebugPolling>[0]);
+  stopRagJobsPolling(host as unknown as Parameters<typeof stopRagJobsPolling>[0]);
   cancelHostAnimationFrame(host.chatScrollFrame);
   host.chatScrollFrame = null;
   cancelHostAnimationFrame(host.logsScrollFrame);

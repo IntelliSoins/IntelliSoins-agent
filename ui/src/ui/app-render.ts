@@ -120,6 +120,7 @@ import {
 import { loadLogs } from "./controllers/logs.ts";
 import { loadNodes } from "./controllers/nodes.ts";
 import { loadPresence } from "./controllers/presence.ts";
+import { ingestRagFiles, loadRagJobs, loadRagSources, searchRag } from "./controllers/rag.ts";
 import {
   branchSessionFromCheckpoint,
   createSessionAndRefresh,
@@ -668,6 +669,7 @@ const lazyDebug = createLazyView(() => import("./views/debug.ts"), notifyLazyVie
 const lazyInstances = createLazyView(() => import("./views/instances.ts"), notifyLazyViewChanged);
 const lazyLogs = createLazyView(() => import("./views/logs.ts"), notifyLazyViewChanged);
 const lazyNodes = createLazyView(() => import("./views/nodes.ts"), notifyLazyViewChanged);
+const lazyRag = createLazyView(() => import("./views/rag.ts"), notifyLazyViewChanged);
 const lazySessions = createLazyView(() => import("./views/sessions.ts"), notifyLazyViewChanged);
 const lazySkillWorkshop = createLazyView(
   () => import("./views/skill-workshop.ts"),
@@ -2919,6 +2921,26 @@ export function renderApp(state: AppViewState) {
                   switchChatSession(state, sessionKey);
                   state.setTab("chat" as import("./navigation.ts").Tab);
                 },
+              }),
+            )
+          : nothing}
+        ${state.tab === "rag"
+          ? renderLazyView(lazyRag, (m) =>
+              m.renderRag({
+                jobs: state.ragJobs,
+                jobsLoading: state.ragJobsLoading,
+                sources: state.ragSources,
+                sourcesLoading: state.ragSourcesLoading,
+                searchQuery: state.ragSearchQuery,
+                searchLoading: state.ragSearchLoading,
+                searchResults: state.ragSearchResults,
+                uploadBusy: state.ragUploadBusy,
+                error: state.ragError,
+                onFilesSelected: (files) => void ingestRagFiles(state, files),
+                onRefreshJobs: () => void loadRagJobs(state),
+                onRefreshSources: () => void loadRagSources(state),
+                onSearchQueryChange: (next) => (state.ragSearchQuery = next),
+                onSearch: () => void searchRag(state),
               }),
             )
           : nothing}

@@ -108,6 +108,7 @@ import {
   type ExecApprovalRequest,
 } from "./controllers/exec-approval.ts";
 import type { ExecApprovalsFile, ExecApprovalsSnapshot } from "./controllers/exec-approvals.ts";
+import type { RagJob, RagSearchResult, RagSource } from "./controllers/rag.ts";
 import type { SkillWorkshopState } from "./controllers/skill-workshop.ts";
 import type {
   ClawHubSearchResult,
@@ -689,6 +690,17 @@ export class OpenClawApp extends LitElement {
   @state() logsLimit = 500;
   @state() logsMaxBytes = 250_000;
   @state() logsAtBottom = true;
+
+  @state() ragJobs: RagJob[] = [];
+  @state() ragJobsLoading = false;
+  @state() ragSources: RagSource[] = [];
+  @state() ragSourcesLoading = false;
+  @state() ragSearchQuery = "";
+  @state() ragSearchLoading = false;
+  @state() ragSearchResults: RagSearchResult[] | null = null;
+  @state() ragUploadBusy = false;
+  @state() ragError: string | null = null;
+  ragJobsPollTimer: number | ReturnType<typeof globalThis.setInterval> | null = null;
 
   client: GatewayBrowserClient | null = null;
   chatScrollFrame: number | null = null;

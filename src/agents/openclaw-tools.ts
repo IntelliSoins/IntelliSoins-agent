@@ -56,6 +56,7 @@ import { createMessageTool } from "./tools/message-tool.js";
 import { createMusicGenerateTool } from "./tools/music-generate-tool.js";
 import { createNodesTool } from "./tools/nodes-tool.js";
 import { createPdfTool } from "./tools/pdf-tool.js";
+import { createRagTool } from "./tools/rag-tool.js";
 import { createSessionStatusTool } from "./tools/session-status-tool.js";
 import { createSessionsHistoryTool } from "./tools/sessions-history-tool.js";
 import { createSessionsListTool } from "./tools/sessions-list-tool.js";
@@ -440,6 +441,8 @@ export function createOpenClawTools(
             agentSessionKey: options?.agentSessionKey,
             config: options?.config,
           }),
+          // Intellisoins fork: local pgvector RAG search via gateway rag.* methods.
+          createRagTool(),
         ]),
     createAgentsListTool({
       agentSessionKey: options?.agentSessionKey,

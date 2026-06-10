@@ -52,6 +52,12 @@ import {
 } from "./controllers/model-auth-status.ts";
 import { loadNodes, type NodesState } from "./controllers/nodes.ts";
 import { loadPresence, type PresenceState } from "./controllers/presence.ts";
+import {
+  loadRagJobs,
+  loadRagSources,
+  stopRagJobsPolling,
+  type RagState,
+} from "./controllers/rag.ts";
 import { loadSessions, type SessionsState } from "./controllers/sessions.ts";
 import {
   loadSkillWorkshopProposals,
@@ -155,6 +161,7 @@ type SettingsAppHost = SettingsHost &
   LogsState &
   NodesState &
   PresenceState &
+  RagState &
   SessionsState &
   SkillsState &
   SkillWorkshopState &
@@ -468,6 +475,9 @@ export async function refreshActiveTab(host: SettingsHost, opts?: { chatStartup?
       case "cron":
         await loadCron(host);
         break;
+      case "rag":
+        await Promise.all([loadRagSources(app), loadRagJobs(app)]);
+        break;
       case "skills":
         await loadSkills(app);
         break;
@@ -709,6 +719,10 @@ function applyTabSelection(
   (next === "debug" ? startDebugPolling : stopDebugPolling)(
     host as unknown as Parameters<typeof startDebugPolling>[0],
   );
+  if (next !== "rag") {
+    // RAG job polling only restarts from loadRagJobs while the tab is active.
+    stopRagJobsPolling(host as unknown as RagState);
+  }
 
   if (options.refreshPolicy === "always" || host.connected) {
     void refreshActiveTab(host);

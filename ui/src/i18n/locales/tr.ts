@@ -433,6 +433,7 @@ export const tr: TranslationMap = {
     debug: "Hata Ayıklama",
     logs: "Günlükler",
     dreams: "Düşler",
+    rag: "RAG",
   },
   subtitles: {
     agents: "Çalışma alanları, araçlar, kimlikler.",
@@ -459,6 +460,45 @@ export const tr: TranslationMap = {
     debug: "Anlık görüntüler, olaylar, RPC.",
     logs: "Canlı Gateway günlükleri.",
     dreams: "Uyku sırasında bellek birleştirme.",
+    rag: "Document ingestion, indexing, and semantic search.",
+  },
+  rag: {
+    upload: {
+      title: "Upload documents",
+      subtitle: "Allowed types: {extensions}. Max {maxMb} MB per file.",
+      busy: "Uploading…",
+      fileTooLarge: "{fileName} exceeds the {maxMb} MB limit.",
+      unsupportedType: "{fileName} has an unsupported file type.",
+    },
+    jobs: {
+      title: "Indexing jobs",
+      subtitle: "Ingestion jobs and their status.",
+      empty: "No ingestion jobs yet.",
+      file: "File",
+      status: "Status",
+      started: "Started",
+      finished: "Finished",
+      running: "Indexing…",
+      chunks: "{count} chunks",
+      failed: "Indexing failed.",
+    },
+    sources: {
+      title: "Indexed documents",
+      subtitle: "Documents available for semantic search.",
+      empty: "No documents indexed yet.",
+      source: "Source",
+      chunks: "Chunks",
+      lastIngested: "Last indexed",
+    },
+    search: {
+      title: "Semantic search",
+      subtitle: "Query the indexed documents.",
+      placeholder: "Search indexed documents",
+      button: "Search",
+      empty: "No results.",
+      score: "Score {score}",
+      pages: "Pages: {pages}",
+    },
   },
   skillWorkshop: {
     header: {

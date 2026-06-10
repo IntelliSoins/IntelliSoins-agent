@@ -417,6 +417,24 @@ import {
   SkillsUploadChunkParamsSchema,
   type SkillsUploadCommitParams,
   SkillsUploadCommitParamsSchema,
+  type RagIngestParams,
+  RagIngestParamsSchema,
+  type RagIngestResult,
+  RagIngestResultSchema,
+  type RagJob,
+  RagJobSchema,
+  type RagJobsParams,
+  RagJobsParamsSchema,
+  type RagJobsResult,
+  RagJobsResultSchema,
+  type RagSearchParams,
+  RagSearchParamsSchema,
+  type RagSearchResult,
+  RagSearchResultSchema,
+  type RagSourcesParams,
+  RagSourcesParamsSchema,
+  type RagSourcesResult,
+  RagSourcesResultSchema,
   type SkillsUpdateParams,
   SkillsUpdateParamsSchema,
   type ToolsCatalogParams,
@@ -777,6 +795,10 @@ export const validateSkillsUploadChunkParams = lazyCompile<SkillsUploadChunkPara
 export const validateSkillsUploadCommitParams = lazyCompile<SkillsUploadCommitParams>(
   SkillsUploadCommitParamsSchema,
 );
+export const validateRagIngestParams = lazyCompile<RagIngestParams>(RagIngestParamsSchema);
+export const validateRagJobsParams = lazyCompile<RagJobsParams>(RagJobsParamsSchema);
+export const validateRagSearchParams = lazyCompile<RagSearchParams>(RagSearchParamsSchema);
+export const validateRagSourcesParams = lazyCompile<RagSourcesParams>(RagSourcesParamsSchema);
 export const validateSkillsUpdateParams = lazyCompile<SkillsUpdateParams>(SkillsUpdateParamsSchema);
 export const validateSkillsSearchParams = lazyCompile<SkillsSearchParams>(SkillsSearchParamsSchema);
 export const validateSkillsDetailParams = lazyCompile<SkillsDetailParams>(SkillsDetailParamsSchema);
@@ -1130,6 +1152,15 @@ export {
   SkillsUploadChunkParamsSchema,
   SkillsUploadCommitParamsSchema,
   SkillsUpdateParamsSchema,
+  RagIngestParamsSchema,
+  RagIngestResultSchema,
+  RagJobSchema,
+  RagJobsParamsSchema,
+  RagJobsResultSchema,
+  RagSearchParamsSchema,
+  RagSearchResultSchema,
+  RagSourcesParamsSchema,
+  RagSourcesResultSchema,
   CronJobSchema,
   CronListParamsSchema,
   CronStatusParamsSchema,
@@ -1296,6 +1327,15 @@ export type {
   SkillsUploadChunkParams,
   SkillsUploadCommitParams,
   SkillsInstallParams,
+  RagIngestParams,
+  RagIngestResult,
+  RagJob,
+  RagJobsParams,
+  RagJobsResult,
+  RagSearchParams,
+  RagSearchResult,
+  RagSourcesParams,
+  RagSourcesResult,
   SkillsUpdateParams,
   EnvironmentStatus,
   EnvironmentSummary,

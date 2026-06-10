@@ -430,6 +430,7 @@ export const ko: TranslationMap = {
     debug: "디버그",
     logs: "로그",
     dreams: "드리밍",
+    rag: "RAG",
   },
   subtitles: {
     agents: "워크스페이스, 도구, 정체성.",
@@ -455,6 +456,45 @@ export const ko: TranslationMap = {
     debug: "스냅샷, 이벤트, RPC.",
     logs: "실시간 Gateway 로그.",
     dreams: "수면 중 메모리 통합.",
+    rag: "Document ingestion, indexing, and semantic search.",
+  },
+  rag: {
+    upload: {
+      title: "Upload documents",
+      subtitle: "Allowed types: {extensions}. Max {maxMb} MB per file.",
+      busy: "Uploading…",
+      fileTooLarge: "{fileName} exceeds the {maxMb} MB limit.",
+      unsupportedType: "{fileName} has an unsupported file type.",
+    },
+    jobs: {
+      title: "Indexing jobs",
+      subtitle: "Ingestion jobs and their status.",
+      empty: "No ingestion jobs yet.",
+      file: "File",
+      status: "Status",
+      started: "Started",
+      finished: "Finished",
+      running: "Indexing…",
+      chunks: "{count} chunks",
+      failed: "Indexing failed.",
+    },
+    sources: {
+      title: "Indexed documents",
+      subtitle: "Documents available for semantic search.",
+      empty: "No documents indexed yet.",
+      source: "Source",
+      chunks: "Chunks",
+      lastIngested: "Last indexed",
+    },
+    search: {
+      title: "Semantic search",
+      subtitle: "Query the indexed documents.",
+      placeholder: "Search indexed documents",
+      button: "Search",
+      empty: "No results.",
+      score: "Score {score}",
+      pages: "Pages: {pages}",
+    },
   },
   skillWorkshop: {
     header: {

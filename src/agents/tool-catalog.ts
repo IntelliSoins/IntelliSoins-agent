@@ -149,6 +149,14 @@ const CORE_TOOL_DEFINITIONS: CoreToolDefinition[] = [
     includeInOpenClawGroup: true,
   },
   {
+    id: "rag_search",
+    label: "rag_search",
+    description: "Search locally indexed documents (pgvector RAG)",
+    sectionId: "memory",
+    profiles: ["coding"],
+    includeInOpenClawGroup: true,
+  },
+  {
     id: "sessions_list",
     label: "sessions_list",
     description: SESSIONS_LIST_TOOL_DISPLAY_SUMMARY,
