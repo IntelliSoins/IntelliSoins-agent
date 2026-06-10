@@ -303,6 +303,20 @@ servers:
     health_endpoint: /health
     throttle: 30
 
+  litellm-pgvector-openclaw:
+    name: "LiteLLM PGVector sidecar (OpenClaw)"
+    category: vector_store
+    port: 8100
+    host: 127.0.0.1
+    launcher: launchers/litellm-pgvector-openclaw.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/litellm-pgvector-openclaw.log
+    log_stderr: logs/litellm-pgvector-openclaw.error.log
+    health_endpoint: /health
+    throttle: 30
+
   signal-api:
     name: "Signal Messenger REST API"
     category: app

@@ -166,7 +166,7 @@ model_list:
       db_model: false
   - model_name: bge-reranker-v2-m3
     litellm_params:
-      model: openai/bge-reranker-v2-m3
+      model: infinity/BAAI/bge-reranker-v2-m3
       api_key: dummy
       api_base: http://127.0.0.1:8085/v1
       use_litellm_proxy: false
@@ -175,6 +175,7 @@ model_list:
     model_info:
       id: 727aa42e-f43a-56c1-9366-7ba1e8f5d103
       db_model: false
+      mode: rerank
   - model_name: claude-haiku-4-5
     litellm_params:
       model: openai/gpt-4o
@@ -467,4 +468,10 @@ vector_store_registry:
       vector_store_id: 7cb6eb11-f576-4929-9a3c-c5e2acbb6778
       custom_llm_provider: pg_vector
       api_base: http://127.0.0.1:8093
+      api_key: os.environ/PG_VECTOR_API_KEY
+  - vector_store_name: pgvector-openclaw-docs
+    litellm_params:
+      vector_store_id: 41e70e3d-cbbe-45a2-b185-9e8df3f8d7b5
+      custom_llm_provider: pg_vector
+      api_base: http://127.0.0.1:8100
       api_key: os.environ/PG_VECTOR_API_KEY
