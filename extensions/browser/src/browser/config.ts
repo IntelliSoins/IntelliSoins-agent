@@ -107,7 +107,7 @@ export type ResolvedBrowserProfile = {
   mcpCommand?: string;
   mcpArgs?: string[];
   color: string;
-  driver: "openclaw" | "existing-session";
+  driver: "openclaw" | "existing-session" | "webkit-native";
   executablePath?: string;
   headless: boolean;
   headlessSource?: "profile" | "config" | "default";
@@ -484,11 +484,32 @@ export function resolveProfile(
   let cdpHost = resolved.cdpHost;
   let cdpPort = profile.cdpPort ?? 0;
   let cdpUrl;
-  const driver = profile.driver === "existing-session" ? "existing-session" : "openclaw";
+  const driver =
+    profile.driver === "existing-session"
+      ? "existing-session"
+      : profile.driver === "webkit-native"
+        ? "webkit-native"
+        : "openclaw";
   const headless = profile.headless ?? resolved.headless;
   const headlessSource =
     typeof profile.headless === "boolean" ? "profile" : resolved.headlessSource;
   const executablePath = normalizeExecutablePath(profile.executablePath) ?? resolved.executablePath;
+
+  if (driver === "webkit-native") {
+    return {
+      name: profileName,
+      cdpPort: 0,
+      cdpUrl: "",
+      cdpHost: "",
+      cdpIsLoopback: true,
+      color: profile.color,
+      driver,
+      executablePath,
+      headless: true,
+      headlessSource: "default",
+      attachOnly: true,
+    };
+  }
 
   if (driver === "existing-session") {
     const existingSessionCdp = normalizeExistingSessionCdpUrl(rawProfileUrl, profileName);

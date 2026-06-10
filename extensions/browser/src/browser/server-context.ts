@@ -197,6 +197,13 @@ export function createBrowserRouteContext(opts: ContextOptions): BrowserRouteCon
         } catch {
           // Chrome MCP not available
         }
+      } else if (capabilities.usesWebKitNative) {
+        try {
+          running = await profileCtx.isTransportAvailable(300);
+          tabCount = running ? 1 : 0;
+        } catch {
+          // macOS companion not available
+        }
       } else if (profileState?.running) {
         running = true;
         try {
@@ -231,9 +238,17 @@ export function createBrowserRouteContext(opts: ContextOptions): BrowserRouteCon
 
       result.push({
         name,
-        transport: capabilities.usesChromeMcp ? "chrome-mcp" : "cdp",
-        cdpPort: capabilities.usesChromeMcp ? null : profile.cdpPort,
-        cdpUrl: capabilities.usesChromeMcp ? null : (redactCdpUrl(profile.cdpUrl) ?? null),
+        transport: capabilities.usesChromeMcp
+          ? "chrome-mcp"
+          : capabilities.usesWebKitNative
+            ? "webkit-native"
+            : "cdp",
+        cdpPort:
+          capabilities.usesChromeMcp || capabilities.usesWebKitNative ? null : profile.cdpPort,
+        cdpUrl:
+          capabilities.usesChromeMcp || capabilities.usesWebKitNative
+            ? null
+            : (redactCdpUrl(profile.cdpUrl) ?? null),
         color: profile.color,
         driver: profile.driver,
         running,

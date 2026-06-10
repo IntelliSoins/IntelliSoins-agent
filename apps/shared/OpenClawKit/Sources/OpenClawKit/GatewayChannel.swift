@@ -941,6 +941,8 @@ public actor GatewayChannelActor {
             }
             if evt.event == "tick" { self.lastTick = Date() }
             await self.pushHandler?(.event(evt))
+        case let .req(req):
+            await self.pushHandler?(.req(req))
         default:
             break
         }
@@ -1176,6 +1178,36 @@ public actor GatewayChannelActor {
             try await task.send(.data(payload.data))
         } catch {
             let wrapped = self.wrap(error, context: "gateway send \(method)")
+            self.connected = false
+            self.task?.cancel(with: .goingAway, reason: nil)
+            Task { [weak self] in
+                guard let self else { return }
+                await self.scheduleReconnect()
+            }
+            throw wrapped
+        }
+    }
+
+    public func sendResponse(id: String, ok: Bool, payload: AnyCodable?, error: ErrorShape?) async throws {
+        try await self.connectOrThrow(context: "gateway response")
+        let frame = ResponseFrame(
+            type: "res",
+            id: id,
+            ok: ok,
+            payload: payload,
+            error: error
+        )
+        let data = try self.encoder.encode(GatewayFrame.res(frame))
+        guard let task = self.task else {
+            throw NSError(
+                domain: "Gateway",
+                code: 5,
+                userInfo: [NSLocalizedDescriptionKey: "gateway socket unavailable"])
+        }
+        do {
+            try await task.send(.data(data))
+        } catch {
+            let wrapped = self.wrap(error, context: "gateway send response \(id)")
             self.connected = false
             self.task?.cancel(with: .goingAway, reason: nil)
             Task { [weak self] in

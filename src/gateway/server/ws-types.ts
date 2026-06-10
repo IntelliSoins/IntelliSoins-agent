@@ -23,4 +23,12 @@ export type GatewayWsClient = PluginNodeCapabilityClient & {
   canvasCapabilityExpiresAtMs?: number;
   invalidated?: boolean;
   invalidatedReason?: string;
+  pendingRequests?: Map<
+    string,
+    {
+      resolve: (val: unknown) => void;
+      reject: (err: Error) => void;
+      timer: NodeJS.Timeout;
+    }
+  >;
 };

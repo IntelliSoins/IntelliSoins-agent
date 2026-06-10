@@ -958,6 +958,19 @@ export function convertMessages(
                 text: sanitizeSurrogates(item.text),
               } satisfies ChatCompletionContentPartText;
             }
+            const itemObj = item as unknown as Record<string, unknown>;
+            if (
+              itemObj.type === "audio" ||
+              (typeof itemObj.mimeType === "string" && itemObj.mimeType.startsWith("audio/"))
+            ) {
+              return {
+                type: "input_audio",
+                input_audio: {
+                  data: itemObj.data as string,
+                  format: itemObj.mimeType === "audio/wav" ? "wav" : "mp3",
+                },
+              } as unknown as ChatCompletionContentPart;
+            }
             return {
               type: "image_url",
               image_url: {

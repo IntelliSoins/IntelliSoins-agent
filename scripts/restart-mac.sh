@@ -196,11 +196,11 @@ if ! kill_all_openclaw; then
 fi
 
 # Bundle Gateway-hosted plugin assets.
-run_step "bundle plugin assets" bash -lc "cd '${ROOT_DIR}' && pnpm plugins:assets:build"
+run_step "bundle plugin assets" zsh -lc "cd '${ROOT_DIR}' && pnpm plugins:assets:build"
 
 # 2) Rebuild into the same path the packager consumes (.build).
-run_step "clean build cache" bash -lc "cd '${ROOT_DIR}/apps/macos' && rm -rf .build .build-swift .swiftpm 2>/dev/null || true"
-run_step "swift build" bash -lc "cd '${ROOT_DIR}/apps/macos' && swift build -q --product OpenClaw"
+run_step "clean build cache" zsh -lc "cd '${ROOT_DIR}/apps/macos' && rm -rf .build .build-swift .swiftpm 2>/dev/null || true"
+run_step "swift build" zsh -lc "cd '${ROOT_DIR}/apps/macos' && swift build -q --product OpenClaw"
 
 if [ "$AUTO_DETECT_SIGNING" -eq 1 ]; then
   if check_signing_keys; then
@@ -226,7 +226,7 @@ elif [ "$SIGN" -eq 1 ]; then
 fi
 
 # 3) Package app (no embedded gateway).
-run_step "package app" bash -lc "cd '${ROOT_DIR}' && SKIP_TSC=${SKIP_TSC:-1} '${ROOT_DIR}/scripts/package-mac-app.sh'"
+run_step "package app" zsh -lc "cd '${ROOT_DIR}' && SKIP_TSC=${SKIP_TSC:-1} '${ROOT_DIR}/scripts/package-mac-app.sh'"
 
 choose_app_bundle() {
   if [[ -n "${APP_BUNDLE}" ]]; then
@@ -260,8 +260,8 @@ fi
 # When unsigned, ensure the gateway LaunchAgent targets the repo CLI (before the app launches).
 # This reduces noisy "could not connect" errors during app startup.
 if [ "$NO_SIGN" -eq 1 ] && [ "$ATTACH_ONLY" -ne 1 ]; then
-  run_step "install gateway launch agent (unsigned)" bash -lc "cd '${ROOT_DIR}' && node openclaw.mjs daemon install --force --runtime node"
-  run_step "restart gateway daemon (unsigned)" bash -lc "cd '${ROOT_DIR}' && node openclaw.mjs daemon restart"
+  run_step "install gateway launch agent (unsigned)" zsh -lc "cd '${ROOT_DIR}' && node openclaw.mjs daemon install --force --runtime node"
+  run_step "restart gateway daemon (unsigned)" zsh -lc "cd '${ROOT_DIR}' && node openclaw.mjs daemon restart"
   if [[ "${GATEWAY_WAIT_SECONDS}" -gt 0 ]]; then
     run_step "wait for gateway (unsigned)" sleep "${GATEWAY_WAIT_SECONDS}"
   fi
@@ -308,5 +308,5 @@ else
 fi
 
 if [ "$NO_SIGN" -eq 1 ] && [ "$ATTACH_ONLY" -ne 1 ]; then
-  run_step "show gateway launch agent args (unsigned)" bash -lc "/usr/bin/plutil -p '${HOME}/Library/LaunchAgents/ai.openclaw.gateway.plist' | head -n 40 || true"
+  run_step "show gateway launch agent args (unsigned)" zsh -lc "/usr/bin/plutil -p '${HOME}/Library/LaunchAgents/ai.openclaw.gateway.plist' | head -n 40 || true"
 fi

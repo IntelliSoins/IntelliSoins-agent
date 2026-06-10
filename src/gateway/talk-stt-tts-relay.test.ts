@@ -29,7 +29,15 @@ describe("STT-TTS local offline voice relay", () => {
 
   beforeEach(() => {
     context = {
-      getRuntimeConfig: vi.fn(() => ({})),
+      getRuntimeConfig: vi.fn(() => ({
+        talk: {
+          providers: {
+            openai: {
+              sttModel: "whisper",
+            },
+          },
+        },
+      })),
       broadcastToConnIds: vi.fn(),
     };
     vi.mocked(transcribeAudioFile).mockResolvedValue({ text: "hello", provider: "openai" });
@@ -46,13 +54,14 @@ describe("STT-TTS local offline voice relay", () => {
   });
 
   afterEach(() => {
+    vi.clearAllMocks();
     vi.restoreAllMocks();
   });
 
   it("should create and register a session successfully", () => {
     const session = createTalkSttTtsRelaySession({
       context,
-      connId: "conn-123",
+      connId: "conn-1",
       sessionKey: "session-key",
       agentId: "agent-id",
     });
@@ -64,7 +73,7 @@ describe("STT-TTS local offline voice relay", () => {
   it("should run VAD logic and trigger agent on silence", async () => {
     const sessionResult = createTalkSttTtsRelaySession({
       context,
-      connId: "conn-123",
+      connId: "conn-2",
       sessionKey: "session-key",
       agentId: "agent-id",
     });
@@ -73,7 +82,7 @@ describe("STT-TTS local offline voice relay", () => {
     const silentChunk = Buffer.alloc(9600); // 9600 bytes = 4800 samples = 200ms at 24kHz
     sendTalkSttTtsRelayAudio({
       relaySessionId: sessionResult.relaySessionId,
-      connId: "conn-123",
+      connId: "conn-2",
       audioBase64: silentChunk.toString("base64"),
     });
 
@@ -84,7 +93,7 @@ describe("STT-TTS local offline voice relay", () => {
     }
     sendTalkSttTtsRelayAudio({
       relaySessionId: sessionResult.relaySessionId,
-      connId: "conn-123",
+      connId: "conn-2",
       audioBase64: speechChunk.toString("base64"),
     });
 
@@ -92,7 +101,7 @@ describe("STT-TTS local offline voice relay", () => {
     for (let k = 0; k < 6; k++) {
       sendTalkSttTtsRelayAudio({
         relaySessionId: sessionResult.relaySessionId,
-        connId: "conn-123",
+        connId: "conn-2",
         audioBase64: silentChunk.toString("base64"),
       });
     }
@@ -105,5 +114,61 @@ describe("STT-TTS local offline voice relay", () => {
     expect(transcribeAudioFile).toHaveBeenCalled();
     expect(dispatchInboundMessage).toHaveBeenCalled();
     expect(synthesizeSpeech).toHaveBeenCalled();
+  });
+
+  it("should run in audio-native mode and bypass Whisper STT", async () => {
+    context.getRuntimeConfig.mockReturnValue({
+      talk: {
+        providers: {
+          openai: {
+            sttModel: "audio-native",
+          },
+        },
+      },
+    });
+
+    const sessionResult = createTalkSttTtsRelaySession({
+      context,
+      connId: "conn-3",
+      sessionKey: "session-key",
+      agentId: "agent-id",
+    });
+
+    // Send active speech (sine wave) -> should trigger speaking
+    const speechChunk = Buffer.alloc(9600);
+    for (let i = 0; i < speechChunk.length / 2; i++) {
+      speechChunk.writeInt16LE(Math.sin(i) * 16384, i * 2);
+    }
+    sendTalkSttTtsRelayAudio({
+      relaySessionId: sessionResult.relaySessionId,
+      connId: "conn-3",
+      audioBase64: speechChunk.toString("base64"),
+    });
+
+    // Send silence to trigger silence timeout
+    const silentChunk = Buffer.alloc(9600);
+    for (let k = 0; k < 6; k++) {
+      sendTalkSttTtsRelayAudio({
+        relaySessionId: sessionResult.relaySessionId,
+        connId: "conn-3",
+        audioBase64: silentChunk.toString("base64"),
+      });
+    }
+
+    // Allow async VAD processing to resolve
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 100);
+    });
+
+    expect(transcribeAudioFile).not.toHaveBeenCalled();
+    expect(dispatchInboundMessage).toHaveBeenCalled();
+    expect(synthesizeSpeech).toHaveBeenCalled();
+
+    // Verify broadcastToOwner received "[Audio]"
+    const lastBroadcast = context.broadcastToConnIds.mock.calls.find((call: any) => {
+      return call[1]?.type === "transcript" && call[1]?.role === "user";
+    });
+    expect(lastBroadcast).toBeDefined();
+    expect(lastBroadcast[1].text).toBe("[Audio]");
   });
 });

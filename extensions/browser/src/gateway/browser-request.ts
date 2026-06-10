@@ -8,6 +8,8 @@ import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
 } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { setSharedNodeRegistry } from "../browser-control-state.js";
+import type { ResolvedBrowserConfig } from "../browser/config.js";
 import {
   ErrorCodes,
   applyBrowserProxyPaths,
@@ -19,6 +21,7 @@ import {
   isPersistentBrowserProfileMutation,
   persistBrowserProxyFiles,
   resolveNodeCommandAllowlist,
+  resolveProfile,
   resolveRequestedBrowserProfile,
   respondUnavailableOnNodeInvokeError,
   safeParseJson,
@@ -176,6 +179,182 @@ export async function handleBrowserGatewayRequest({
   }
 
   const cfg = getRuntimeConfig();
+  setSharedNodeRegistry(context.nodeRegistry);
+
+  const initialReady = await startBrowserControlServiceFromConfig();
+  if (initialReady && typeof initialReady === "object" && "resolved" in initialReady) {
+    const resolvedConfig = (initialReady as { resolved: ResolvedBrowserConfig }).resolved;
+    const profileName =
+      resolveRequestedBrowserProfile({ query, body }) ?? resolvedConfig.defaultProfile;
+    const profile = resolveProfile(resolvedConfig, profileName);
+    if (profile && profile.driver === "webkit-native") {
+      const companion = context.nodeRegistry.get("openclaw-macos");
+      if (!companion) {
+        respond(
+          false,
+          undefined,
+          errorShape(
+            ErrorCodes.UNAVAILABLE,
+            "macOS companion application (openclaw-macos) is not connected",
+          ),
+        );
+        return;
+      }
+
+      interface CompanionWsClient {
+        socket: { send(data: string): void };
+        pendingRequests?: Map<
+          string,
+          {
+            resolve: (value: unknown) => void;
+            reject: (reason: Error) => void;
+            timer: NodeJS.Timeout;
+          }
+        >;
+      }
+
+      interface BrowserRequestBody {
+        url?: string;
+        kind?: string;
+        fn?: string;
+        targetId?: string;
+      }
+
+      const client = companion.client as unknown as CompanionWsClient;
+      if (!client.pendingRequests) {
+        client.pendingRequests = new Map();
+      }
+
+      const bodyData = body as BrowserRequestBody | null | undefined;
+      const requestId = crypto.randomUUID();
+      let reqFrame: {
+        type: "req";
+        id: string;
+        method: string;
+        params: Record<string, unknown>;
+      } | null = null;
+
+      if (path === "/navigate" && methodRaw === "POST") {
+        const bodyUrl = bodyData?.url;
+        if (!bodyUrl) {
+          respond(
+            false,
+            undefined,
+            errorShape(ErrorCodes.INVALID_REQUEST, "Missing required param 'url'"),
+          );
+          return;
+        }
+        reqFrame = {
+          type: "req",
+          id: requestId,
+          method: "browser.navigate",
+          params: { url: bodyUrl },
+        };
+      } else if (path === "/act" && methodRaw === "POST" && bodyData?.kind === "evaluate") {
+        const script = bodyData?.fn;
+        if (!script) {
+          respond(
+            false,
+            undefined,
+            errorShape(ErrorCodes.INVALID_REQUEST, "Missing required param 'fn'"),
+          );
+          return;
+        }
+        reqFrame = {
+          type: "req",
+          id: requestId,
+          method: "browser.evaluate",
+          params: { script },
+        };
+      } else if (
+        path === "/status" ||
+        path === "/profiles" ||
+        path === "/start" ||
+        path === "/stop"
+      ) {
+        // Fall through to normal local routing
+      } else {
+        respond(
+          false,
+          undefined,
+          errorShape(
+            ErrorCodes.INVALID_REQUEST,
+            `Unsupported operation '${methodRaw} ${path}' for webkit-native driver`,
+          ),
+        );
+        return;
+      }
+
+      if (reqFrame) {
+        const promise = new Promise((resolve, reject) => {
+          const timer = setTimeout(() => {
+            client.pendingRequests?.delete(requestId);
+            reject(new Error("macOS companion webkit-native request timed out"));
+          }, timeoutMs || 30000);
+
+          client.pendingRequests?.set(requestId, {
+            resolve,
+            reject,
+            timer,
+          });
+        });
+
+        try {
+          client.socket.send(JSON.stringify(reqFrame));
+        } catch (err) {
+          client.pendingRequests?.delete(requestId);
+          respond(
+            false,
+            undefined,
+            errorShape(
+              ErrorCodes.UNAVAILABLE,
+              `Failed to send request to macOS companion over WebSocket: ${String(err)}`,
+            ),
+          );
+          return;
+        }
+
+        try {
+          const response = (await promise) as {
+            ok: boolean;
+            payload?: { result?: unknown };
+            error?: { message?: string };
+          };
+          if (response.ok) {
+            const payload = response.payload;
+            if (path === "/navigate") {
+              respond(true, {
+                ok: true,
+                targetId: bodyData?.targetId || "default",
+                url: bodyData?.url,
+              });
+            } else if (path === "/act") {
+              respond(true, {
+                ok: true,
+                targetId: bodyData?.targetId || "default",
+                result: payload?.result,
+              });
+            } else {
+              respond(true, payload);
+            }
+          } else {
+            respond(
+              false,
+              undefined,
+              errorShape(
+                ErrorCodes.UNAVAILABLE,
+                response.error?.message || "macOS companion request failed",
+              ),
+            );
+          }
+        } catch (err) {
+          respond(false, undefined, errorShape(ErrorCodes.UNAVAILABLE, String(err)));
+        }
+        return;
+      }
+    }
+  }
+
   let nodeTarget: NodeSession | null;
   try {
     nodeTarget = resolveBrowserNodeTarget({

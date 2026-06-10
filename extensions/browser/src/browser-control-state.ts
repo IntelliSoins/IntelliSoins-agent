@@ -12,6 +12,15 @@ type BrowserControlOwner = "server" | "service";
 
 let state: BrowserServerState | null = null;
 let owner: BrowserControlOwner | null = null;
+let sharedNodeRegistry: { get(name: string): unknown } | null = null;
+
+export function getSharedNodeRegistry(): { get(name: string): unknown } | null {
+  return sharedNodeRegistry;
+}
+
+export function setSharedNodeRegistry(registry: { get(name: string): unknown } | null): void {
+  sharedNodeRegistry = registry;
+}
 
 export function getBrowserControlState(): BrowserServerState | null {
   return state;

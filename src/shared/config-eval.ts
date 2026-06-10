@@ -158,6 +158,15 @@ const hasBinaryCache = new Map<string, boolean>();
 
 /** Checks PATH for an executable binary, including PATHEXT candidates on Windows. */
 export function hasBinary(bin: string): boolean {
+  if (path.isAbsolute(bin)) {
+    try {
+      fs.accessSync(bin, fs.constants.X_OK);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   const pathEnv = process.env.PATH ?? "";
   const pathExt = process.platform === "win32" ? (process.env.PATHEXT ?? "") : "";
   if (cachedHasBinaryPath !== pathEnv || cachedHasBinaryPathExt !== pathExt) {

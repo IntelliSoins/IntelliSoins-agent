@@ -54,6 +54,7 @@ export type TalkSessionController = {
   readonly context: TalkEventContext;
   readonly outputAudioActive: boolean;
   readonly recentEvents: readonly TalkEvent[];
+  getProvider(): string | undefined;
   clearActiveTurn(): void;
   emit<TPayload>(input: TalkEventInput<TPayload>): TalkEvent<TPayload>;
   ensureTurn(params?: { payload?: unknown; turnId?: string }): TalkEnsureTurnResult;
@@ -183,6 +184,9 @@ export function createTalkSessionController(
     },
     get recentEvents() {
       return recentEvents;
+    },
+    getProvider() {
+      return context.provider;
     },
     clearActiveTurn() {
       activeTurnId = undefined;

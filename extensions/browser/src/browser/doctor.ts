@@ -35,7 +35,12 @@ export function buildBrowserDoctorReport(params: {
 }): BrowserDoctorReport {
   const status = params.status;
   const checks: BrowserDoctorCheck[] = [];
-  const transport: BrowserTransport = status.transport === "chrome-mcp" ? "chrome-mcp" : "cdp";
+  const transport: BrowserTransport =
+    status.transport === "chrome-mcp"
+      ? "chrome-mcp"
+      : status.transport === "webkit-native"
+        ? "webkit-native"
+        : "cdp";
 
   checks.push({
     id: "plugin-enabled",
@@ -65,6 +70,19 @@ export function buildBrowserDoctorReport(params: {
         : {
             fixHint:
               "Keep the matching Chromium browser running, enable remote debugging in chrome://inspect, and accept the attach prompt.",
+          }),
+    });
+  } else if (transport === "webkit-native") {
+    checks.push({
+      id: "webkit-native-companion",
+      label: "macOS WebKit companion",
+      status: status.running ? "pass" : "fail",
+      summary: status.running ? "macOS companion is connected" : "macOS companion is not connected",
+      ...(status.running
+        ? {}
+        : {
+            fixHint:
+              "Start the macOS OpenClaw companion app and ensure it is connected to the gateway.",
           }),
     });
   } else {
