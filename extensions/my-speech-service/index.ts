@@ -4,62 +4,11 @@ import * as path from "node:path";
 import { runFfmpeg } from "openclaw/plugin-sdk/media-runtime";
 import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
 import type {
-  RealtimeTranscriptionProviderPlugin,
-  RealtimeTranscriptionSession,
-} from "openclaw/plugin-sdk/realtime-transcription";
-import type {
   RealtimeVoiceProviderPlugin,
   RealtimeVoiceBridge,
   RealtimeVoiceBridgeCreateRequest,
 } from "openclaw/plugin-sdk/realtime-voice";
 import { REALTIME_VOICE_AUDIO_FORMAT_PCM16_24KHZ } from "openclaw/plugin-sdk/realtime-voice";
-import type { SpeechProviderPlugin, SpeechSynthesisResult } from "openclaw/plugin-sdk/speech";
-import WebSocket from "ws";
-
-const mySpeechProvider: SpeechProviderPlugin = {
-  id: "my-speech-provider",
-  label: "My Custom Speech Provider",
-  isConfigured(): boolean {
-    return true;
-  },
-  async synthesize(_req): Promise<SpeechSynthesisResult> {
-    return {
-      audioBuffer: Buffer.alloc(0),
-      outputFormat: "mp3",
-      fileExtension: "mp3",
-      voiceCompatible: true,
-    };
-  },
-};
-
-const myTranscriptionProvider: RealtimeTranscriptionProviderPlugin = {
-  id: "my-transcription-provider",
-  label: "My Custom Transcription Provider",
-  isConfigured(): boolean {
-    return true;
-  },
-  createSession(_req): RealtimeTranscriptionSession {
-    let connected = false;
-    let ws: WebSocket | null = null;
-    return {
-      async connect(): Promise<void> {
-        ws = new WebSocket("ws://localhost:8080");
-        connected = true;
-        ws.close();
-      },
-      sendAudio(_audio: Buffer): void {
-        // mock no-op
-      },
-      close(): void {
-        connected = false;
-        ws?.close();
-      },
-      isConnected(): boolean {
-        return connected;
-      },
-    };
-  },
-};
 
 // Helper to convert PCM to WAV
 function pcmToWav(pcmBuffer: Buffer, sampleRate: number): Buffer {
@@ -343,8 +292,6 @@ export default definePluginEntry({
   name: "My Speech Service Plugin",
   description: "Custom OpenClaw SST-TTS plugin",
   register(api) {
-    api.registerSpeechProvider(mySpeechProvider);
-    api.registerRealtimeTranscriptionProvider(myTranscriptionProvider);
     api.registerRealtimeVoiceProvider(localVoiceProvider);
   },
 });

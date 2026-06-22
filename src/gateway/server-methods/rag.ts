@@ -15,7 +15,9 @@ import {
   validateRagSourcesParams,
 } from "../../../packages/gateway-protocol/src/index.js";
 import type { ErrorShape, RagJob } from "../../../packages/gateway-protocol/src/index.js";
+import { resolveStateDir } from "../../config/paths.js";
 import { formatErrorMessage } from "../../infra/errors.js";
+import { FsSafeError, readSecureFile } from "../../infra/fs-safe.js";
 import type { GatewayRequestHandlers } from "./types.js";
 
 const SIDECAR_URL = "http://127.0.0.1:8100";
@@ -46,26 +48,77 @@ const SUPPORTED_EXTENSIONS = new Set([
 
 const ragJobs = new Map<string, RagJob>();
 
-// The sidecar key lives in the macOS keychain only; cache it for the process lifetime
-// and never include it in logs or error messages.
+const SIDECAR_KEY_ENV = "LITELLM_PGVECTOR_API_KEY";
+const SIDECAR_KEY_NAME = "litellm-pgvector-api-key";
+
+// Read the sidecar key once and cache it for the process lifetime; never log it or put it in
+// error messages. Sources, in order: env var (portable/testable), the canonical credentials
+// file, then the macOS keychain (darwin only) so existing macOS setups keep working.
 let sidecarApiKeyPromise: Promise<string> | null = null;
 
 function getSidecarApiKey(): Promise<string> {
-  return (sidecarApiKeyPromise ??= new Promise<string>((resolve, reject) => {
-    execFile(
-      "security",
-      ["find-generic-password", "-s", "litellm-pgvector-api-key", "-w"],
-      (err, stdout) => {
-        if (err) {
-          // Allow a retry on the next request instead of caching the failure forever.
-          sidecarApiKeyPromise = null;
-          reject(new Error("failed to read litellm-pgvector-api-key from the macOS keychain"));
-          return;
-        }
-        resolve(stdout.trim());
-      },
-    );
+  return (sidecarApiKeyPromise ??= readSidecarApiKey().catch((err: unknown) => {
+    // Allow a retry on the next request instead of caching the failure forever.
+    sidecarApiKeyPromise = null;
+    throw err;
   }));
+}
+
+async function readSidecarApiKey(): Promise<string> {
+  const fromEnv = process.env[SIDECAR_KEY_ENV]?.trim();
+  if (fromEnv) {
+    return fromEnv;
+  }
+  const credentialsPath = path.join(resolveStateDir(), "credentials", SIDECAR_KEY_NAME);
+  const fromFile = await readSidecarKeyFile(credentialsPath);
+  if (fromFile) {
+    return fromFile;
+  }
+  if (process.platform === "darwin") {
+    const fromKeychain = await readSidecarKeyFromKeychain();
+    if (fromKeychain) {
+      return fromKeychain;
+    }
+  }
+  const keychainHint = process.platform === "darwin" ? " or the macOS keychain" : "";
+  throw new Error(
+    `missing sidecar API key: set ${SIDECAR_KEY_ENV} or write the key to ${credentialsPath}${keychainHint}`,
+  );
+}
+
+async function readSidecarKeyFile(filePath: string): Promise<string | null> {
+  try {
+    const { buffer } = await readSecureFile({
+      filePath,
+      label: "rag sidecar api key",
+      io: { maxBytes: 4096, timeoutMs: 5_000 },
+    });
+    return (
+      buffer
+        .toString("utf8")
+        .replace(/^\uFEFF/, "")
+        .trim() || null
+    );
+  } catch (err) {
+    // Only a truly-absent file falls through to the next source. Other read errors
+    // (e.g. insecure-permissions on a world-readable secret) are surfaced, not ignored.
+    const missing =
+      err instanceof FsSafeError
+        ? err.code === "not-found"
+        : (err as NodeJS.ErrnoException | undefined)?.code === "ENOENT";
+    if (missing) {
+      return null;
+    }
+    throw err;
+  }
+}
+
+function readSidecarKeyFromKeychain(): Promise<string | null> {
+  return new Promise<string | null>((resolve) => {
+    execFile("security", ["find-generic-password", "-s", SIDECAR_KEY_NAME, "-w"], (err, stdout) => {
+      resolve(err ? null : stdout.trim() || null);
+    });
+  });
 }
 
 function invalidParamsShape(

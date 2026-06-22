@@ -5,8 +5,6 @@
   },
   "enabledByDefault": true,
   "contracts": {
-    "speechProviders": ["my-speech-provider"],
-    "realtimeTranscriptionProviders": ["my-transcription-provider"],
     "realtimeVoiceProviders": ["local-voice"]
   },
   "configSchema": {
