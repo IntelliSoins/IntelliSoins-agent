@@ -51,7 +51,7 @@ Each entry lists the package, distribution route, and description.
 
 ## Core npm package
 
-90 plugins
+92 plugins
 
 - **[admin-http-rpc](/plugins/reference/admin-http-rpc)** (`@openclaw/admin-http-rpc`) - included in OpenClaw. OpenClaw admin HTTP RPC endpoint.
 
@@ -137,7 +137,7 @@ Each entry lists the package, distribution route, and description.
 
 - **[mattermost](/plugins/reference/mattermost)** (`@openclaw/mattermost`) - included in OpenClaw. Adds the Mattermost channel surface for sending and receiving OpenClaw messages.
 
-- **[memory-core](/plugins/reference/memory-core)** (`@openclaw/memory-core`) - included in OpenClaw. Adds file-backed memory search tools.
+- **[memory-core](/plugins/reference/memory-core)** (`@openclaw/memory-core`) - included in OpenClaw. Adds agent-callable tools.
 
 - **[memory-wiki](/plugins/reference/memory-wiki)** (`@openclaw/memory-wiki`) - included in OpenClaw. Persistent wiki compiler and Obsidian-friendly knowledge vault for OpenClaw.
 
@@ -153,7 +153,11 @@ Each entry lists the package, distribution route, and description.
 
 - **[mistral](/plugins/reference/mistral)** (`@openclaw/mistral-provider`) - included in OpenClaw. Adds Mistral model provider support to OpenClaw.
 
+- **[mlx](/plugins/reference/mlx)** (`@openclaw/mlx-provider`) - included in OpenClaw. Adds MLX model provider support to OpenClaw.
+
 - **[moonshot](/plugins/reference/moonshot)** (`@openclaw/moonshot-provider`) - included in OpenClaw. Adds Moonshot model provider support to OpenClaw.
+
+- **[my-speech-service](/plugins/reference/my-speech-service)** (`@openclaw/my-speech-service`) - included in OpenClaw. Adds realtime transcription provider support. Adds realtime voice provider support. Adds text-to-speech provider support.
 
 - **[novita](/plugins/reference/novita)** (`@openclaw/novita-provider`) - included in OpenClaw. Adds Novita, Novita AI, Novitaai model provider support to OpenClaw.
 
@@ -267,9 +271,9 @@ Each entry lists the package, distribution route, and description.
 
 - **[googlechat](/plugins/reference/googlechat)** (`@openclaw/googlechat`) - npm; ClawHub. OpenClaw Google Chat channel plugin for spaces and direct messages.
 
-- **[llama-cpp](/plugins/reference/llama-cpp)** (`@openclaw/llama-cpp-provider`) - npm; ClawHub. OpenClaw llama.cpp embedding provider plugin.
-
 - **[line](/plugins/reference/line)** (`@openclaw/line`) - npm; ClawHub. OpenClaw LINE channel plugin for LINE Bot API chats.
+
+- **[llama-cpp](/plugins/reference/llama-cpp)** (`@openclaw/llama-cpp-provider`) - npm; ClawHub. Local GGUF embeddings through node-llama-cpp.
 
 - **[lobster](/plugins/reference/lobster)** (`@openclaw/lobster`) - npm; ClawHub. Lobster workflow tool plugin for typed pipelines and resumable approvals.
 
