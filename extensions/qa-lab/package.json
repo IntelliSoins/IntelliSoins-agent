@@ -5,9 +5,9 @@
   "description": "OpenClaw QA lab plugin with private debugger UI and scenario runner",
   "type": "module",
   "dependencies": {
-    "@copilotkit/aimock": "1.27.3",
+    "@copilotkit/aimock": "1.35.0",
     "@modelcontextprotocol/sdk": "1.29.0",
-    "playwright-core": "1.60.0",
+    "playwright-core": "1.61.1",
     "yaml": "2.9.0",
     "zod": "4.4.3"
   },
