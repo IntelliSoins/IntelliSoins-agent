@@ -93,6 +93,7 @@ jobs:
         with:
           base-sha: ${{ github.event_name == 'push' && github.event.before || github.event.pull_request.base.sha }}
           fetch-ref: ${{ github.event_name == 'push' && github.ref_name || github.event.pull_request.base.ref }}
+          github-token: ${{ github.token }}
 
       - name: Detect docs-only changes
         id: docs_scope
@@ -311,6 +312,7 @@ jobs:
         with:
           base-sha: ${{ github.event_name == 'push' && github.event.before || github.event.pull_request.base.sha }}
           fetch-ref: ${{ github.event_name == 'push' && github.ref_name || github.event.pull_request.base.ref }}
+          github-token: ${{ github.token }}
 
       - name: Prepare trusted pre-commit config
         if: github.event_name == 'pull_request'
@@ -514,6 +516,7 @@ jobs:
         with:
           base-sha: ${{ github.event.pull_request.base.sha }}
           fetch-ref: ${{ github.event.pull_request.base.ref }}
+          github-token: ${{ github.token }}
 
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
