@@ -582,6 +582,10 @@
   - changed-files:
       - any-glob-to-any-file:
           - "extensions/parallel/**"
+"extensions: mlx":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "extensions/mlx/**"
 "extensions: perplexity":
   - changed-files:
       - any-glob-to-any-file:

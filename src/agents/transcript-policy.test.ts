@@ -34,6 +34,7 @@ vi.mock("../plugins/provider-hook-runtime.js", async () => {
           "opencode-go",
           "ollama",
           "openrouter",
+          "mlx",
           "sglang",
           "vllm",
           "xai",
@@ -42,7 +43,7 @@ vi.mock("../plugins/provider-hook-runtime.js", async () => {
       ) {
         return undefined;
       }
-      if (provider === "sglang" || provider === "vllm") {
+      if (provider === "mlx" || provider === "sglang" || provider === "vllm") {
         return {};
       }
       return {

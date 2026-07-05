@@ -218,6 +218,7 @@ const LOCAL_EXTENSION_API_BARREL_GUARDS = [
   "matrix",
   "mattermost",
   "memory-lancedb",
+  "mlx",
   "msteams",
   "nextcloud-talk",
   "nostr",

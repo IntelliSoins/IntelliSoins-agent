@@ -10,6 +10,7 @@ import {
 const resolveCopilotApiTokenMock = vi.hoisted(() => vi.fn());
 const buildVllmProviderMock = vi.hoisted(() => vi.fn());
 const buildSglangProviderMock = vi.hoisted(() => vi.fn());
+const buildMlxProviderMock = vi.hoisted(() => vi.fn());
 const ensureAuthProfileStoreMock = vi.hoisted(() => vi.fn());
 const listProfilesForProviderMock = vi.hoisted(() => vi.fn());
 
@@ -24,6 +25,7 @@ type DiscoveryState = {
   githubCopilotProvider?: ProviderHandle;
   vllmProvider?: ProviderHandle;
   sglangProvider?: ProviderHandle;
+  mlxProvider?: ProviderHandle;
   minimaxProvider?: ProviderHandle;
   minimaxPortalProvider?: ProviderHandle;
   modelStudioProvider?: ProviderHandle;
@@ -34,6 +36,7 @@ type BundledProviderUnderTest =
   | "github-copilot"
   | "vllm"
   | "sglang"
+  | "mlx"
   | "minimax"
   | "modelstudio"
   | "cloudflare-ai-gateway";
@@ -43,12 +46,14 @@ type DiscoveryContractOptions = {
   loadGithubCopilot?: ProviderDiscoveryContractPluginLoader;
   loadVllm?: ProviderDiscoveryContractPluginLoader;
   loadSglang?: ProviderDiscoveryContractPluginLoader;
+  loadMlx?: ProviderDiscoveryContractPluginLoader;
   loadMinimax?: ProviderDiscoveryContractPluginLoader;
   loadModelStudio?: ProviderDiscoveryContractPluginLoader;
   loadCloudflareAiGateway?: ProviderDiscoveryContractPluginLoader;
   githubCopilotRegisterRuntimeModuleId?: string;
   vllmApiModuleId?: string;
   sglangApiModuleId?: string;
+  mlxApiModuleId?: string;
 };
 
 function setRuntimeAuthStore(store?: AuthProfileStore) {
@@ -209,6 +214,18 @@ function installDiscoveryHooks(state: DiscoveryState, options: DiscoveryContract
         };
       });
     }
+    if (options.mlxApiModuleId) {
+      vi.doMock(options.mlxApiModuleId, async () => {
+        return {
+          MLX_DEFAULT_API_KEY_ENV_VAR: "MLX_API_KEY",
+          MLX_DEFAULT_BASE_URL: "http://127.0.0.1:8000/v1",
+          MLX_MODEL_PLACEHOLDER: "mlx-community/Qwen3-8B-4bit",
+          MLX_PROVIDER_ID: "mlx",
+          MLX_PROVIDER_LABEL: "MLX",
+          buildMlxProvider: (...args: unknown[]) => buildMlxProviderMock(...args),
+        };
+      });
+    }
     state.runProviderCatalog = runProviderCatalog;
 
     if (options.providerIds.includes("github-copilot")) {
@@ -227,6 +244,11 @@ function installDiscoveryHooks(state: DiscoveryState, options: DiscoveryContract
     if (options.providerIds.includes("sglang")) {
       const { default: sglangPlugin } = await options.loadSglang!();
       state.sglangProvider = requireProvider(await registerProviders(sglangPlugin), "sglang");
+    }
+
+    if (options.providerIds.includes("mlx")) {
+      const { default: mlxPlugin } = await options.loadMlx!();
+      state.mlxProvider = requireProvider(await registerProviders(mlxPlugin), "mlx");
     }
 
     if (options.providerIds.includes("minimax")) {
@@ -259,6 +281,7 @@ function installDiscoveryHooks(state: DiscoveryState, options: DiscoveryContract
     resolveCopilotApiTokenMock.mockReset();
     buildVllmProviderMock.mockReset();
     buildSglangProviderMock.mockReset();
+    buildMlxProviderMock.mockReset();
     ensureAuthProfileStoreMock.mockReset();
     listProfilesForProviderMock.mockReset();
     setRuntimeAuthStore();
@@ -684,6 +707,116 @@ export function describeSglangProviderDiscoveryContract(params: {
         }),
       ).resolves.toBeNull();
       expect(buildSglangProviderMock).not.toHaveBeenCalled();
+    });
+  });
+}
+
+export function describeMlxProviderDiscoveryContract(params: {
+  load: ProviderDiscoveryContractPluginLoader;
+  apiModuleId: string;
+}) {
+  const state = {} as DiscoveryState;
+
+  describe("mlx provider discovery contract", () => {
+    installDiscoveryHooks(state, {
+      providerIds: ["mlx"],
+      loadMlx: params.load,
+      mlxApiModuleId: params.apiModuleId,
+    });
+
+    it("keeps self-hosted discovery provider-owned", async () => {
+      buildMlxProviderMock.mockResolvedValueOnce({
+        baseUrl: "http://127.0.0.1:8000/v1",
+        api: "openai-completions",
+        models: [{ id: "mlx-community/Qwen3-8B-4bit", name: "Qwen3-8B-4bit" }],
+      });
+
+      await expect(
+        runCatalog(state, {
+          provider: state.mlxProvider!,
+          config: {},
+          env: {
+            MLX_API_KEY: "env-mlx-key",
+          } as NodeJS.ProcessEnv,
+          resolveProviderApiKey: () => ({
+            apiKey: "MLX_API_KEY",
+            discoveryApiKey: "env-mlx-key",
+          }),
+          resolveProviderAuth: () => ({
+            apiKey: "MLX_API_KEY",
+            discoveryApiKey: "env-mlx-key",
+            mode: "api_key",
+            source: "env",
+          }),
+        }),
+      ).resolves.toEqual({
+        provider: {
+          baseUrl: "http://127.0.0.1:8000/v1",
+          api: "openai-completions",
+          apiKey: "MLX_API_KEY",
+          models: [{ id: "mlx-community/Qwen3-8B-4bit", name: "Qwen3-8B-4bit" }],
+        },
+      });
+      expect(buildMlxProviderMock).toHaveBeenCalledWith({
+        apiKey: "env-mlx-key",
+      });
+    });
+
+    it("uses configured transport only for provider wildcard discovery", async () => {
+      buildMlxProviderMock.mockResolvedValueOnce({
+        baseUrl: "http://127.0.0.1:8010/v1",
+        api: "openai-completions",
+        models: [{ id: "Qwen3.5-9B-MLX-4bit", name: "Qwen3.5-9B-MLX-4bit" }],
+      });
+
+      await expect(
+        runCatalog(state, {
+          provider: state.mlxProvider!,
+          config: {
+            agents: {
+              defaults: {
+                models: {
+                  "mlx/*": {},
+                },
+              },
+            },
+            models: {
+              providers: {
+                mlx: {
+                  baseUrl: "http://127.0.0.1:8010/v1",
+                  apiKey: "MLX_API_KEY",
+                  api: "openai-completions",
+                  models: [],
+                },
+              },
+            },
+          } as OpenClawConfig,
+          env: {
+            MLX_API_KEY: "env-mlx-key",
+          } as NodeJS.ProcessEnv,
+          resolveProviderApiKey: () => ({
+            apiKey: "MLX_API_KEY",
+            discoveryApiKey: "env-mlx-key",
+          }),
+          resolveProviderAuth: () => ({
+            apiKey: "MLX_API_KEY",
+            discoveryApiKey: "env-mlx-key",
+            mode: "api_key",
+            source: "env",
+          }),
+        }),
+      ).resolves.toEqual({
+        provider: {
+          baseUrl: "http://127.0.0.1:8010/v1",
+          api: "openai-completions",
+          apiKey: "MLX_API_KEY",
+          models: [{ id: "Qwen3.5-9B-MLX-4bit", name: "Qwen3.5-9B-MLX-4bit" }],
+        },
+      });
+      expect(buildMlxProviderMock).toHaveBeenCalledWith({
+        apiKey: "env-mlx-key",
+        baseUrl: "http://127.0.0.1:8010/v1",
+      });
     });
   });
 }

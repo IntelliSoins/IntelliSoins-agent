@@ -27,6 +27,7 @@ export {
   describeGithubCopilotProviderDiscoveryContract,
   describeMinimaxProviderDiscoveryContract,
   describeModelStudioProviderDiscoveryContract,
+  describeMlxProviderDiscoveryContract,
   describeSglangProviderDiscoveryContract,
   describeVllmProviderDiscoveryContract,
   type ProviderDiscoveryContractPluginLoader,

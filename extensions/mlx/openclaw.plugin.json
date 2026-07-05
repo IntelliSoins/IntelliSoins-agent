@@ -1,0 +1,50 @@
+{
+  "id": "mlx",
+  "activation": {
+    "onStartup": false
+  },
+  "enabledByDefault": true,
+  "providers": ["mlx"],
+  "providerRequest": {
+    "providers": {
+      "mlx": {
+        "family": "mlx",
+        "openAICompletions": {
+          "supportsStreamingUsage": true
+        }
+      }
+    }
+  },
+  "modelPricing": {
+    "providers": {
+      "mlx": {
+        "external": false
+      }
+    }
+  },
+  "setup": {
+    "providers": [
+      {
+        "id": "mlx",
+        "envVars": ["MLX_API_KEY", "OMLX_API_KEY", "VLLM_MLX_API_KEY", "VMLX_API_KEY"]
+      }
+    ]
+  },
+  "providerAuthChoices": [
+    {
+      "provider": "mlx",
+      "method": "custom",
+      "choiceId": "mlx",
+      "choiceLabel": "MLX",
+      "choiceHint": "Apple Silicon MLX server (oMLX, vLLM-MLX, vMLX, mlx-lm)",
+      "groupId": "mlx",
+      "groupLabel": "MLX",
+      "groupHint": "Local MLX inference on Apple Silicon"
+    }
+  ],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
