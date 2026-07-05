@@ -31,12 +31,12 @@ export function enrichMlxModelDefinition(
   const input = vision ? (["text", "image"] as const) : (["text"] as const);
   const compat: NonNullable<ModelDefinitionConfig["compat"]> = {
     ...model.compat,
-    supportedParameters: ["tools", "tool_choice"],
+    supportsTools: true,
   };
   if (backend.supportsPromptCacheKey) {
     compat.supportsPromptCacheKey = true;
   }
-  if (isMlxQwenModelId(model.id) && model.reasoning !== false) {
+  if (isMlxQwenModelId(model.id) && model.reasoning) {
     compat.thinkingFormat = "qwen-chat-template";
   }
   return {

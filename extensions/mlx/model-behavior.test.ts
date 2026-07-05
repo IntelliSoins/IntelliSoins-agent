@@ -25,7 +25,7 @@ describe("mlx model behavior", () => {
 
     expect(enriched.input).toEqual(["text", "image"]);
     expect(enriched.compat).toMatchObject({
-      supportedParameters: ["tools", "tool_choice"],
+      supportsTools: true,
       supportsPromptCacheKey: true,
       thinkingFormat: "qwen-chat-template",
     });
@@ -46,6 +46,6 @@ describe("mlx model behavior", () => {
     );
 
     expect(enriched.compat?.supportsPromptCacheKey).toBeUndefined();
-    expect(enriched.compat?.supportedParameters).toEqual(["tools", "tool_choice"]);
+    expect(enriched.compat?.supportsTools).toBe(true);
   });
 });

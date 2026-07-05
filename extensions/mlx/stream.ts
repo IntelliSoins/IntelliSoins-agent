@@ -7,12 +7,7 @@ import {
   isOpenAICompatibleThinkingEnabled,
 } from "openclaw/plugin-sdk/provider-stream-shared";
 import { isMlxNemotronThinkingModelId } from "./model-behavior.js";
-import {
-  resolveMlxQwenThinkingFormatFromCompat,
-  type MlxQwenThinkingFormat,
-} from "./thinking-policy.js";
-
-type MlxThinkingLevel = ProviderWrapStreamFnContext["thinkingLevel"];
+import { resolveMlxQwenThinkingFormatFromCompat } from "./thinking-policy.js";
 
 function isMlxProviderId(providerId: string): boolean {
   return normalizeProviderId(providerId) === "mlx";
@@ -52,48 +47,41 @@ function setNemotronThinkingOffChatTemplateKwargs(payload: Record<string, unknow
       : defaults;
 }
 
-export function wrapMlxProviderStream(
-  ctx: ProviderWrapStreamFnContext,
-  baseStreamFn: StreamFn | undefined,
-): StreamFn {
+export function wrapMlxProviderStream(ctx: ProviderWrapStreamFnContext): StreamFn | undefined {
+  let streamFn = ctx.streamFn;
   const providerId = ctx.model?.provider;
   if (typeof providerId !== "string" || !isMlxProviderId(providerId)) {
-    return baseStreamFn ?? ctx.streamFn;
+    return streamFn;
   }
   const qwenFormat = resolveMlxQwenThinkingFormatFromCompat(ctx.model?.compat);
   if (qwenFormat) {
-    return createPayloadPatchStreamWrapper(
-      baseStreamFn ?? ctx.streamFn,
-      ({ payload: payloadObj, options }) => {
-        const enableThinking = isOpenAICompatibleThinkingEnabled({
-          thinkingLevel: ctx.thinkingLevel,
-          options,
-        });
-        if (qwenFormat === "chat-template") {
-          setQwenChatTemplateThinking(payloadObj, enableThinking);
-          return;
-        }
-        payloadObj.enable_thinking = enableThinking;
-      },
-    );
+    streamFn = createPayloadPatchStreamWrapper(streamFn, ({ payload: payloadObj, options }) => {
+      const enableThinking = isOpenAICompatibleThinkingEnabled({
+        thinkingLevel: ctx.thinkingLevel,
+        options,
+      });
+      if (qwenFormat === "chat-template") {
+        setQwenChatTemplateThinking(payloadObj, enableThinking);
+        return;
+      }
+      payloadObj.enable_thinking = enableThinking;
+    });
+    return streamFn;
   }
   if (
     ctx.model?.api === "openai-completions" &&
     typeof ctx.model.id === "string" &&
     isMlxNemotronThinkingModelId(ctx.model.id)
   ) {
-    return createPayloadPatchStreamWrapper(
-      baseStreamFn ?? ctx.streamFn,
-      ({ payload: payloadObj, options }) => {
-        const enableThinking = isOpenAICompatibleThinkingEnabled({
-          thinkingLevel: ctx.thinkingLevel as MlxThinkingLevel,
-          options,
-        });
-        if (!enableThinking) {
-          setNemotronThinkingOffChatTemplateKwargs(payloadObj);
-        }
-      },
-    );
+    streamFn = createPayloadPatchStreamWrapper(streamFn, ({ payload: payloadObj, options }) => {
+      const enableThinking = isOpenAICompatibleThinkingEnabled({
+        thinkingLevel: ctx.thinkingLevel,
+        options,
+      });
+      if (!enableThinking) {
+        setNemotronThinkingOffChatTemplateKwargs(payloadObj);
+      }
+    });
   }
-  return baseStreamFn ?? ctx.streamFn;
+  return streamFn;
 }
