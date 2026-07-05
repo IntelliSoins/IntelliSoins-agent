@@ -39,7 +39,7 @@ import {
 import type { ProviderPlugin } from "../../plugins/types.js";
 
 const DISCOVERY_ORDERS = ["simple", "profile", "paired", "late"] as const;
-const SELF_HOSTED_DISCOVERY_PROVIDER_IDS = new Set(["lmstudio", "ollama", "sglang", "vllm"]);
+const SELF_HOSTED_DISCOVERY_PROVIDER_IDS = new Set(["lmstudio", "mlx", "ollama", "sglang", "vllm"]);
 const log = createSubsystemLogger("models/list-provider-catalog");
 
 function buildProviderCatalogEnvCacheFingerprint(env: NodeJS.ProcessEnv): string {

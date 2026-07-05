@@ -132,6 +132,7 @@ function humanizeId(value) {
     ["lmstudio", "LM Studio"],
     ["mdns", "mDNS"],
     ["minimax", "MiniMax"],
+    ["mlx", "MLX"],
     ["modelstudio", "Model Studio"],
     ["msteams", "Microsoft Teams"],
     ["nextcloud", "Nextcloud"],

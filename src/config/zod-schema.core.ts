@@ -458,6 +458,7 @@ const BUILT_IN_MODEL_PROVIDER_OVERLAY_IDS = new Set([
   "minimax",
   "minimax-portal",
   "mistral",
+  "mlx",
   "modelstudio",
   "moonshot",
   "nvidia",

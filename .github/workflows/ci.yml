@@ -32,6 +32,7 @@ concurrency:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  GITHUB_TOKEN: ${{ github.token }}
 
 jobs:
   # Preflight: establish routing truth and job matrices once, then let real
@@ -76,50 +77,11 @@ jobs:
       android_matrix: ${{ steps.manifest.outputs.android_matrix }}
     steps:
       - name: Checkout
-        env:
-          CHECKOUT_REPO: ${{ github.repository }}
-          CHECKOUT_REF: ${{ inputs.target_ref || github.sha }}
-          CHECKOUT_FALLBACK_REF: ${{ github.sha }}
-          GITHUB_EVENT_NAME: ${{ github.event_name }}
-        run: |
-          set -euo pipefail
-          git init "$GITHUB_WORKSPACE"
-          git -C "$GITHUB_WORKSPACE" config gc.auto 0
-          git -C "$GITHUB_WORKSPACE" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
-          fetch_checkout_ref() {
-            local ref="$1"
-            local fetch_status
-            for attempt in 1 2 3; do
-              timeout --signal=TERM --kill-after=10s 30s git -C "$GITHUB_WORKSPACE" \
-                -c protocol.version=2 \
-                fetch --no-tags --prune --no-recurse-submodules --depth=2 origin \
-                "+${ref}:refs/remotes/origin/checkout" && return 0
-              fetch_status="$?"
-              if [ "$fetch_status" != "124" ] && [ "$fetch_status" != "137" ]; then
-                return "$fetch_status"
-              fi
-              if [ "$attempt" = "3" ]; then
-                return "$fetch_status"
-              fi
-              echo "::warning::checkout fetch for '$ref' timed out on attempt $attempt; retrying"
-              sleep 5
-            done
-          }
-          if fetch_checkout_ref "$CHECKOUT_REF"; then
-            :
-          else
-            fetch_status="$?"
-            if [ "$fetch_status" = "124" ] || [ "$fetch_status" = "137" ]; then
-              echo "::error::checkout fetch for '$CHECKOUT_REF' timed out"
-              exit "$fetch_status"
-            fi
-            if [ "$GITHUB_EVENT_NAME" != "workflow_dispatch" ] || [ "$CHECKOUT_REF" = "$CHECKOUT_FALLBACK_REF" ]; then
-              exit "$fetch_status"
-            fi
-            echo "::warning::workflow_dispatch target_ref '$CHECKOUT_REF' is unavailable; falling back to head SHA '$CHECKOUT_FALLBACK_REF'"
-            fetch_checkout_ref "$CHECKOUT_FALLBACK_REF"
-          fi
-          git -C "$GITHUB_WORKSPACE" checkout --detach refs/remotes/origin/checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.target_ref || (github.event_name == 'pull_request' && github.event.pull_request.head.sha) || github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
 
       - name: Resolve checkout SHA
         id: checkout_ref
@@ -131,6 +93,7 @@ jobs:
         with:
           base-sha: ${{ github.event_name == 'push' && github.event.before || github.event.pull_request.base.sha }}
           fetch-ref: ${{ github.event_name == 'push' && github.ref_name || github.event.pull_request.base.ref }}
+          github-token: ${{ github.token }}
 
       - name: Detect docs-only changes
         id: docs_scope
@@ -337,50 +300,11 @@ jobs:
       PRE_COMMIT_HOME: .cache/pre-commit-security-fast
     steps:
       - name: Checkout
-        env:
-          CHECKOUT_REPO: ${{ github.repository }}
-          CHECKOUT_REF: ${{ inputs.target_ref || github.sha }}
-          CHECKOUT_FALLBACK_REF: ${{ github.sha }}
-          GITHUB_EVENT_NAME: ${{ github.event_name }}
-        run: |
-          set -euo pipefail
-          git init "$GITHUB_WORKSPACE"
-          git -C "$GITHUB_WORKSPACE" config gc.auto 0
-          git -C "$GITHUB_WORKSPACE" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
-          fetch_checkout_ref() {
-            local ref="$1"
-            local fetch_status
-            for attempt in 1 2 3; do
-              timeout --signal=TERM --kill-after=10s 30s git -C "$GITHUB_WORKSPACE" \
-                -c protocol.version=2 \
-                fetch --no-tags --prune --no-recurse-submodules --depth=1 origin \
-                "+${ref}:refs/remotes/origin/checkout" && return 0
-              fetch_status="$?"
-              if [ "$fetch_status" != "124" ] && [ "$fetch_status" != "137" ]; then
-                return "$fetch_status"
-              fi
-              if [ "$attempt" = "3" ]; then
-                return "$fetch_status"
-              fi
-              echo "::warning::checkout fetch for '$ref' timed out on attempt $attempt; retrying"
-              sleep 5
-            done
-          }
-          if fetch_checkout_ref "$CHECKOUT_REF"; then
-            :
-          else
-            fetch_status="$?"
-            if [ "$fetch_status" = "124" ] || [ "$fetch_status" = "137" ]; then
-              echo "::error::checkout fetch for '$CHECKOUT_REF' timed out"
-              exit "$fetch_status"
-            fi
-            if [ "$GITHUB_EVENT_NAME" != "workflow_dispatch" ] || [ "$CHECKOUT_REF" = "$CHECKOUT_FALLBACK_REF" ]; then
-              exit "$fetch_status"
-            fi
-            echo "::warning::workflow_dispatch target_ref '$CHECKOUT_REF' is unavailable; falling back to head SHA '$CHECKOUT_FALLBACK_REF'"
-            fetch_checkout_ref "$CHECKOUT_FALLBACK_REF"
-          fi
-          git -C "$GITHUB_WORKSPACE" checkout --detach refs/remotes/origin/checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.target_ref || (github.event_name == 'pull_request' && github.event.pull_request.head.sha) || github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
 
       - name: Ensure security base commit
         if: github.event_name != 'workflow_dispatch'
@@ -388,6 +312,7 @@ jobs:
         with:
           base-sha: ${{ github.event_name == 'push' && github.event.before || github.event.pull_request.base.sha }}
           fetch-ref: ${{ github.event_name == 'push' && github.ref_name || github.event.pull_request.base.ref }}
+          github-token: ${{ github.token }}
 
       - name: Prepare trusted pre-commit config
         if: github.event_name == 'pull_request'
@@ -496,7 +421,7 @@ jobs:
             reset_checkout_dir
             git init "$workdir" >/dev/null
             git config --global --add safe.directory "$workdir"
-            git -C "$workdir" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+            git -C "$workdir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
             git -C "$workdir" config gc.auto 0
 
             timeout --signal=TERM --kill-after=10s 30s git -C "$workdir" \
@@ -561,7 +486,7 @@ jobs:
             reset_checkout_dir
             git init "$workdir" >/dev/null
             git config --global --add safe.directory "$workdir"
-            git -C "$workdir" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+            git -C "$workdir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
             git -C "$workdir" config gc.auto 0
 
             timeout --signal=TERM --kill-after=10s 30s git -C "$workdir" \
@@ -591,6 +516,7 @@ jobs:
         with:
           base-sha: ${{ github.event.pull_request.base.sha }}
           fetch-ref: ${{ github.event.pull_request.base.ref }}
+          github-token: ${{ github.token }}
 
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
@@ -807,7 +733,7 @@ jobs:
             reset_checkout_dir
             git init "$workdir" >/dev/null
             git config --global --add safe.directory "$workdir"
-            git -C "$workdir" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+            git -C "$workdir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
             git -C "$workdir" config gc.auto 0
 
             timeout --signal=TERM --kill-after=10s 30s git -C "$workdir" \
@@ -896,7 +822,7 @@ jobs:
             reset_checkout_dir
             git init "$workdir" >/dev/null
             git config --global --add safe.directory "$workdir"
-            git -C "$workdir" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+            git -C "$workdir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
             git -C "$workdir" config gc.auto 0
 
             timeout --signal=TERM --kill-after=10s 30s git -C "$workdir" \
@@ -976,7 +902,7 @@ jobs:
             reset_checkout_dir
             git init "$workdir" >/dev/null
             git config --global --add safe.directory "$workdir"
-            git -C "$workdir" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+            git -C "$workdir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
             git -C "$workdir" config gc.auto 0
 
             timeout --signal=TERM --kill-after=10s 30s git -C "$workdir" \
@@ -1053,7 +979,7 @@ jobs:
             reset_checkout_dir
             git init "$workdir" >/dev/null
             git config --global --add safe.directory "$workdir"
-            git -C "$workdir" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+            git -C "$workdir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
             git -C "$workdir" config gc.auto 0
 
             timeout --signal=TERM --kill-after=10s 30s git -C "$workdir" \
@@ -1128,7 +1054,7 @@ jobs:
             reset_checkout_dir
             git init "$workdir" >/dev/null
             git config --global --add safe.directory "$workdir"
-            git -C "$workdir" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+            git -C "$workdir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
             git -C "$workdir" config gc.auto 0
 
             timeout --signal=TERM --kill-after=10s 30s git -C "$workdir" \
@@ -1255,7 +1181,7 @@ jobs:
             reset_checkout_dir
             git init "$workdir" >/dev/null
             git config --global --add safe.directory "$workdir"
-            git -C "$workdir" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+            git -C "$workdir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
             git -C "$workdir" config gc.auto 0
 
             timeout --signal=TERM --kill-after=10s 30s git -C "$workdir" \
@@ -1387,7 +1313,7 @@ jobs:
             reset_checkout_dir
             git init "$workdir" >/dev/null
             git config --global --add safe.directory "$workdir"
-            git -C "$workdir" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+            git -C "$workdir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
             git -C "$workdir" config gc.auto 0
 
             timeout --signal=TERM --kill-after=10s 30s git -C "$workdir" \
@@ -1554,7 +1480,7 @@ jobs:
             reset_checkout_dir
             git init "$workdir" >/dev/null
             git config --global --add safe.directory "$workdir"
-            git -C "$workdir" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+            git -C "$workdir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
             git -C "$workdir" config gc.auto 0
 
             timeout --signal=TERM --kill-after=10s 30s git -C "$workdir" \
@@ -1601,7 +1527,7 @@ jobs:
             reset_checkout_dir
             git init "$workdir" >/dev/null
             git -C "$workdir" config gc.auto 0
-            git -C "$workdir" remote add origin "https://github.com/openclaw/clawhub.git"
+            git -C "$workdir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/openclaw/clawhub.git"
 
             timeout --signal=TERM --kill-after=10s 30s git -C "$workdir" \
               -c protocol.version=2 \
@@ -1646,7 +1572,7 @@ jobs:
           set -euo pipefail
           git init "$GITHUB_WORKSPACE"
           git -C "$GITHUB_WORKSPACE" config gc.auto 0
-          git -C "$GITHUB_WORKSPACE" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+          git -C "$GITHUB_WORKSPACE" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
           fetch_checkout_ref() {
             local fetch_status
             for attempt in 1 2 3; do
@@ -1712,7 +1638,7 @@ jobs:
           set -euo pipefail
           git init "$GITHUB_WORKSPACE"
           git -C "$GITHUB_WORKSPACE" config gc.auto 0
-          git -C "$GITHUB_WORKSPACE" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+          git -C "$GITHUB_WORKSPACE" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
           fetch_timeout_seconds=90
           fetch_checkout_ref() {
             git -C "$GITHUB_WORKSPACE" \
@@ -1833,7 +1759,7 @@ jobs:
           set -euo pipefail
           git init "$GITHUB_WORKSPACE"
           git -C "$GITHUB_WORKSPACE" config gc.auto 0
-          git -C "$GITHUB_WORKSPACE" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+          git -C "$GITHUB_WORKSPACE" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
           fetch_timeout_seconds=90
           fetch_checkout_ref() {
             git -C "$GITHUB_WORKSPACE" \
@@ -1900,7 +1826,7 @@ jobs:
           set -euo pipefail
           git init "$GITHUB_WORKSPACE"
           git -C "$GITHUB_WORKSPACE" config gc.auto 0
-          git -C "$GITHUB_WORKSPACE" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+          git -C "$GITHUB_WORKSPACE" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
           fetch_timeout_seconds=90
           fetch_checkout_ref() {
             git -C "$GITHUB_WORKSPACE" \
@@ -2053,7 +1979,7 @@ jobs:
             reset_checkout_dir
             git init "$workdir" >/dev/null
             git config --global --add safe.directory "$workdir"
-            git -C "$workdir" remote add origin "https://github.com/${CHECKOUT_REPO}.git"
+            git -C "$workdir" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${CHECKOUT_REPO}.git"
             git -C "$workdir" config gc.auto 0
 
             timeout --signal=TERM --kill-after=10s 30s git -C "$workdir" \
