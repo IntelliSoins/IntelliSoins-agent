@@ -1,5 +1,4 @@
 import * as fs from "node:fs";
-import * as os from "node:os";
 import * as path from "node:path";
 import { runFfmpeg } from "openclaw/plugin-sdk/media-runtime";
 import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
@@ -14,7 +13,20 @@ import type {
 } from "openclaw/plugin-sdk/realtime-voice";
 import { REALTIME_VOICE_AUDIO_FORMAT_PCM16_24KHZ } from "openclaw/plugin-sdk/realtime-voice";
 import type { SpeechProviderPlugin, SpeechSynthesisResult } from "openclaw/plugin-sdk/speech";
+import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
 import WebSocket from "ws";
+
+const LOCAL_VOICE_SSRF_POLICY = { allowPrivateNetwork: true } as const;
+
+async function fetchLocalVoiceService(url: string, init: RequestInit) {
+  return await fetchWithSsrFGuard({
+    url,
+    init,
+    policy: LOCAL_VOICE_SSRF_POLICY,
+    auditContext: "my-speech-service/local-voice",
+  });
+}
 
 const mySpeechProvider: SpeechProviderPlugin = {
   id: "my-speech-provider",
@@ -166,21 +178,28 @@ class LocalVoiceBridge implements RealtimeVoiceBridge {
         headers["Authorization"] = `Bearer ${apiKey}`;
       }
 
-      const response = await fetch(`http://127.0.0.1:${sttPort}/v1/audio/transcriptions`, {
-        method: "POST",
-        headers,
-        body: formData,
-      });
+      const { response, release } = await fetchLocalVoiceService(
+        `http://127.0.0.1:${sttPort}/v1/audio/transcriptions`,
+        {
+          method: "POST",
+          headers,
+          body: formData,
+        },
+      );
 
-      if (!response.ok) {
-        throw new Error(`Whisper STT failed with status ${response.status}`);
-      }
+      try {
+        if (!response.ok) {
+          throw new Error(`Whisper STT failed with status ${response.status}`);
+        }
 
-      const data = (await response.json()) as { text: string };
-      const text = data.text?.trim();
+        const data = (await response.json()) as { text: string };
+        const text = data.text?.trim();
 
-      if (text) {
-        this.req.onTranscript?.("user", text, true);
+        if (text) {
+          this.req.onTranscript?.("user", text, true);
+        }
+      } finally {
+        await release();
       }
     } catch (error) {
       this.req.onError?.(error instanceof Error ? error : new Error(String(error)));
@@ -217,78 +236,87 @@ class LocalVoiceBridge implements RealtimeVoiceBridge {
         headers["Authorization"] = `Bearer ${apiKey}`;
       }
 
-      const response = await fetch(`http://127.0.0.1:${ttsPort}/v1/audio/speech`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          model,
-          input: text,
-          voice,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`VibeVoice TTS failed with status ${response.status}`);
-      }
-
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = Buffer.from(arrayBuffer);
-
-      // Convert synthesized audio to raw PCM16 24kHz mono using ffmpeg
-      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-local-voice-"));
-      const inputPath = path.join(tempDir, "input.mp3");
-      const outputPath = path.join(tempDir, "output.raw");
-
-      fs.writeFileSync(inputPath, audioBuffer);
-
-      await runFfmpeg([
-        "-y",
-        "-i",
-        inputPath,
-        "-f",
-        "s16le",
-        "-acodec",
-        "pcm_s16le",
-        "-ar",
-        "24000",
-        "-ac",
-        "1",
-        outputPath,
-      ]);
-
-      const pcmOutput = fs.readFileSync(outputPath);
+      const { response, release } = await fetchLocalVoiceService(
+        `http://127.0.0.1:${ttsPort}/v1/audio/speech`,
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            model,
+            input: text,
+            voice,
+          }),
+        },
+      );
 
       try {
-        fs.unlinkSync(inputPath);
-        fs.unlinkSync(outputPath);
-        fs.rmdirSync(tempDir);
-      } catch {
-        // ignore cleanup errors
-      }
-
-      // Stream the audio chunks back to the client
-      if (this.activeInterval) {
-        clearInterval(this.activeInterval);
-      }
-
-      const chunkSize = 4096;
-      const delayMs = Math.round((chunkSize / 2 / 24000) * 1000); // ~85ms
-      let offset = 0;
-
-      this.activeInterval = setInterval(() => {
-        if (offset >= pcmOutput.length || !this.connected) {
-          if (this.activeInterval) {
-            clearInterval(this.activeInterval);
-            this.activeInterval = null;
-          }
-          this.req.onMark?.("audio-done");
-          return;
+        if (!response.ok) {
+          throw new Error(`VibeVoice TTS failed with status ${response.status}`);
         }
 
-        const chunk = pcmOutput.subarray(offset, offset + chunkSize);
-        offset += chunkSize;
-        this.req.onAudio(chunk);
-      }, delayMs);
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = Buffer.from(arrayBuffer);
+
+        // Convert synthesized audio to raw PCM16 24kHz mono using ffmpeg
+        const tempDir = fs.mkdtempSync(
+          path.join(resolvePreferredOpenClawTmpDir(), "openclaw-local-voice-"),
+        );
+        const inputPath = path.join(tempDir, "input.mp3");
+        const outputPath = path.join(tempDir, "output.raw");
+
+        fs.writeFileSync(inputPath, audioBuffer);
+
+        await runFfmpeg([
+          "-y",
+          "-i",
+          inputPath,
+          "-f",
+          "s16le",
+          "-acodec",
+          "pcm_s16le",
+          "-ar",
+          "24000",
+          "-ac",
+          "1",
+          outputPath,
+        ]);
+
+        const pcmOutput = fs.readFileSync(outputPath);
+
+        try {
+          fs.unlinkSync(inputPath);
+          fs.unlinkSync(outputPath);
+          fs.rmdirSync(tempDir);
+        } catch {
+          // ignore cleanup errors
+        }
+
+        // Stream the audio chunks back to the client
+        if (this.activeInterval) {
+          clearInterval(this.activeInterval);
+        }
+
+        const chunkSize = 4096;
+        const delayMs = Math.round((chunkSize / 2 / 24000) * 1000); // ~85ms
+        let offset = 0;
+
+        this.activeInterval = setInterval(() => {
+          if (offset >= pcmOutput.length || !this.connected) {
+            if (this.activeInterval) {
+              clearInterval(this.activeInterval);
+              this.activeInterval = null;
+            }
+            this.req.onMark?.("audio-done");
+            return;
+          }
+
+          const chunk = pcmOutput.subarray(offset, offset + chunkSize);
+          offset += chunkSize;
+          this.req.onAudio(chunk);
+        }, delayMs);
+      } finally {
+        await release();
+      }
     } catch (error) {
       this.req.onError?.(error instanceof Error ? error : new Error(String(error)));
     }
