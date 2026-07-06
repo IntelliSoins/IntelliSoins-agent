@@ -47,6 +47,15 @@ if [ -z "$TOGETHERAI_API_KEY" ]; then
 fi
 export TOGETHERAI_API_KEY
 
+# OpenRouter — wildcard openrouter/* dans config.yaml. Placeholder si cle absente
+# pour ne pas bloquer le boot du proxy (les appels openrouter/* echoueront en 401).
+OPENROUTER_API_KEY="${OPENROUTER_API_KEY:-$(security find-generic-password -a "$USER" -s openrouter-api-key -w 2>/dev/null)}"
+if [ -z "$OPENROUTER_API_KEY" ]; then
+    echo "WARN: openrouter-api-key absent du Keychain — routes openrouter/* inactives" >&2
+    OPENROUTER_API_KEY="sk-or-MANQUANTE"
+fi
+export OPENROUTER_API_KEY
+
 # Garde: regenerer le client Prisma si manquant (robustesse si venv recree)
 LITELLM_PROXY_DIR="$HOME/.venvs/litellm/lib/python3.12/site-packages/litellm/proxy"
 if ! "$HOME/.venvs/litellm/bin/python3" -c "import prisma" 2>/dev/null; then

@@ -1,0 +1,147 @@
+# Registre canonique des modèles — apple_all / ai-servers
+# Source de vérité humaine. Tout nouveau modèle : entrée ici + config.yaml LiteLLM + alias si Claude Code.
+# Voir : models-catalog, ~/.local/bin/claude-proxy, claude-omlx (fallback direct)
+
+version: 1
+updated: "2026-07-05"
+
+clients:
+  claude:
+    description: Claude Code cloud via Vertex direct
+    command: claude
+    backend: vertex
+    settings: ~/.claude/settings.json (CLAUDE_CODE_USE_VERTEX=1)
+  claude-proxy:
+    description: Claude Code via hub LiteLLM (:8092)
+    command: claude-local | claude-proxy
+    backend: litellm:8092
+  claude-omlx:
+    description: Claude Code direct oMLX (:8211), fallback si LiteLLM down
+    command: claude-omlx | cc-omlx
+    backend: omlx:8211
+  cursor-cli:
+    description: Cursor agent CLI — catalogue Cursor cloud uniquement
+    command: agent
+    backend: cursor-cloud
+  cursor-chat:
+    description: Cursor IDE Chat / Cmd+K via LiteLLM OpenAI-compatible
+    command: Cursor Settings → Override OpenAI Base URL
+    backend: litellm:8092/v1
+
+models:
+  # --- Local oMLX (via LiteLLM hub) ---
+  - id: qwen3-coder-local
+    litellm_name: Qwen3-Coder-30B-A3B-Instruct-4bit
+    litellm_alias: code-local
+    litellm_alias_legacy: claude-local-qwen3-coder-30b
+    backend: omlx:8211
+    clients: [claude-proxy, cursor-chat]
+    tier: code
+    pinned_omlx: false
+    notes: Agent code local par défaut (claude-local)
+
+  - id: qwen36-general-local
+    litellm_name: Qwen3.6-35B-A3B-4bit
+    litellm_alias: general-local
+    backend: omlx:8211
+    clients: [claude-proxy, cursor-chat]
+    tier: sonnet
+    pinned_omlx: true
+    notes: Modèle général multimodal, pinné oMLX (variante MTP non supportée par oMLX 0.3.12 — ValueError qwen3_5_mtp ; alias legacy qwen35-35b retirés 2026-07-05)
+
+  - id: gemma4-12b-local
+    litellm_name: gemma4-12b
+    litellm_alias: gemma4-12b-mlx
+    litellm_alias_voice: voice-local
+    backend: omlx:8211
+    omlx_model_id: mlx-community--gemma-4-12B-it-8bit
+    clients: [claude-proxy]
+    tier: sonnet
+    notes: Agent vocal / multimodal — exclusif RAM avec autres gros modèles
+
+  # --- Cloud via LiteLLM (Together / Anthropic API) ---
+  - id: qwen3-coder-480b-together
+    litellm_name: claude-together-qwen3-coder-480b
+    litellm_alias: sonnet-together-coder
+    backend: together_ai
+    clients: [claude-proxy]
+    tier: code
+
+  - id: claude-opus-anthropic
+    litellm_name: anthropic-claude-opus
+    litellm_alias: opus-anthropic
+    backend: anthropic-api
+    clients: [claude-proxy]
+    tier: opus
+    notes: Hors Vertex — clé Anthropic via LiteLLM
+
+  - id: claude-sonnet-anthropic
+    litellm_name: anthropic-claude-sonnet
+    backend: anthropic-api
+    clients: [claude-proxy]
+    tier: sonnet
+
+  # --- Vertex direct (hors LiteLLM) ---
+  - id: claude-opus-vertex
+    backend: vertex
+    project: intellisoins-vertex
+    region: global
+    clients: [claude]
+    tier: opus
+    notes: Opus/Sonnet/Haiku GCP — commande claude uniquement
+
+  - id: claude-sonnet-vertex
+    backend: vertex
+    clients: [claude]
+    tier: sonnet
+
+  - id: claude-haiku-vertex
+    backend: vertex
+    clients: [claude]
+    tier: haiku
+
+  # --- Vertex via LiteLLM hub (ADC gcloud, endpoint global) ---
+  - id: vertex-claude-sonnet-litellm
+    litellm_name: vertex-claude-sonnet-4-6
+    litellm_alias: vertex-sonnet
+    backend: vertex
+    project: intellisoins-vertex
+    region: global
+    clients: [claude-proxy, cursor-chat]
+    tier: sonnet
+
+  - id: vertex-claude-opus-litellm
+    litellm_name: vertex-claude-opus-4-8
+    litellm_alias: vertex-opus
+    backend: vertex
+    project: intellisoins-vertex
+    region: global
+    clients: [claude-proxy, cursor-chat]
+    tier: opus
+
+  # --- Cursor cloud (hors hub) ---
+  - id: fable-5-cursor
+    cursor_slug: claude-fable-5
+    backend: cursor-cloud
+    clients: [cursor-cli]
+    tier: opus
+    notes: "agent --model claude-fable-5 — pas disponible dans Claude Code ni oMLX"
+
+  - id: composer-25-cursor
+    cursor_slug: composer-2.5
+    backend: cursor-cloud
+    clients: [cursor-cli]
+    tier: sonnet
+
+  - id: claude-opus-48-cursor
+    cursor_slug: claude-opus-4-8
+    backend: cursor-cloud
+    clients: [cursor-cli]
+    tier: opus
+
+  # --- OpenRouter via LiteLLM hub (wildcard) ---
+  - id: openrouter-wildcard
+    litellm_name: openrouter/*
+    backend: openrouter
+    clients: [claude-proxy, cursor-chat]
+    notes: "Tout slug openrouter/<org>/<modele> passe tel quel — cle Keychain openrouter-api-key requise"

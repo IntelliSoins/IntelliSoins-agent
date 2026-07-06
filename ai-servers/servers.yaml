@@ -20,76 +20,6 @@
 #   env             Variables d'environnement supplementaires (cle: valeur)
 
 servers:
-  mlxcel:
-    name: "mlxcel (Rust native MLX)"
-    category: llm
-    port: 8097
-    host: 127.0.0.1
-    launcher: launchers/mlxcel.sh
-    autostart: false
-    keepalive: true
-    requires_disk: false
-    log_stdout: logs/mlxcel.log
-    log_stderr: logs/mlxcel.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
-  medgemma-27b:
-    name: "MedGemma 27B Text"
-    category: llm
-    port: 8080
-    host: 127.0.0.1
-    launcher: launchers/medgemma-27b.sh
-    autostart: false
-    keepalive: false
-    requires_disk: false
-    log_stdout: logs/medgemma-27b.log
-    log_stderr: logs/medgemma-27b.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
-  qwen3-email:
-    name: "Qwen3-8B Email LoRA"
-    category: llm
-    port: 8081
-    host: 127.0.0.1
-    launcher: launchers/qwen3-email.sh
-    autostart: false
-    keepalive: false
-    requires_disk: true
-    log_stdout: logs/qwen3-email.log
-    log_stderr: logs/qwen3-email.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
-  nemotron-30b:
-    name: "Nemotron 30B Tools"
-    category: llm
-    port: 8082
-    host: 127.0.0.1
-    launcher: launchers/nemotron-30b.sh
-    autostart: false
-    keepalive: false
-    requires_disk: true
-    log_stdout: logs/nemotron-30b.log
-    log_stderr: logs/nemotron-30b.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
-  qwen3-merged:
-    name: "Qwen3-8B Merged + Tools"
-    category: llm
-    port: 8083
-    host: 127.0.0.1
-    launcher: launchers/qwen3-merged.sh
-    autostart: false
-    keepalive: false
-    requires_disk: true
-    log_stdout: logs/qwen3-merged.log
-    log_stderr: logs/qwen3-merged.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
   embedding:
     name: "Qwen3-Embedding-0.6B"
     category: embedding
@@ -132,34 +62,6 @@ servers:
     health_endpoint: /health
     throttle: 30
 
-  qwen35-35b:
-    name: "Qwen3.5 35B MoE Agentic"
-    category: llm
-    port: 8087
-    host: 127.0.0.1
-    launcher: launchers/qwen35-35b.sh
-    autostart: false
-    keepalive: true
-    requires_disk: false
-    log_stdout: logs/qwen35-35b.log
-    log_stderr: logs/qwen35-35b.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
-  gemma4-12b:
-    name: "Gemma 4 12B Instruct"
-    category: llm
-    port: 8098
-    host: 127.0.0.1
-    launcher: launchers/gemma4-12b.sh
-    autostart: false
-    keepalive: true
-    requires_disk: true
-    log_stdout: logs/gemma4-12b.log
-    log_stderr: logs/gemma4-12b.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
   docling:
     name: "Docling OCR/Extraction"
     category: ocr
@@ -174,37 +76,36 @@ servers:
     health_endpoint: /health
     throttle: 30
 
-  kokoro-tts:
-    name: "Kokoro TTS"
+  voxcpm-tts:
+    name: "VoxCPM2 Michael v6 (MLX 8bit)"
     category: tts
-    port: 8880
+    port: 8025
     host: 127.0.0.1
-    launcher: launchers/kokoro-tts.sh
-    autostart: false
-    keepalive: false
-    requires_disk: false
-    log_stdout: logs/kokoro-tts.log
-    log_stderr: logs/kokoro-tts.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-    # working_dir configuré dans le launcher
-
-  vibevoice-tts:
-    name: "VibeVoice Realtime 0.5B TTS"
-    category: tts
-    port: 8882
-    host: 127.0.0.1
-    launcher: launchers/vibevoice-tts.sh
+    launcher: launchers/voxcpm-tts.sh
     autostart: true
     keepalive: true
     requires_disk: false
-    log_stdout: logs/vibevoice-tts.log
-    log_stderr: logs/vibevoice-tts.error.log
+    log_stdout: logs/voxcpm-tts.log
+    log_stderr: logs/voxcpm-tts.error.log
     health_endpoint: /v1/models
-    throttle: 30
+    throttle: 60
+
+  voxcpm-openai-bridge:
+    name: "VoxCPM OpenAI bridge (OpenClaw TTS)"
+    category: tts
+    port: 8883
+    host: 127.0.0.1
+    launcher: launchers/voxcpm-openai-bridge.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/voxcpm-openai-bridge.log
+    log_stderr: logs/voxcpm-openai-bridge.error.log
+    health_endpoint: /health
+    throttle: 15
 
   whisper-stt:
-    name: "Whisper large-v3-turbo STT"
+    name: "Whisper large-v3-turbo STT (fine-tuné voix Michael, LoRA v2 2026-06-18)"
     category: stt
     port: 2022
     host: 127.0.0.1
@@ -246,20 +147,6 @@ servers:
     health_endpoint: /v1/models
     throttle: 30
 
-  qwen35-9b-vision:
-    name: "Qwen3.5-9B Vision + Tools"
-    category: vlm
-    port: 8089
-    host: 127.0.0.1
-    launcher: launchers/qwen35-9b-vision.sh
-    autostart: true
-    keepalive: true
-    requires_disk: false
-    log_stdout: logs/qwen35-9b-vision.log
-    log_stderr: logs/qwen35-9b-vision.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
   litellm-proxy:
     name: "LiteLLM Proxy (OpenAI gateway)"
     category: llm
@@ -273,6 +160,20 @@ servers:
     log_stderr: logs/litellm-proxy.error.log
     health_endpoint: /health/liveliness
     throttle: 30
+
+  study-chat-bridge:
+    name: "Pont d'étude concept-interactif"
+    category: app
+    port: 8765
+    host: 127.0.0.1
+    launcher: launchers/study-chat-bridge.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/study-chat-bridge.log
+    log_stderr: logs/study-chat-bridge.error.log
+    health_endpoint: /health
+    throttle: 15
 
   litellm-config-sync:
     name: "LiteLLM Config/UI Sync"
@@ -359,24 +260,32 @@ servers:
     health_endpoint: /healthz
     throttle: 30
 
-  # --- Serveurs externes (affiches en status, pas controles par aictl) ---
-
-  ollama:
-    name: "Ollama"
-    category: llm
-    port: 11434
+  mlx-vlm-omni:
+    name: "gemma-4-12B omni (mlx-vlm, 4 modalites)"
+    category: vlm
+    port: 8089
     host: 127.0.0.1
-    managed_by: brew
-    health_endpoint: /api/tags
+    launcher: launchers/mlx-vlm-omni.sh
+    autostart: false
+    keepalive: false
+    requires_disk: false
+    log_stdout: logs/mlx-vlm-omni.log
+    log_stderr: logs/mlx-vlm-omni.error.log
+    health_endpoint: /health
+    throttle: 30
+    # Demarrage manuel sous controle RAM (modele 8bit lourd)
+    # Modele: mlx-community/gemma-4-12B-it-8bit (texte+image+audio+video)
+
+  # --- Serveurs externes (affiches en status, pas controles par aictl) ---
 
   omlx:
     name: "oMLX (multi-model, KV cache RAM+SSD)"
     category: llm
-    port: 8010
+    port: 8211
     host: 127.0.0.1
     managed_by: brew
     health_endpoint: /health
     # Lance par LaunchAgent Homebrew (homebrew.mxcl.omlx)
-    # Config: ~/.omlx/settings.json (hot cache 25GB, SSD cache 92GB)
+    # Config: ~/.omlx/settings.json (hot cache 35GB, SSD cache 92GB)
     # API key requise: cat ~/.omlx/settings.json | jq -r .auth.api_key
     # Models: ~/.omlx/models/ (charge a la demande, multi-modele)
