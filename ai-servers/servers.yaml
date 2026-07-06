@@ -133,20 +133,6 @@ servers:
     throttle: 30
     working_dir: /Users/michaelahern/master-IA/tools/live-translator
 
-  gemma4-e4b:
-    name: "Gemma 4 E4B Multimodal"
-    category: vlm
-    port: 8088
-    host: 127.0.0.1
-    launcher: launchers/gemma4-e4b.sh
-    autostart: false
-    keepalive: true
-    requires_disk: false
-    log_stdout: logs/gemma4-e4b.log
-    log_stderr: logs/gemma4-e4b.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
   litellm-proxy:
     name: "LiteLLM Proxy (OpenAI gateway)"
     category: llm

@@ -11,7 +11,7 @@ paths:
 
 # Local AI Stack — Conventions d'appel (Host macOS personnel)
 
-Stack AI/ML **personnelle** Michael Ahern, **installée nativement sur le disque** (Apple Silicon M3 Max via Homebrew + LaunchAgents + MLX). Couvre LiteLLM Proxy AI Gateway local (:8092), sidecar vector store pgvector (:8093), aictl + serveurs MLX, omlx FIM coder (:8000), conventions d'appel des modèles, et config Claude Code `settings.local.json`. Charger quand un projet mentionne "ai-servers", "aictl", "MLX", "LiteLLM Proxy host", "qwen3", "medgemma", "nemotron", "gemma4", "embedding local", "reranker local", "ANTHROPIC_BASE_URL", "apiKeyHelper", "omlx", "Continue VS Code", "PRO-G40", "local servers", "port 8092".
+Stack AI/ML **personnelle** Michael Ahern, **installée nativement sur le disque** (Apple Silicon M3 Max via Homebrew + LaunchAgents + MLX). Couvre LiteLLM Proxy AI Gateway local (:8092), sidecar vector store pgvector (:8093), aictl + serveurs MLX, omlx multi-modèle (:8211), conventions d'appel des modèles, et config Claude Code `settings.local.json`. Charger quand un projet mentionne "ai-servers", "aictl", "MLX", "LiteLLM Proxy host", "qwen3", "medgemma", "nemotron", "gemma4", "embedding local", "reranker local", "ANTHROPIC_BASE_URL", "apiKeyHelper", "omlx", "Continue VS Code", "PRO-G40", "local servers", "port 8092".
 
 ## Périmètre — Deux stacks distincts, NE PAS confondre
 
@@ -49,36 +49,32 @@ Stack AI/ML **personnelle** Michael Ahern, **installée nativement sur le disque
 
 ## Inventaire des serveurs
 
-Source de vérité = `~/ai-servers/servers.yaml` (lire avant toute affirmation). 21 entrées gérées par aictl + 2 externes brew (omlx :8000, Ollama). vMLX :8002 tourne via vMLX.app (ni aictl ni brew), routé par LiteLLM.
+Source de vérité = `~/ai-servers/servers.yaml` (lire avant toute affirmation). **18 entrées** gérées par aictl + **omlx** externe (brew, :8211). Ollama retiré (2026-07-06).
 
-| Catégorie    | Serveur             | Port      | Modèle / Notes                                                    |
-| ------------ | ------------------- | --------- | ----------------------------------------------------------------- |
-| Gateway      | litellm-proxy       | :8092     | LiteLLM AI Gateway DB-backed, master key Keychain                 |
-| Vector store | litellm-pgvector    | :8093     | Sidecar OpenAI Vector Stores API, Postgres17 + pgvector           |
-| LLM          | medgemma-27b        | :8080     | MedGemma 27B (TurboQuant V2 3-bit actif)                          |
-| LLM          | qwen3-email         | :8081     | Qwen3 email                                                       |
-| LLM          | nemotron-30b        | :8082     | Nemotron 30B (**PRO-G40 strict**)                                 |
-| LLM          | qwen3-merged        | :8083     | Qwen3 merged                                                      |
-| LLM          | gemma3-4b           | :8086     | Gemma 3 4B                                                        |
-| LLM          | qwen35-35b          | :8087     | Qwen3.5 35B MoE agentic                                           |
-| LLM externe  | **omlx**            | **:8000** | multi-modèles (Qwen2.5-Coder-3B FIM…), KV cache RAM+SSD, brew     |
-| LLM          | **vMLX**            | **:8002** | Qwen3.6-35B-A3B-JANGTQ reasoning MoE, vMLX.app (déplacé de :8000) |
-| LLM externe  | ollama              | :11434    | Ollama, brew services                                             |
-| VLM          | medgemma-4b-vision  | :8001     | MedGemma 4B vision                                                |
-| VLM          | gemma4-e4b          | :8088     | Gemma 4 E4B multimodal                                            |
-| VLM          | qwen35-9b-vision    | :8089     | Qwen3.5-9B Vision + Tools (backend chat Continue / vllm-mlx)      |
-| Embedding    | embedding           | **:8084** | Qwen3-Embedding-0.6B 1024D (**PRO-G40 strict**)                   |
-| Reranker     | reranker            | **:8085** | BGE-reranker-v2-m3 (**PRO-G40 strict**)                           |
-| NER          | gliner              | :8091     | GLiNER Biomed, PyTorch CPU                                        |
-| OCR          | docling             | :5010     | Docling                                                           |
-| STT          | whisper-stt         | :2022     | Whisper large-v3-turbo, MLX                                       |
-| TTS          | kokoro-tts          | :8880     | Kokoro TTS                                                        |
-| Translation  | translation         | :6060     | NLLB-200                                                          |
-| App          | litellm-config-sync | —         | Sync config/UI LiteLLM (`litellm_config_sync.py`, autostart)      |
-| App          | signal-api          | :8094     | Signal Messenger REST API                                         |
-| App          | signal-agent-router | :8096     | Signal Agent Router                                               |
+| Catégorie    | Serveur                   | Port      | Modèle / Notes                                          |
+| ------------ | ------------------------- | --------- | ------------------------------------------------------- |
+| Gateway      | litellm-proxy             | :8092     | LiteLLM AI Gateway DB-backed, master key Keychain       |
+| LLM externe  | **omlx**                  | **:8211** | Multi-modèles (Qwen3.6, Qwen3-Coder, Gemma4…), brew     |
+| Vector store | litellm-pgvector          | :8093     | Sidecar OpenAI Vector Stores API, Postgres17 + pgvector |
+| Vector store | litellm-pgvector-openclaw | :8100     | Sidecar pgvector dédié OpenClaw                         |
+| Embedding    | embedding                 | :8084     | Qwen3-Embedding-0.6B 1024D                              |
+| Reranker     | reranker                  | :8085     | BGE-reranker-v2-m3                                      |
+| NER          | gliner                    | :8091     | GLiNER Biomed, PyTorch CPU                              |
+| OCR          | docling                   | :5010     | Docling                                                 |
+| STT          | whisper-stt               | :2022     | Whisper large-v3-turbo (LoRA voix Michael)              |
+| TTS          | voxcpm-tts                | :8025     | VoxCPM2 Michael v6 MLX 8bit                             |
+| TTS          | voxcpm-openai-bridge      | :8883     | Pont OpenAI-compatible → OpenClaw TTS                   |
+| Translation  | translation               | :6060     | NLLB-200                                                |
+| VLM          | mlx-vlm-omni              | :8089     | Gemma 4 12B omni (démarrage manuel, contrôle RAM)       |
+| App          | study-chat-bridge         | :8765     | Pont fiches concept-interactif                          |
+| App          | litellm-config-sync       | —         | Sync config/UI LiteLLM                                  |
+| App          | openclaw                  | :18789    | Gateway IntelliSoins                                    |
+| App          | signal-api                | :8094     | Signal Messenger REST API (autostart off)               |
+| App          | signal-agent-router       | :8096     | Signal Agent Router                                     |
 
 Config : `~/ai-servers/servers.yaml` (source de vérité). LaunchAgents : `~/Library/LaunchAgents/com.ai-servers.*`.
+
+Backends MLX standalone retirés — voir `litellm-proxy/standby-models.yaml`.
 
 ## PRO-G40 Disque externe
 
@@ -92,29 +88,24 @@ SSD `/Volumes/PRO-G40/.cache/huggingface/` requis par 3 serveurs.
 
 Les launchers attendent jusqu'à 5 minutes (60 × 5s) avant d'échouer ou de continuer.
 
-## omlx — FIM coder local (:8000)
+## omlx — LLM local multi-modèle (:8211)
 
-Serveur LLM Apple Silicon (jundot/omlx) avec **tiered KV cache** (survit aux restarts), API OpenAI + Anthropic natives, menubar app + admin web. Géré par Homebrew, **pas via aictl**.
+Serveur LLM Apple Silicon (jundot/omlx) avec **tiered KV cache** (RAM + SSD), API OpenAI + Anthropic natives, menubar app + admin web. Géré par Homebrew, **pas via aictl**.
 
 ```bash
 brew services start omlx       # auto-restart au reboot
 brew services stop omlx
 brew services restart omlx
-curl -s http://127.0.0.1:8000/v1/models | python3 -m json.tool  # sanity check
+curl -s -H "Authorization: Bearer $(jq -r .auth.api_key ~/.omlx/settings.json)" \
+  http://127.0.0.1:8211/v1/models | python3 -m json.tool
 ```
 
-Modèle déployé : `Qwen2.5-Coder-3B-bf16` (6 GB, FIM, ~30-50ms latence). Admin web : `http://127.0.0.1:8000/admin`.
-
-Avantages vs mlx-openai-server (aictl) :
-
-- API Anthropic native (`/v1/messages`) en plus de OpenAI
-- KV cache persistant entre restarts (TTFT 49s → 1.7s, 29× speedup)
-- Multi-modèles dans 1 process avec LRU eviction
+Modèles typiques : `Qwen3.6-35B-A3B-4bit` (général), `Qwen3-Coder-30B-A3B-Instruct-4bit` (code), `mlx-community--gemma-4-12B-it-8bit` (Gemma 4).
 
 Logs : `$(brew --prefix)/var/log/omlx.log` + `~/.omlx/logs/server.log`.
 Rule détaillée : `~/.claude/rules/omlx.md`.
 
-**Exposition LiteLLM + coexistence vMLX** : omlx possède `:8000` (l'autocomplete Continue FIM le vise), vMLX a déménagé sur `:8002`. Les deux sont routés par le proxy LiteLLM `:8092` via les aliases `omlx-coder` (:8000) et `vmlx-qwen36` (:8002). vMLX étant reasoning, passer `chat_template_kwargs.enable_thinking=false` pour obtenir du JSON propre (sinon il brûle `max_tokens` en raisonnement). Consommé par le hook `goal-judged.sh` (Tier 2 LLM via `/v1/chat/completions`, modèle `qwen35-9b-vision`).
+**LiteLLM** : aliases `general-local`, `code-local`, `gemma4-12b` routent vers oMLX :8211 via le hub :8092.
 
 ## Continue VS Code — stack 100% local
 
@@ -157,21 +148,19 @@ redis-cli -n 1 ping
 
 `config.yaml` = **49 `model_name`** statiques ; le proxy DB-backed expose **~63 live** (`curl :8092/v1/models` — l'écart = entrées ajoutées via l'Admin UI).
 
-| model_name                                                                               | Type                             |
-| ---------------------------------------------------------------------------------------- | -------------------------------- |
-| `gpt-5.5`, `gpt-4o`                                                                      | Cloud OpenAI                     |
-| `medgemma-27b`, `qwen3-email`, `nemotron-30b`, `qwen3-merged`, `qwen35-35b`              | LLM MLX                          |
-| `medgemma-4b-vision`, `gemma3-4b`, `gemma4-e4b`, `qwen35-9b-vision`                      | VLM MLX                          |
-| `omlx-coder` (:8000), `vmlx-qwen36` (:8002)                                              | oMLX / vMLX locaux               |
-| `ollama-default`                                                                         | Ollama brew                      |
-| `qwen3-embedding` (1024D), `bge-reranker-v2-m3`                                          | Embedding / Rerank               |
-| `whisper-stt`, `kokoro-tts`                                                              | Audio                            |
-| `deepseek-v3.1`, `deepseek-r1`, `qwen3-235b`, `qwen3-coder-480b`, `glm-5.1`, `kimi-k2.6` | Together AI (cloud US)           |
-| `claude-local-*`                                                                         | Aliases Claude Code → MLX locaux |
-| `claude-together-*`, `claude-openai-*`                                                   | Aliases Claude Code → cloud      |
-| `anthropic-claude-*`, `claude-opus-4-8[1m]`, `claude-opus-4-7[1m]`                       | OAuth Max forwarding (pattern B) |
+| model_name / alias                                                                       | Type                           |
+| ---------------------------------------------------------------------------------------- | ------------------------------ |
+| `general-local`, `code-local`, `Qwen3.6-35B-A3B-4bit`                                    | LLM local via oMLX :8211       |
+| `gemma4-12b`, `gemma4-12b-mlx`, `voice-local`                                            | Gemma 4 via oMLX :8211         |
+| `qwen3-embedding` (1024D), `bge-reranker-v2-m3`                                          | Embedding / Rerank             |
+| `whisper-stt`                                                                            | STT :2022                      |
+| `gpt-5.5`, `gpt-4o`                                                                      | Cloud OpenAI                   |
+| `deepseek-v3.1`, `deepseek-r1`, `qwen3-235b`, `qwen3-coder-480b`, `glm-5.1`, `kimi-k2.6` | Together AI (cloud US)         |
+| `claude-local-*`                                                                         | Aliases Claude Code → locaux   |
+| `claude-together-*`, `claude-openai-*`                                                   | Aliases Claude Code → cloud    |
+| `anthropic-claude-*`, `vertex-claude-*`                                                  | Anthropic API / Vertex via hub |
 
-Backends MLX **DOWN par défaut**. Avant d'appeler : `aictl start <name>`.
+**Standby** (ports MLX retirés) : `medgemma-27b`, `qwen3-email`, `nemotron-30b`, `qwen35-35b`, `gemma4-e4b`, etc. — voir `litellm-proxy/standby-models.yaml`. Ollama retiré 2026-07-06.
 
 **Together AI caveats** :
 

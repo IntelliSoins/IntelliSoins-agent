@@ -2,6 +2,11 @@
 # Re-entry rule: move a model back to config.yaml only after aictl status,
 # /v1/models, and a minimal /v1/chat/completions smoke all pass.
 standby_models:
+  - model_name: openrouter-placeholder
+    expected_port: null
+    last_status: STANDBY
+    reason: OpenRouter non configuré — ajouter model_list + OPENROUTER_API_KEY quand slug choisi. Distinct de claude-fable-5 (Cursor).
+    reentry_test: "curl openrouter.ai/models; add to config.yaml; smoke via claude-proxy"
   - model_name: claude-local-medgemma-27b
     expected_port: 8080
     last_status: DOWN

@@ -166,6 +166,10 @@ async def embeddings(request: EmbeddingRequest):
             if request.normalize:
                 norms = np.linalg.norm(encoded, axis=1, keepdims=True)
                 encoded = encoded / np.where(norms == 0, 1, norms)
+        if device_name == "mps":
+            # L'allocateur MPS garde les tampons indéfiniment : sans ce vidage,
+            # l'empreinte grossit sans limite (22 Go observés le 2026-06-11).
+            torch.mps.empty_cache()
         return encoded.astype(float)
 
     loop = asyncio.get_running_loop()

@@ -1,24 +1,27 @@
 ## Modèles et aliases LiteLLM
 
-`config.yaml` = **49 `model_name`** statiques ; le proxy DB-backed expose **~63 live** (`curl :8092/v1/models` — l'écart = entrées ajoutées via l'Admin UI).
+`config.yaml` expose **~157 modèles live** via le proxy DB-backed (`curl :8092/v1/models`).
 
-| model_name                                                                               | Type                             |
-| ---------------------------------------------------------------------------------------- | -------------------------------- |
-| `gpt-5.5`, `gpt-4o`                                                                      | Cloud OpenAI                     |
-| `medgemma-27b`, `qwen3-email`, `nemotron-30b`, `qwen3-merged`, `qwen35-35b`              | LLM MLX                          |
-| `medgemma-4b-vision`, `gemma3-4b`, `gemma4-e4b`, `qwen35-9b-vision`                      | VLM MLX                          |
-| `omlx-coder` (:8000), `vmlx-qwen36` (:8002)                                              | oMLX / vMLX locaux               |
-| `ollama-default`                                                                         | Ollama brew                      |
-| `qwen3-embedding` (1024D), `bge-reranker-v2-m3`                                          | Embedding / Rerank               |
-| `whisper-stt`, `kokoro-tts`                                                              | Audio                            |
-| `deepseek-v3.1`, `deepseek-r1`, `qwen3-235b`, `qwen3-coder-480b`, `glm-5.1`, `kimi-k2.6` | Together AI (cloud US)           |
-| `claude-local-*`                                                                         | Aliases Claude Code → MLX locaux |
-| `claude-together-*`, `claude-openai-*`                                                   | Aliases Claude Code → cloud      |
-| `anthropic-claude-*`, `claude-opus-4-8[1m]`, `claude-opus-4-7[1m]`                       | OAuth Max forwarding (pattern B) |
+| model_name / alias                                                                       | Type                           |
+| ---------------------------------------------------------------------------------------- | ------------------------------ |
+| `general-local`, `Qwen3.6-35B-A3B-4bit`                                                  | LLM local via oMLX :8211       |
+| `code-local`, `Qwen3-Coder-30B-A3B-Instruct-4bit`                                        | Code local via oMLX :8211      |
+| `gemma4-12b`, `gemma4-12b-mlx`, `voice-local`                                            | Gemma 4 via oMLX :8211         |
+| `qwen3-embedding` (1024D), `bge-reranker-v2-m3`                                          | Embedding :8084 / Rerank :8085 |
+| `whisper-stt`                                                                            | STT :2022                      |
+| `gpt-5.5`, `gpt-4o`                                                                      | Cloud OpenAI                   |
+| `deepseek-v3.1`, `deepseek-r1`, `qwen3-235b`, `qwen3-coder-480b`, `glm-5.1`, `kimi-k2.6` | Together AI (cloud US)         |
+| `claude-local-*`                                                                         | Aliases Claude Code → locaux   |
+| `claude-together-*`, `claude-openai-*`                                                   | Aliases Claude Code → cloud    |
+| `anthropic-claude-*`, `vertex-claude-*`                                                  | Anthropic API / Vertex via hub |
 
-Backends MLX **DOWN par défaut**. Avant d'appeler : `aictl start <name>`.
+**Standby** (retirés de la config active, ports MLX morts) : `medgemma-27b`, `qwen3-email`, `nemotron-30b`, `qwen3-merged`, `qwen35-35b`, `gemma4-e4b`, `medgemma-4b-vision`, `gemma3-4b`, `vmlx-qwen36` — voir `litellm-proxy/standby-models.yaml`.
+
+**Retiré** : `ollama-default` (Ollama supprimé 2026-07-06).
+
+Backends locaux hors oMLX : démarrer via `aictl start <name>` avant appel direct.
 
 **Together AI caveats** :
 
 - Modèles de reasoning (`kimi-k2.6`, `deepseek-r1`) consomment des tokens en `reasoning_content` : prévoir `max_tokens` ≥ 80 sinon `content` revient vide.
-- 6/6 modèles testés OK en serverless (Ottawa retourné). Voir `~/ai-servers/litellm-proxy/config.yaml:107-138`.
+- Voir `~/ai-servers/litellm-proxy/config.yaml` pour la liste complète.
