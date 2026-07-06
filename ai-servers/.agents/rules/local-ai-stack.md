@@ -78,15 +78,7 @@ Backends MLX standalone retirés — voir `litellm-proxy/standby-models.yaml`.
 
 ## PRO-G40 Disque externe
 
-SSD `/Volumes/PRO-G40/.cache/huggingface/` requis par 3 serveurs.
-
-| Comportement                  | Serveurs                                          |
-| ----------------------------- | ------------------------------------------------- |
-| **Strict** (fail sans disque) | nemotron-30b, embedding (:8084), reranker (:8085) |
-| **Fallback** (cache local)    | qwen3-email, qwen3-merged, gemma3-4b              |
-| **Pas de dépendance**         | Tous les autres                                   |
-
-Les launchers attendent jusqu'à 5 minutes (60 × 5s) avant d'échouer ou de continuer.
+SSD `/Volumes/PRO-G40/.cache/huggingface/` — optionnel pour caches HF volumineux. Les serveurs actifs (`embedding`, `reranker`, etc.) tournent sans dépendance disque stricte dans `servers.yaml` (2026-07-06).
 
 ## omlx — LLM local multi-modèle (:8211)
 
@@ -109,16 +101,15 @@ Rule détaillée : `~/.claude/rules/omlx.md`.
 
 ## Continue VS Code — stack 100% local
 
-Config `~/.continue/config.yaml` routée sur 4 ports locaux, zéro cloud.
+Config `~/.continue/config.yaml` routée sur ports locaux, zéro cloud.
 
-| Rôle                | Port  | Modèle                    | Backend                   |
-| ------------------- | ----- | ------------------------- | ------------------------- |
-| autocomplete FIM    | :8000 | Qwen2.5-Coder-3B-bf16     | omlx                      |
-| chat / edit / apply | :8089 | qwen3.5-9b-vision         | vllm-mlx (aictl)          |
-| embed               | :8084 | Qwen/Qwen3-Embedding-0.6B | mlx-openai-server (aictl) |
-| rerank              | :8085 | BAAI/bge-reranker-v2-m3   | mlx-openai-server (aictl) |
+| Rôle                | Port  | Modèle                          | Backend              |
+| ------------------- | ----- | ------------------------------- | -------------------- |
+| chat / edit / apply | :8092 | `code-local` ou `general-local` | LiteLLM → oMLX :8211 |
+| embed               | :8084 | Qwen/Qwen3-Embedding-0.6B       | aictl embedding      |
+| rerank              | :8085 | BAAI/bge-reranker-v2-m3         | aictl reranker       |
 
-Note : bypass direct des ports (pas via proxy LiteLLM) pour latence minimale.
+Pour FIM/autocomplete direct oMLX : `:8211` (modèle `Qwen3-Coder-30B-A3B-Instruct-4bit`).
 
 ## Toujours router via le LiteLLM Proxy (host perso uniquement)
 
