@@ -202,43 +202,57 @@ const SLASH_MENU_LISTBOX_ID = "chat-slash-menu-listbox";
 const SLASH_MENU_ACTIVE_ANNOUNCEMENT_ID = "chat-slash-active-announcement";
 type TalkSelectOption = { label: string; value: string };
 
-const TALK_VOICE_OPTIONS: TalkSelectOption[] = [
-  { label: "Default", value: "" },
-  { label: "Alloy", value: "alloy" },
-  { label: "Ash", value: "ash" },
-  { label: "Ballad", value: "ballad" },
-  { label: "Coral", value: "coral" },
-  { label: "Echo", value: "echo" },
-  { label: "Sage", value: "sage" },
-  { label: "Shimmer", value: "shimmer" },
-  { label: "Verse", value: "verse" },
-  { label: "Marin", value: "marin" },
-  { label: "Cedar", value: "cedar" },
-];
-const TALK_SENSITIVITY_OPTIONS: TalkSelectOption[] = [
-  { label: "Default", value: "" },
-  { label: "Low", value: "0.65" },
-  { label: "Medium", value: "0.5" },
-  { label: "High", value: "0.35" },
-];
-const TALK_PROVIDER_OPTIONS: TalkSelectOption[] = [
-  { label: "Auto", value: "" },
-  { label: "OpenAI", value: "openai" },
-  { label: "Google", value: "google" },
-];
-const TALK_TRANSPORT_OPTIONS: TalkSelectOption[] = [
-  { label: "Auto", value: "" },
-  { label: "WebRTC", value: "webrtc" },
-  { label: "Gateway relay", value: "gateway-relay" },
-  { label: "Provider WebSocket", value: "provider-websocket" },
-];
-const TALK_REASONING_OPTIONS: TalkSelectOption[] = [
-  { label: "Default", value: "" },
-  { label: "Minimal", value: "minimal" },
-  { label: "Low", value: "low" },
-  { label: "Medium", value: "medium" },
-  { label: "High", value: "high" },
-];
+function resolveTalkVoiceOptions(): TalkSelectOption[] {
+  return [
+    { label: t("chat.talk.default"), value: "" },
+    { label: "Alloy", value: "alloy" },
+    { label: "Ash", value: "ash" },
+    { label: "Ballad", value: "ballad" },
+    { label: "Coral", value: "coral" },
+    { label: "Echo", value: "echo" },
+    { label: "Sage", value: "sage" },
+    { label: "Shimmer", value: "shimmer" },
+    { label: "Verse", value: "verse" },
+    { label: "Marin", value: "marin" },
+    { label: "Cedar", value: "cedar" },
+  ];
+}
+
+function resolveTalkSensitivityOptions(): TalkSelectOption[] {
+  return [
+    { label: t("chat.talk.default"), value: "" },
+    { label: t("chat.talk.low"), value: "0.65" },
+    { label: t("chat.talk.medium"), value: "0.5" },
+    { label: t("chat.talk.high"), value: "0.35" },
+  ];
+}
+
+function resolveTalkProviderOptions(): TalkSelectOption[] {
+  return [
+    { label: t("chat.talk.auto"), value: "" },
+    { label: "OpenAI", value: "openai" },
+    { label: "Google", value: "google" },
+  ];
+}
+
+function resolveTalkTransportOptions(): TalkSelectOption[] {
+  return [
+    { label: t("chat.talk.auto"), value: "" },
+    { label: "WebRTC", value: "webrtc" },
+    { label: t("chat.talk.gatewayRelay"), value: "gateway-relay" },
+    { label: t("chat.talk.providerWebsocket"), value: "provider-websocket" },
+  ];
+}
+
+function resolveTalkReasoningOptions(): TalkSelectOption[] {
+  return [
+    { label: t("chat.talk.default"), value: "" },
+    { label: t("chat.talk.minimal"), value: "minimal" },
+    { label: t("chat.talk.low"), value: "low" },
+    { label: t("chat.talk.medium"), value: "medium" },
+    { label: t("chat.talk.high"), value: "high" },
+  ];
+}
 const INITIAL_CHAT_HISTORY_RENDER_WINDOW = 30;
 const CHAT_HISTORY_RENDER_WINDOW_BATCH = 30;
 const CHAT_HISTORY_RENDER_EXPAND_SCROLL_TOP_PX = 48;
@@ -317,8 +331,8 @@ function renderRealtimeTalkOptions(props: ChatProps) {
       ? options.vadThreshold
       : "__custom";
   const sensitivityOptions = isCustomSensitivity
-    ? [...TALK_SENSITIVITY_OPTIONS, { label: t("chat.talk.custom"), value: "__custom" }]
-    : TALK_SENSITIVITY_OPTIONS;
+    ? [...resolveTalkSensitivityOptions(), { label: t("chat.talk.custom"), value: "__custom" }]
+    : resolveTalkSensitivityOptions();
   const sensitivityLabel =
     sensitivityOptions.find((entry) => entry.value === sensitivityValue)?.label ??
     t("chat.talk.custom");
@@ -333,7 +347,7 @@ function renderRealtimeTalkOptions(props: ChatProps) {
         ${renderNativeTalkSelect({
           label: t("chat.talk.voice"),
           value: options.voice,
-          options: TALK_VOICE_OPTIONS,
+          options: resolveTalkVoiceOptions(),
           onSelect: (voice) => onChange({ voice }),
         })}
         <label class="agent-chat__talk-field">
@@ -359,19 +373,19 @@ function renderRealtimeTalkOptions(props: ChatProps) {
           ${renderNativeTalkSelect({
             label: t("chat.talk.provider"),
             value: options.provider,
-            options: TALK_PROVIDER_OPTIONS,
+            options: resolveTalkProviderOptions(),
             onSelect: (provider) => onChange({ provider }),
           })}
           ${renderNativeTalkSelect({
             label: t("chat.talk.transport"),
             value: options.transport,
-            options: TALK_TRANSPORT_OPTIONS,
+            options: resolveTalkTransportOptions(),
             onSelect: (transport) => onChange({ transport }),
           })}
           ${renderNativeTalkSelect({
             label: t("chat.talk.reasoning"),
             value: options.reasoningEffort,
-            options: TALK_REASONING_OPTIONS,
+            options: resolveTalkReasoningOptions(),
             onSelect: (reasoningEffort) => onChange({ reasoningEffort }),
           })}
           <label class="agent-chat__talk-field">
@@ -387,7 +401,7 @@ function renderRealtimeTalkOptions(props: ChatProps) {
             />
           </label>
           <label class="agent-chat__talk-field">
-            <span>Pause before send</span>
+            <span>${t("chat.talk.pauseBeforeSend")}</span>
             <input
               type="number"
               min="1"
@@ -398,7 +412,7 @@ function renderRealtimeTalkOptions(props: ChatProps) {
             />
           </label>
           <label class="agent-chat__talk-field">
-            <span>Lead-in</span>
+            <span>${t("chat.talk.leadIn")}</span>
             <input
               type="number"
               min="0"
@@ -426,7 +440,9 @@ function renderRealtimeTalkConversation(props: ChatProps) {
         (entry) => entry.id,
         (entry) => {
           const label =
-            entry.role === "user" ? props.userName?.trim() || "You" : props.assistantName;
+            entry.role === "user"
+              ? props.userName?.trim() || t("chat.roles.you")
+              : props.assistantName;
           return html`
             <div
               class="agent-chat__voice-turn agent-chat__voice-turn--${entry.role}"
@@ -951,12 +967,18 @@ function renderAttachmentPreview(props: ChatProps): TemplateResult | typeof noth
               .join(" ")}
           >
             ${isImageAttachment(att) && getChatAttachmentPreviewUrl(att)
-              ? html`<img src=${getChatAttachmentPreviewUrl(att)!} alt="Attachment preview" />`
+              ? html`<img
+                  src=${getChatAttachmentPreviewUrl(att)!}
+                  alt=${t("chat.attachments.preview")}
+                />`
               : html`
-                  <div class="chat-attachment-file" title=${att.fileName ?? "Attached file"}>
+                  <div
+                    class="chat-attachment-file"
+                    title=${att.fileName ?? t("chat.attachments.attachedFile")}
+                  >
                     <span class="chat-attachment-file__icon">${icons.paperclip}</span>
                     <span class="chat-attachment-file__name"
-                      >${att.fileName ?? "Attached file"}</span
+                      >${att.fileName ?? t("chat.attachments.attachedFile")}</span
                     >
                   </div>
                 `}
@@ -1021,7 +1043,7 @@ function renderWorkspaceFileRail(
     <aside class="chat-workspace-rail" aria-label=${t("chat.workspace.label")}>
       <div class="chat-workspace-rail__header">
         <div class="chat-workspace-rail__title">
-          <span class="chat-workspace-rail__eyebrow">Workspace</span>
+          <span class="chat-workspace-rail__eyebrow">${t("chat.workspace.eyebrow")}</span>
           <strong>${t("chat.talk.files")}</strong>
         </div>
         <button
@@ -1045,9 +1067,9 @@ function renderWorkspaceFileRail(
             ${workspaceFiles.error}
           </div>`
         : workspaceFiles.loading && files.length === 0
-          ? html`<div class="chat-workspace-rail__state">Loading files...</div>`
+          ? html`<div class="chat-workspace-rail__state">${t("chat.workspace.loadingFiles")}</div>`
           : files.length === 0
-            ? html`<div class="chat-workspace-rail__state">No workspace files</div>`
+            ? html`<div class="chat-workspace-rail__state">${t("chat.workspace.noFiles")}</div>`
             : html`
                 <div class="chat-workspace-rail__list" role="list">
                   ${files.map((file) => {
@@ -1071,7 +1093,9 @@ function renderWorkspaceFileRail(
                             : nothing}
                         </span>
                         ${file.missing
-                          ? html`<span class="chat-workspace-rail__file-badge">Missing</span>`
+                          ? html`<span class="chat-workspace-rail__file-badge"
+                              >${t("chat.workspace.missing")}</span
+                            >`
                           : nothing}
                       </button>
                     `;
@@ -1397,7 +1421,7 @@ function renderPinnedSection(
           requestUpdate();
         }}
       >
-        ${icons.bookmark} ${entries.length} pinned
+        ${icons.bookmark} ${t("chat.pinned.count", { count: String(entries.length) })}
         <span class="collapse-chevron ${vs.pinnedExpanded ? "" : "collapse-chevron--collapsed"}"
           >${icons.chevronDown}</span
         >
@@ -1409,7 +1433,7 @@ function renderPinnedSection(
                 ({ index, text, role }) => html`
                   <div class="agent-chat__pinned-item">
                     <span class="agent-chat__pinned-role"
-                      >${role === "user" ? userRoleLabel : "Assistant"}</span
+                      >${role === "user" ? userRoleLabel : t("chat.roles.assistant")}</span
                     >
                     <span class="agent-chat__pinned-text"
                       >${text.slice(0, 100)}${text.length > 100 ? "..." : ""}</span
@@ -1478,9 +1502,7 @@ function renderSlashMenu(
             `,
           )}
         </div>
-        <div class="slash-menu-footer">
-          <kbd>↑↓</kbd> navigate <kbd>Tab</kbd> fill <kbd>Enter</kbd> run <kbd>Esc</kbd> close
-        </div>
+        <div class="slash-menu-footer">${t("chat.slashCommands.footerRun")}</div>
       </div>
     `;
   }
@@ -1530,9 +1552,13 @@ function renderSlashMenu(
               ${cmd.args ? html`<span class="slash-menu-args">${cmd.args}</span>` : nothing}
               <span class="slash-menu-desc">${cmd.description}</span>
               ${cmd.argOptions?.length
-                ? html`<span class="slash-menu-badge">${cmd.argOptions.length} options</span>`
+                ? html`<span class="slash-menu-badge"
+                    >${t("chat.slashCommands.optionsBadge", {
+                      count: String(cmd.argOptions.length),
+                    })}</span
+                  >`
                 : cmd.executeLocal && !cmd.args
-                  ? html` <span class="slash-menu-badge">instant</span> `
+                  ? html` <span class="slash-menu-badge">${t("chat.slashCommands.instant")}</span> `
                   : nothing}
             </div>
           `,
@@ -1561,12 +1587,12 @@ function renderSlashMenu(
               updateSlashMenu(draft, requestUpdate, props);
             }}
           >
-            Show ${hiddenCount} more command${hiddenCount !== 1 ? "s" : ""}
+            ${hiddenCount !== 1
+              ? t("chat.slashCommands.showMorePlural", { count: String(hiddenCount) })
+              : t("chat.slashCommands.showMore", { count: String(hiddenCount) })}
           </button>`
         : nothing}
-      <div class="slash-menu-footer">
-        <kbd>↑↓</kbd> navigate <kbd>Tab</kbd> fill <kbd>Enter</kbd> select <kbd>Esc</kbd> close
-      </div>
+      <div class="slash-menu-footer">${t("chat.slashCommands.footerSelect")}</div>
     </div>
   `;
 }
@@ -1709,7 +1735,7 @@ export function renderChat(props: ChatProps) {
           : nothing}
         ${isEmpty && !vs.searchOpen ? renderWelcomeState(props) : nothing}
         ${isEmpty && vs.searchOpen
-          ? html` <div class="agent-chat__empty">No matching messages</div> `
+          ? html` <div class="agent-chat__empty">${t("chat.search.noMatches")}</div> `
           : nothing}
         ${guard(
           [
@@ -2020,7 +2046,7 @@ export function renderChat(props: ChatProps) {
                       type="button"
                       @click=${props.onDismissError}
                       aria-label=${t("chat.errors.dismiss")}
-                      title="Dismiss error"
+                      title=${t("chat.errors.dismiss")}
                     >
                       ${icons.x}
                     </button>
@@ -2036,7 +2062,7 @@ export function renderChat(props: ChatProps) {
               type="button"
               @click=${props.onToggleFocusMode}
               aria-label=${t("chat.focus.exit")}
-              title="Exit focus mode"
+              title=${t("chat.focus.exit")}
             >
               ${icons.x}
             </button>
@@ -2096,7 +2122,7 @@ export function renderChat(props: ChatProps) {
       ${props.showNewMessages
         ? html`
             <button class="chat-new-messages" type="button" @click=${props.onScrollToBottom}>
-              ${icons.arrowDown} New messages
+              ${icons.arrowDown} ${t("chat.newMessages")}
             </button>
           `
         : nothing}
@@ -2220,13 +2246,13 @@ export function renderChat(props: ChatProps) {
                       ? "agent-chat__input-btn--talk"
                       : ""}"
                     @click=${props.onToggleRealtimeTalkOptions}
-                    title="Talk settings"
+                    title=${t("chat.talk.settings")}
                     aria-label=${t("chat.talk.settings")}
                     aria-expanded=${props.realtimeTalkOptionsOpen ? "true" : "false"}
                     ?disabled=${!props.connected || props.realtimeTalkActive}
                   >
                     ${icons.settings}
-                    <span class="agent-chat__control-label">Talk settings</span>
+                    <span class="agent-chat__control-label">${t("chat.talk.settings")}</span>
                   </button>
                 `
               : nothing}

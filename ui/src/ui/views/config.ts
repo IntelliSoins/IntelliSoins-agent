@@ -414,85 +414,73 @@ type SectionCategory = {
   sections: Array<{ key: string; label: string }>;
 };
 
-const SECTION_CATEGORIES: SectionCategory[] = [
+const SECTION_CATEGORY_DEFS: Array<{ id: string; labelKey: string; sectionKeys: string[] }> = [
   {
     id: "core",
-    label: "Core",
-    sections: [
-      { key: "env", label: "Environment" },
-      { key: "auth", label: "Authentication" },
-      { key: "update", label: "Updates" },
-      { key: "meta", label: "Meta" },
-      { key: "logging", label: "Logging" },
-      { key: "diagnostics", label: "Diagnostics" },
-      { key: "cli", label: "Cli" },
-      { key: "secrets", label: "Secrets" },
-    ],
+    labelKey: "config.sidebar.categories.core",
+    sectionKeys: ["env", "auth", "update", "meta", "logging", "diagnostics", "cli", "secrets"],
   },
   {
     id: "ai",
-    label: "AI & Agents",
-    sections: [
-      { key: "agents", label: "Agents" },
-      { key: "models", label: "Models" },
-      { key: "skills", label: "Skills" },
-      { key: "tools", label: "Tools" },
-      { key: "memory", label: "Memory" },
-      { key: "session", label: "Session" },
-    ],
+    labelKey: "config.sidebar.categories.ai",
+    sectionKeys: ["agents", "models", "skills", "tools", "memory", "session"],
   },
   {
     id: "communication",
-    label: "Communication",
-    sections: [
-      { key: "channels", label: "Channels" },
-      { key: "messages", label: "Messages" },
-      { key: "broadcast", label: "Broadcast" },
-      { key: "__notifications__", label: "Notifications" },
-      { key: "talk", label: "Talk" },
-      { key: "audio", label: "Audio" },
-    ],
+    labelKey: "config.sidebar.categories.communication",
+    sectionKeys: ["channels", "messages", "broadcast", "__notifications__", "talk", "audio"],
   },
   {
     id: "automation",
-    label: "Automation",
-    sections: [
-      { key: "commands", label: "Commands" },
-      { key: "hooks", label: "Hooks" },
-      { key: "bindings", label: "Bindings" },
-      { key: "cron", label: "Cron" },
-      { key: "approvals", label: "Approvals" },
-      { key: "plugins", label: "Plugins" },
-    ],
+    labelKey: "config.sidebar.categories.automation",
+    sectionKeys: ["commands", "hooks", "bindings", "cron", "approvals", "plugins"],
   },
   {
     id: "infrastructure",
-    label: "Infrastructure",
-    sections: [
-      { key: "gateway", label: "Gateway" },
-      { key: "web", label: "Web" },
-      { key: "browser", label: "Browser" },
-      { key: "nodeHost", label: "NodeHost" },
-      { key: "canvasHost", label: "CanvasHost" },
-      { key: "discovery", label: "Discovery" },
-      { key: "media", label: "Media" },
-      { key: "acp", label: "Acp" },
-      { key: "mcp", label: "Mcp" },
+    labelKey: "config.sidebar.categories.infrastructure",
+    sectionKeys: [
+      "gateway",
+      "web",
+      "browser",
+      "nodeHost",
+      "canvasHost",
+      "discovery",
+      "media",
+      "acp",
+      "mcp",
     ],
   },
   {
     id: "appearance",
-    label: t("tabs.appearance"),
-    sections: [
-      { key: "__appearance__", label: "Theme" },
-      { key: "ui", label: "UI" },
-      { key: "wizard", label: "Setup Wizard" },
-    ],
+    labelKey: "tabs.appearance",
+    sectionKeys: ["__appearance__", "ui", "wizard"],
   },
 ];
 
-// Flat lookup: all categorised keys
-const CATEGORISED_KEYS = new Set(SECTION_CATEGORIES.flatMap((c) => c.sections.map((s) => s.key)));
+const CATEGORISED_KEYS = new Set(SECTION_CATEGORY_DEFS.flatMap((cat) => cat.sectionKeys));
+
+function resolveConfigSectionLabel(key: string): string {
+  if (key === "__appearance__") {
+    return t("config.sidebar.theme");
+  }
+  if (key === "__notifications__") {
+    return t("appearance.notifications.title");
+  }
+  const labelKey = `configForm.sections.${key}.label`;
+  const label = t(labelKey);
+  return label !== labelKey ? label : humanize(key);
+}
+
+function resolveSectionCategories(): SectionCategory[] {
+  return SECTION_CATEGORY_DEFS.map((cat) => ({
+    id: cat.id,
+    label: t(cat.labelKey),
+    sections: cat.sectionKeys.map((key) => ({
+      key,
+      label: resolveConfigSectionLabel(key),
+    })),
+  }));
+}
 
 function getSectionIcon(key: string) {
   return sidebarIcons[key as keyof typeof sidebarIcons] ?? sidebarIcons.default;
@@ -1291,16 +1279,18 @@ export function renderConfig(props: ConfigProps) {
     includeVirtualSections &&
     VIRTUAL_SECTIONS.has(key) &&
     (key === "__appearance__" || include?.has(key) === true);
-  const visibleCategories = SECTION_CATEGORIES.map((cat) =>
-    Object.assign({}, cat, {
-      sections: cat.sections.filter(
-        (s) =>
-          (isVisibleVirtualSection(s.key) || s.key in schemaProps) &&
-          (!include || include.has(s.key)) &&
-          (!exclude || !exclude.has(s.key)),
-      ),
-    }),
-  ).filter((cat) => cat.sections.length > 0);
+  const visibleCategories = resolveSectionCategories()
+    .map((cat) =>
+      Object.assign({}, cat, {
+        sections: cat.sections.filter(
+          (s) =>
+            (isVisibleVirtualSection(s.key) || s.key in schemaProps) &&
+            (!include || include.has(s.key)) &&
+            (!exclude || !exclude.has(s.key)),
+        ),
+      }),
+    )
+    .filter((cat) => cat.sections.length > 0);
 
   // Catch any schema keys not in our categories
   const extraSections = Object.keys(schemaProps)
@@ -1308,7 +1298,9 @@ export function renderConfig(props: ConfigProps) {
     .map((k) => ({ key: k, label: k.charAt(0).toUpperCase() + k.slice(1) }));
 
   const otherCategory: SectionCategory | null =
-    extraSections.length > 0 ? { id: "other", label: "Other", sections: extraSections } : null;
+    extraSections.length > 0
+      ? { id: "other", label: t("config.sidebar.categories.other"), sections: extraSections }
+      : null;
 
   const isVirtualSection =
     includeVirtualSections &&
