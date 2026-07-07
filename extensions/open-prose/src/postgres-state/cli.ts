@@ -87,6 +87,11 @@ function createClient() {
 }
 
 async function runCommand(command: string, args: string[]): Promise<number> {
+  if (command === "help" || command === "--help" || command === "-h") {
+    usage();
+    return 0;
+  }
+
   const sql = createClient();
   try {
     switch (command) {
@@ -156,11 +161,6 @@ async function runCommand(command: string, args: string[]): Promise<number> {
         printJson({ results });
         return 0;
       }
-      case "help":
-      case "--help":
-      case "-h":
-        usage();
-        return 0;
       default:
         usage();
         return 1;
