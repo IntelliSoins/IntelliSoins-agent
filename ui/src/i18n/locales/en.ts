@@ -396,6 +396,11 @@ export const en: TranslationMap = {
     channel: "Channel",
     builtIn: "Built-in",
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
+  },
   nav: {
     chat: "Chat",
     control: "Control",

@@ -400,6 +400,11 @@ export const tr: TranslationMap = {
     channel: "Kanal",
     builtIn: "Yerleşik",
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
+  },
   nav: {
     chat: "Sohbet",
     control: "Kontrol",

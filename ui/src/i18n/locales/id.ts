@@ -398,6 +398,11 @@ export const id: TranslationMap = {
     channel: "Saluran",
     builtIn: "Bawaan",
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
+  },
   nav: {
     chat: "Chat",
     control: "Kontrol",

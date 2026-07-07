@@ -396,6 +396,11 @@ export const th: TranslationMap = {
     channel: "ช่องทาง",
     builtIn: "มีมาในระบบ",
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
+  },
   nav: {
     chat: "แชต",
     control: "ควบคุม",

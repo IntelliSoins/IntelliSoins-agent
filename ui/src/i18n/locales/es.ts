@@ -398,6 +398,11 @@ export const es: TranslationMap = {
     channel: "Canal",
     builtIn: "Integrado",
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
+  },
   nav: {
     chat: "Chat",
     control: "Control",

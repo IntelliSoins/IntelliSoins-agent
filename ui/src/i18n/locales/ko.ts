@@ -397,6 +397,11 @@ export const ko: TranslationMap = {
     channel: "채널",
     builtIn: "내장",
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
+  },
   nav: {
     chat: "채팅",
     control: "Control",

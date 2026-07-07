@@ -395,6 +395,11 @@ export const zh_TW: TranslationMap = {
     channel: "頻道",
     builtIn: "內建",
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
+  },
   nav: {
     chat: "聊天",
     control: "控制",

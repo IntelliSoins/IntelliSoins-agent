@@ -399,6 +399,11 @@ export const uk: TranslationMap = {
     channel: "Канал",
     builtIn: "Вбудований",
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
+  },
   nav: {
     chat: "Чат",
     control: "Керування",
