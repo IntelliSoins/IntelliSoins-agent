@@ -73,8 +73,12 @@ import {
   inferBasePathFromPathname,
   normalizeBasePath,
   normalizePath,
+  normalizeInterfaceProfile,
   pathForTab,
+  resolveTabForProfile,
+  settingsTabsForProfile,
   tabFromPath,
+  tabGroupsForProfile,
   type Tab,
 } from "./navigation.ts";
 import { normalizeAgentId, parseAgentSessionKey } from "./session-key.ts";
@@ -695,31 +699,33 @@ function applyTabSelection(
   next: Tab,
   options: { refreshPolicy: "always" | "connected"; syncUrl?: boolean },
 ) {
+  const profile = normalizeInterfaceProfile(host.settings.interfaceProfile);
+  const resolved = resolveTabForProfile(next, profile);
   const prev = host.tab;
-  host.tab = next;
-  if (prev !== next) {
-    scheduleControlUiTabVisibleTiming(host, prev, next);
+  host.tab = resolved;
+  if (prev !== resolved) {
+    scheduleControlUiTabVisibleTiming(host, prev, resolved);
     clearPendingSessionsChangedReload(host);
   }
 
   // Cleanup chat module state when navigating away from chat
-  if (prev === "chat" && next !== "chat") {
+  if (prev === "chat" && resolved !== "chat") {
     resetChatViewState();
   }
 
-  if (next === "chat") {
+  if (resolved === "chat") {
     host.chatHasAutoScrolled = false;
   }
-  (next === "logs" ? startLogsPolling : stopLogsPolling)(
+  (resolved === "logs" ? startLogsPolling : stopLogsPolling)(
     host as unknown as Parameters<typeof startLogsPolling>[0],
   );
-  (next === "nodes" ? startNodesPolling : stopNodesPolling)(
+  (resolved === "nodes" ? startNodesPolling : stopNodesPolling)(
     host as unknown as Parameters<typeof startNodesPolling>[0],
   );
-  (next === "debug" ? startDebugPolling : stopDebugPolling)(
+  (resolved === "debug" ? startDebugPolling : stopDebugPolling)(
     host as unknown as Parameters<typeof startDebugPolling>[0],
   );
-  if (next !== "rag") {
+  if (resolved !== "rag") {
     // RAG job polling only restarts from loadRagJobs while the tab is active.
     stopRagJobsPolling(host as unknown as RagState);
   }
@@ -729,7 +735,7 @@ function applyTabSelection(
   }
 
   if (options.syncUrl) {
-    syncUrlWithTab(host, next, false);
+    syncUrlWithTab(host, resolved, false);
   }
 }
 

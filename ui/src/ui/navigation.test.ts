@@ -6,11 +6,15 @@ import {
   iconForTab,
   inferBasePathFromPathname,
   isSettingsTab,
+  isTabVisibleForProfile,
   normalizeBasePath,
   normalizePath,
   pathForTab,
+  resolveTabForProfile,
+  settingsTabsForProfile,
   subtitleForTab,
   tabFromPath,
+  tabGroupsForProfile,
   titleForTab,
   type Tab,
 } from "./navigation.ts";
@@ -42,6 +46,7 @@ describe("iconForTab", () => {
       skillWorkshop: "wrench",
       nodes: "monitor",
       dreams: "moon",
+      rag: "book",
       config: "settings",
       communications: "send",
       appearance: "spark",
@@ -64,29 +69,30 @@ describe("iconForTab", () => {
 describe("titleForTab", () => {
   it("returns expected titles for every tab", () => {
     expect(Object.fromEntries(ALL_TABS.map((tab) => [tab, titleForTab(tab)]))).toEqual({
-      chat: "Chat",
-      overview: "Overview",
-      activity: "Activity",
-      workboard: "Workboard",
-      channels: "Channels",
-      instances: "Instances",
-      sessions: "Sessions",
-      usage: "Usage",
-      cron: "Cron Jobs",
-      agents: "Agents",
-      skills: "Skills",
-      skillWorkshop: "Skill Workshop",
-      nodes: "Nodes",
-      dreams: "Dreaming",
+      chat: "Assistant",
+      overview: "Home",
+      activity: "Recent Activity",
+      workboard: "Active Tasks",
+      channels: "Messages",
+      instances: "Connected Stations",
+      sessions: "Conversations",
+      usage: "Usage & Costs",
+      cron: "Schedules",
+      agents: "Assistants",
+      skills: "Competencies",
+      skillWorkshop: "Competency Workshop",
+      nodes: "Connected Devices",
+      dreams: "Background Memory",
+      rag: "Document Search",
       config: "Settings",
-      communications: "Communications",
+      communications: "Messages & Voice",
       appearance: "Appearance",
-      automation: "Automation",
-      mcp: "MCP",
-      infrastructure: "Infrastructure",
-      aiAgents: "AI & Agents",
-      debug: "Debug",
-      logs: "Logs",
+      automation: "Automations",
+      mcp: "Third-Party Services",
+      infrastructure: "Server & Network",
+      aiAgents: "AI & Assistants",
+      debug: "Diagnostics",
+      logs: "System Log",
     });
   });
 });
@@ -94,29 +100,30 @@ describe("titleForTab", () => {
 describe("subtitleForTab", () => {
   it("returns expected subtitles for every tab", () => {
     expect(Object.fromEntries(ALL_TABS.map((tab) => [tab, subtitleForTab(tab)]))).toEqual({
-      chat: "Gateway chat for quick interventions.",
-      overview: "Status, entry points, health.",
-      activity: "Browser-local tool activity summaries.",
-      workboard: "Agent work queue and session handoff.",
-      channels: "Channels and settings.",
-      instances: "Connected clients and nodes.",
-      sessions: "Active sessions and defaults.",
-      usage: "API usage and costs.",
-      cron: "Wakeups and recurring runs.",
-      agents: "Workspaces, tools, identities.",
-      skills: "Skills and API keys.",
-      skillWorkshop: "Review, refine, and apply proposals before they become live skills.",
+      chat: "Talk to the pharmacy assistant for quick help.",
+      overview: "Service status, connection, and alerts.",
+      activity: "What the assistant did recently in this browser.",
+      workboard: "Tasks in progress, reminders, and handoffs.",
+      channels: "Messaging channels and settings.",
+      instances: "Active connections from computers and tablets.",
+      sessions: "Active conversations and defaults.",
+      usage: "AI usage and costs.",
+      cron: "Recurring reminders and automations.",
+      agents: "Assistant profiles, tools, and identities.",
+      skills: "Competencies and API keys.",
+      skillWorkshop: "Review and apply competency proposals before they go live.",
       nodes: "Paired devices and commands.",
-      dreams: "Memory dreaming, consolidation, and reflection.",
-      config: "Edit openclaw.json.",
+      dreams: "Background memory consolidation and reflection.",
+      rag: "Document ingestion, indexing, and search.",
+      config: "General IntelliSoins configuration.",
       communications: "Channels, messages, and audio settings.",
       appearance: "Theme, UI, and setup wizard settings.",
-      automation: "Commands, hooks, cron, and plugins.",
-      mcp: "MCP servers, auth, tools, and diagnostics.",
-      infrastructure: "Gateway, web, browser, and media settings.",
-      aiAgents: "Agents, models, skills, tools, memory, session.",
-      debug: "Snapshots, events, RPC.",
-      logs: "Live gateway logs.",
+      automation: "Commands, hooks, schedules, and plugins.",
+      mcp: "Third-party service connections, auth, tools, and diagnostics.",
+      infrastructure: "IntelliSoins Connector, web, browser, and media settings.",
+      aiAgents: "Assistants, models, competencies, tools, memory, and conversations.",
+      debug: "Snapshots, events, and technical diagnostics.",
+      logs: "Live IntelliSoins Connector logs.",
     });
   });
 });
@@ -250,5 +257,44 @@ describe("TAB_GROUPS", () => {
       "logs",
     ]);
     expect(SETTINGS_TABS.every((tab) => isSettingsTab(tab))).toBe(true);
+  });
+});
+
+describe("interface profile navigation", () => {
+  it("hides advanced tabs in pharmacy mode", () => {
+    expect(isTabVisibleForProfile("debug", "pharmacy")).toBe(false);
+    expect(isTabVisibleForProfile("mcp", "pharmacy")).toBe(false);
+    expect(isTabVisibleForProfile("overview", "pharmacy")).toBe(true);
+    expect(isTabVisibleForProfile("rag", "pharmacy")).toBe(true);
+    expect(isTabVisibleForProfile("appearance", "pharmacy")).toBe(true);
+    expect(isTabVisibleForProfile("config", "pharmacy")).toBe(false);
+  });
+
+  it("shows all tabs in admin mode", () => {
+    expect(isTabVisibleForProfile("debug", "admin")).toBe(true);
+    expect(isTabVisibleForProfile("config", "admin")).toBe(true);
+  });
+
+  it("filters sidebar groups for pharmacy mode", () => {
+    const groups = tabGroupsForProfile("pharmacy");
+    const tabs = groups.flatMap((group) => group.tabs);
+    expect(tabs).toContain("chat");
+    expect(tabs).toContain("overview");
+    expect(tabs).not.toContain("debug");
+    expect(tabs).not.toContain("agents");
+  });
+
+  it("redirects hidden settings tabs to appearance", () => {
+    expect(resolveTabForProfile("debug", "pharmacy")).toBe("appearance");
+    expect(resolveTabForProfile("overview", "pharmacy")).toBe("overview");
+  });
+
+  it("limits pharmacy settings navigation", () => {
+    expect(settingsTabsForProfile("pharmacy")).toEqual([
+      "channels",
+      "communications",
+      "appearance",
+    ]);
+    expect(settingsTabsForProfile("admin").length).toBe(SETTINGS_TABS.length);
   });
 });

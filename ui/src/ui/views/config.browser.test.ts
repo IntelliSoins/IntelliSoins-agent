@@ -344,9 +344,9 @@ describe("config view", () => {
     const tabs = Array.from(container.querySelectorAll(".config-top-tabs__tab")).map((tab) =>
       tab.textContent?.trim(),
     );
-    expect(tabs).toEqual(["Settings", "Agents", "Gateway", "Theme"]);
+    expect(tabs).toEqual(["Settings", "Assistants", "IntelliSoins Connector", "Theme"]);
 
-    const btn = findButtonByText(container, "Gateway");
+    const btn = findButtonByText(container, "IntelliSoins Connector");
     btn.click();
     expect(onSectionChange).toHaveBeenCalledWith("gateway");
   });
@@ -378,10 +378,10 @@ describe("config view", () => {
     const tabs = Array.from(container.querySelectorAll(".config-top-tabs__tab")).map((tab) =>
       tab.textContent?.trim(),
     );
-    expect(tabs).toContain("Notifications");
+    expect(tabs).toContain("Push notifications");
 
     const btn = Array.from(container.querySelectorAll("button")).find(
-      (button) => button.textContent?.trim() === "Notifications",
+      (button) => button.textContent?.trim() === "Push notifications",
     );
     expect(btn).toBeTruthy();
     btn?.click();
@@ -620,7 +620,7 @@ describe("config view", () => {
       [...container.querySelectorAll(".config-section-card__title")].map((title) =>
         title.textContent?.trim(),
       ),
-    ).toEqual(["Authentication", "Gateway"]);
+    ).toEqual(["Authentication", "IntelliSoins Connector"]);
   });
 
   it("clears the active search query", () => {

@@ -26,7 +26,12 @@ type PersistedUiSettings = Omit<UiSettings, "token" | "sessionKey" | "lastActive
 import { isSupportedLocale } from "../i18n/index.ts";
 import { getSafeLocalStorage, getSafeSessionStorage } from "../local-storage.ts";
 import { parseImportedCustomTheme, type ImportedCustomTheme } from "./custom-theme.ts";
-import { inferBasePathFromPathname, normalizeBasePath } from "./navigation.ts";
+import {
+  inferBasePathFromPathname,
+  normalizeBasePath,
+  normalizeInterfaceProfile,
+  type InterfaceProfile,
+} from "./navigation.ts";
 import { normalizeOptionalString } from "./string-coerce.ts";
 import { parseThemeSelection, type ThemeMode, type ThemeName } from "./theme.ts";
 import {
@@ -98,6 +103,7 @@ export type UiSettings = {
   textScale?: TextScaleStop; // Browser-local text scale percentage
   customTheme?: ImportedCustomTheme;
   locale?: string;
+  interfaceProfile?: InterfaceProfile;
 };
 
 export type { LocalUserIdentity } from "./user-identity.ts";
@@ -241,6 +247,7 @@ export function loadSettings(): UiSettings {
     borderRadius: 50,
     textScale: 100,
     locale: isTest ? "en" : "fr",
+    interfaceProfile: "pharmacy",
   };
 
   try {
@@ -308,6 +315,7 @@ export function loadSettings(): UiSettings {
       textScale: normalizeTextScale(parsed.textScale, defaults.textScale),
       customTheme: customTheme ?? undefined,
       locale: isSupportedLocale(parsed.locale) ? parsed.locale : undefined,
+      interfaceProfile: normalizeInterfaceProfile(parsed.interfaceProfile),
     };
     if ("token" in parsed) {
       persistSettings(settings);
@@ -430,6 +438,7 @@ function persistSettings(next: UiSettings) {
     ...(next.customTheme ? { customTheme: next.customTheme } : {}),
     sessionsByGateway,
     ...(next.locale ? { locale: next.locale } : {}),
+    interfaceProfile: normalizeInterfaceProfile(next.interfaceProfile),
   };
   const serialized = JSON.stringify(persisted);
   try {

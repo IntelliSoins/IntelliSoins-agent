@@ -5,6 +5,7 @@ import {
   normalizeToolName,
   resolveToolProfilePolicy,
 } from "../../../../src/agents/tool-policy-shared.js";
+import { t } from "../../i18n/index.ts";
 import { DEFAULT_ASSISTANT_AVATAR } from "../assistant-identity.ts";
 import { buildQualifiedChatModelValue } from "../chat-model-ref.ts";
 import { controlUiPublicAssetPath } from "../public-assets.ts";
@@ -36,95 +37,148 @@ export type AgentToolSection = {
   tools: AgentToolEntry[];
 };
 
-export const FALLBACK_TOOL_SECTIONS: AgentToolSection[] = [
-  {
-    id: "fs",
-    label: "Files",
-    tools: [
-      { id: "read", label: "read", description: "Read file contents" },
-      { id: "write", label: "write", description: "Create or overwrite files" },
-      { id: "edit", label: "edit", description: "Make precise edits" },
-      { id: "apply_patch", label: "apply_patch", description: "Patch files (OpenAI)" },
-    ],
-  },
-  {
-    id: "runtime",
-    label: "Runtime",
-    tools: [
-      { id: "exec", label: "exec", description: "Run shell commands" },
-      { id: "process", label: "process", description: "Manage background processes" },
-    ],
-  },
-  {
-    id: "web",
-    label: "Web",
-    tools: [
-      { id: "web_search", label: "web_search", description: "Search the web" },
-      { id: "web_fetch", label: "web_fetch", description: "Fetch web content" },
-    ],
-  },
-  {
-    id: "memory",
-    label: "Memory",
-    tools: [
-      { id: "memory_search", label: "memory_search", description: "Semantic search" },
-      { id: "memory_get", label: "memory_get", description: "Read memory files" },
-    ],
-  },
-  {
-    id: "sessions",
-    label: "Sessions",
-    tools: [
-      { id: "sessions_list", label: "sessions_list", description: "List sessions" },
-      { id: "sessions_history", label: "sessions_history", description: "Session history" },
-      { id: "sessions_send", label: "sessions_send", description: "Send to session" },
-      { id: "sessions_spawn", label: "sessions_spawn", description: "Spawn sub-agent" },
-      { id: "session_status", label: "session_status", description: "Session status" },
-    ],
-  },
-  {
-    id: "ui",
-    label: "UI",
-    tools: [
-      { id: "browser", label: "browser", description: "Control web browser" },
-      { id: "canvas", label: "canvas", description: "Control canvases" },
-    ],
-  },
-  {
-    id: "messaging",
-    label: "Messaging",
-    tools: [{ id: "message", label: "message", description: "Send messages" }],
-  },
-  {
-    id: "automation",
-    label: "Automation",
-    tools: [
-      { id: "cron", label: "cron", description: "Schedule tasks" },
-      { id: "gateway", label: "gateway", description: "Gateway control" },
-    ],
-  },
-  {
-    id: "nodes",
-    label: "Nodes",
-    tools: [{ id: "nodes", label: "nodes", description: "Nodes + devices" }],
-  },
-  {
-    id: "agents",
-    label: "Agents",
-    tools: [{ id: "agents_list", label: "agents_list", description: "List agents" }],
-  },
-  {
-    id: "media",
-    label: "Media",
-    tools: [{ id: "image", label: "image", description: "Image understanding" }],
-  },
-];
+export function resolveFallbackToolSections(): AgentToolSection[] {
+  return [
+    {
+      id: "fs",
+      label: t("agentTools.sections.fs"),
+      tools: [
+        { id: "read", label: "read", description: t("agentTools.descriptions.read") },
+        { id: "write", label: "write", description: t("agentTools.descriptions.write") },
+        { id: "edit", label: "edit", description: t("agentTools.descriptions.edit") },
+        {
+          id: "apply_patch",
+          label: "apply_patch",
+          description: t("agentTools.descriptions.apply_patch"),
+        },
+      ],
+    },
+    {
+      id: "runtime",
+      label: t("agentTools.sections.runtime"),
+      tools: [
+        { id: "exec", label: "exec", description: t("agentTools.descriptions.exec") },
+        { id: "process", label: "process", description: t("agentTools.descriptions.process") },
+      ],
+    },
+    {
+      id: "web",
+      label: t("agentTools.sections.web"),
+      tools: [
+        {
+          id: "web_search",
+          label: "web_search",
+          description: t("agentTools.descriptions.web_search"),
+        },
+        {
+          id: "web_fetch",
+          label: "web_fetch",
+          description: t("agentTools.descriptions.web_fetch"),
+        },
+      ],
+    },
+    {
+      id: "memory",
+      label: t("agentTools.sections.memory"),
+      tools: [
+        {
+          id: "memory_search",
+          label: "memory_search",
+          description: t("agentTools.descriptions.memory_search"),
+        },
+        {
+          id: "memory_get",
+          label: "memory_get",
+          description: t("agentTools.descriptions.memory_get"),
+        },
+      ],
+    },
+    {
+      id: "sessions",
+      label: t("agentTools.sections.sessions"),
+      tools: [
+        {
+          id: "sessions_list",
+          label: "sessions_list",
+          description: t("agentTools.descriptions.sessions_list"),
+        },
+        {
+          id: "sessions_history",
+          label: "sessions_history",
+          description: t("agentTools.descriptions.sessions_history"),
+        },
+        {
+          id: "sessions_send",
+          label: "sessions_send",
+          description: t("agentTools.descriptions.sessions_send"),
+        },
+        {
+          id: "sessions_spawn",
+          label: "sessions_spawn",
+          description: t("agentTools.descriptions.sessions_spawn"),
+        },
+        {
+          id: "session_status",
+          label: "session_status",
+          description: t("agentTools.descriptions.session_status"),
+        },
+      ],
+    },
+    {
+      id: "ui",
+      label: t("agentTools.sections.ui"),
+      tools: [
+        { id: "browser", label: "browser", description: t("agentTools.descriptions.browser") },
+        { id: "canvas", label: "canvas", description: t("agentTools.descriptions.canvas") },
+      ],
+    },
+    {
+      id: "messaging",
+      label: t("agentTools.sections.messaging"),
+      tools: [
+        { id: "message", label: "message", description: t("agentTools.descriptions.message") },
+      ],
+    },
+    {
+      id: "automation",
+      label: t("agentTools.sections.automation"),
+      tools: [
+        { id: "cron", label: "cron", description: t("agentTools.descriptions.cron") },
+        { id: "gateway", label: "gateway", description: t("agentTools.descriptions.gateway") },
+      ],
+    },
+    {
+      id: "nodes",
+      label: t("agentTools.sections.nodes"),
+      tools: [{ id: "nodes", label: "nodes", description: t("agentTools.descriptions.nodes") }],
+    },
+    {
+      id: "agents",
+      label: t("agentTools.sections.agents"),
+      tools: [
+        {
+          id: "agents_list",
+          label: "agents_list",
+          description: t("agentTools.descriptions.agents_list"),
+        },
+      ],
+    },
+    {
+      id: "media",
+      label: t("agentTools.sections.media"),
+      tools: [{ id: "image", label: "image", description: t("agentTools.descriptions.image") }],
+    },
+  ];
+}
+
+/** @deprecated Use resolveFallbackToolSections() for locale-aware labels. */
+export const FALLBACK_TOOL_SECTIONS: AgentToolSection[] = resolveFallbackToolSections();
 
 export const PROFILE_OPTIONS = [
-  { id: "minimal", label: "Minimal" },
-  { id: "coding", label: "Coding" },
-  { id: "messaging", label: "Messaging" },
-  { id: "full", label: "Full" },
+  { id: "minimal", label: t("agentTools.profiles.minimal") },
+  { id: "coding", label: t("agentTools.profiles.coding") },
+  { id: "messaging", label: t("agentTools.profiles.messaging") },
+  { id: "full", label: t("agentTools.profiles.full") },
 ] as const;
 
 export function resolveToolSections(
@@ -147,7 +201,7 @@ export function resolveToolSections(
       })),
     }));
   }
-  return FALLBACK_TOOL_SECTIONS;
+  return resolveFallbackToolSections();
 }
 
 export function resolveToolProfileOptions(

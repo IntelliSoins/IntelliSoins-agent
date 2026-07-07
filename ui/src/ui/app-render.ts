@@ -163,6 +163,10 @@ import {
   normalizeBasePath,
   pathForTab,
   SETTINGS_TABS,
+  tabGroupsForProfile,
+  settingsTabsForProfile,
+  normalizeInterfaceProfile,
+  resolveTabForProfile,
   TAB_GROUPS,
   subtitleForTab,
   titleForTab,
@@ -288,7 +292,7 @@ function renderSkillWorkshopHeaderControls(state: AppViewState) {
       <div
         class="sw-mode-switch"
         role="tablist"
-        aria-label="Workshop view"
+        aria-label=${t("skillWorkshop.mode.workshopView")}
         data-mode=${state.skillWorkshopMode}
       >
         <button
@@ -296,7 +300,7 @@ function renderSkillWorkshopHeaderControls(state: AppViewState) {
           class="sw-mode-switch__opt ${state.skillWorkshopMode === "board" ? "is-active" : ""}"
           role="tab"
           aria-selected=${state.skillWorkshopMode === "board" ? "true" : "false"}
-          title="Board view"
+          title=${t("skillWorkshop.mode.boardView")}
           @click=${() => setSkillWorkshopMode(state, "board")}
         >
           <svg viewBox="0 0 24 24" class="sw-mode-switch__icon" aria-hidden="true">
@@ -304,14 +308,14 @@ function renderSkillWorkshopHeaderControls(state: AppViewState) {
             <rect x="14" y="4" width="7" height="9" rx="1.5" />
             <rect x="14" y="15" width="7" height="5" rx="1.5" />
           </svg>
-          <span>Board</span>
+          <span>${t("skillWorkshop.mode.board")}</span>
         </button>
         <button
           type="button"
           class="sw-mode-switch__opt ${state.skillWorkshopMode === "today" ? "is-active" : ""}"
           role="tab"
           aria-selected=${state.skillWorkshopMode === "today" ? "true" : "false"}
-          title="Today view"
+          title=${t("skillWorkshop.mode.todayView")}
           @click=${() => setSkillWorkshopMode(state, "today")}
         >
           <svg viewBox="0 0 24 24" class="sw-mode-switch__icon" aria-hidden="true">
@@ -320,7 +324,7 @@ function renderSkillWorkshopHeaderControls(state: AppViewState) {
               d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"
             />
           </svg>
-          <span>Today</span>
+          <span>${t("skillWorkshop.mode.today")}</span>
         </button>
         <span class="sw-mode-switch__indicator" aria-hidden="true"></span>
       </div>
@@ -434,9 +438,11 @@ function renderSettingsSectionNav(state: AppViewState) {
   if (!isSettingsTab(state.tab)) {
     return nothing;
   }
+  const profile = normalizeInterfaceProfile(state.settings.interfaceProfile);
+  const visibleSettingsTabs = settingsTabsForProfile(profile);
   return html`
     <nav class="settings-section-nav" aria-label=${t("common.settingsSections")}>
-      ${SETTINGS_TABS.map((tab) => {
+      ${visibleSettingsTabs.map((tab) => {
         const active = state.tab === tab;
         const href = pathForTab(tab, state.basePath);
         return html`
@@ -1311,6 +1317,8 @@ export function renderApp(state: AppViewState) {
   const chatHeaderHidden = isChat && (state.onboarding || state.chatHeaderControlsHidden);
   const navDrawerOpen = state.navDrawerOpen && !state.onboarding;
   const navCollapsed = state.settings.navCollapsed && !navDrawerOpen;
+  const interfaceProfile = normalizeInterfaceProfile(state.settings.interfaceProfile);
+  const visibleTabGroups = tabGroupsForProfile(interfaceProfile);
   const dashboardHeaderContext = resolveDashboardHeaderContext(state);
   const showThinking = state.onboarding ? false : state.settings.chatShowThinking;
   const showToolCalls = state.onboarding ? true : state.settings.chatShowToolCalls;
@@ -2333,7 +2341,7 @@ export function renderApp(state: AppViewState) {
             <div class="sidebar-shell__body">
               ${renderSidebarSessions(state)}
               <nav class="sidebar-nav">
-                ${TAB_GROUPS.map((group) => {
+                ${visibleTabGroups.map((group) => {
                   const isGroupCollapsed = state.settings.navGroupsCollapsed[group.label] ?? false;
                   const showItems = navCollapsed || !isGroupCollapsed;
 
@@ -2372,6 +2380,33 @@ export function renderApp(state: AppViewState) {
             </div>
             <div class="sidebar-shell__footer">
               <div class="sidebar-utility-group">
+                <button
+                  type="button"
+                  class="nav-item sidebar-utility-link sidebar-profile-toggle"
+                  title=${interfaceProfile === "admin"
+                    ? t("appearance.interfaceProfile.switchToPharmacy")
+                    : t("appearance.interfaceProfile.switchToAdmin")}
+                  @click=${() => {
+                    const nextProfile = interfaceProfile === "admin" ? "pharmacy" : "admin";
+                    state.applySettings({
+                      ...state.settings,
+                      interfaceProfile: nextProfile,
+                    });
+                    const resolved = resolveTabForProfile(state.tab, nextProfile);
+                    if (resolved !== state.tab) {
+                      state.setTab(resolved);
+                    }
+                  }}
+                >
+                  <span class="nav-item__icon" aria-hidden="true">${icons.settings}</span>
+                  ${!navCollapsed
+                    ? html`<span class="nav-item__text"
+                        >${interfaceProfile === "admin"
+                          ? t("appearance.interfaceProfile.pharmacy")
+                          : t("appearance.interfaceProfile.admin")}</span
+                      >`
+                    : nothing}
+                </button>
                 <a
                   class="nav-item nav-item--external sidebar-utility-link"
                   href="https://docs.openclaw.ai"
