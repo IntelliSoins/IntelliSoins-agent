@@ -1,6 +1,7 @@
 // Control UI component implements the dashboard header element.
 import { LitElement, html, nothing } from "lit";
 import { property } from "lit/decorators.js";
+import { t } from "../../i18n/index.ts";
 import { pathForTab, titleForTab, type Tab } from "../navigation.js";
 
 export class DashboardHeader extends LitElement {
@@ -41,7 +42,7 @@ export class DashboardHeader extends LitElement {
             href=${pathForTab("overview", this.basePath)}
             @click=${this.handleOverviewClick}
           >
-            OpenIntellisoins
+            ${t("brand.dashboardHome")}
           </a>
           ${agentLabel
             ? html`

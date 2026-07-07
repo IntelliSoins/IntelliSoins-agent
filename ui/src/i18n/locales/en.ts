@@ -1098,6 +1098,11 @@ export const en: TranslationMap = {
     loadingSchema: "Loading schema…",
     peek: "Peek",
     click: "Click",
+    navSettings: "Settings",
+    hideEnvValues: "Hide env values",
+    revealEnvValues: "Reveal env values",
+    revealSensitiveValues: "Reveal sensitive values",
+    hideSensitiveValues: "Hide sensitive values",
     sidebar: {
       categories: {
         core: "Core",
@@ -2478,6 +2483,10 @@ export const en: TranslationMap = {
       deleteConfirm: "Delete this message?",
       dontAskAgain: "Don't ask again",
       openInCanvas: "Open in canvas",
+      replyingToCurrent: "Replying to current message",
+      attachedImage: "Attached image",
+      outsideAllowedFolders: "Outside allowed folders",
+      attachmentUnavailable: "Attachment unavailable",
     },
     contextNotice: {
       compactSession: "Compact session context",

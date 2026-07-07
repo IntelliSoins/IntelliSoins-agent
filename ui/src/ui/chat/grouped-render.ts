@@ -380,7 +380,7 @@ export function renderStreamingGroup(
   basePath?: string,
   authToken?: string | null,
 ) {
-  const name = assistant?.name ?? "Assistant";
+  const name = assistant?.name ?? t("chat.roles.assistant");
 
   return html`
     <div class="chat-group assistant">
@@ -434,7 +434,7 @@ export function renderMessageGroup(
   },
 ) {
   const normalizedRole = normalizeRoleForGrouping(group.role);
-  const assistantName = opts.assistantName ?? "Assistant";
+  const assistantName = opts.assistantName ?? t("chat.roles.assistant");
   const resolvedUserName = resolveLocalUserName({
     name: opts.userName ?? null,
     avatar: opts.userAvatar ?? null,
@@ -446,7 +446,7 @@ export function renderMessageGroup(
       : normalizedRole === "assistant"
         ? (userLabel ?? assistantName)
         : normalizedRole === "tool"
-          ? "Tool"
+          ? t("chat.messages.tool")
           : normalizedRole;
   const roleClass =
     normalizedRole === "user"
@@ -481,10 +481,13 @@ export function renderMessageGroup(
     ];
     const preview =
       toolLabels.length === 0
-        ? "Tool output"
+        ? t("chat.messages.toolOutput")
         : toolLabels.length <= 3
           ? toolLabels.join(", ")
-          : `${toolLabels.slice(0, 2).join(", ")} +${toolLabels.length - 2} more`;
+          : t("chat.messages.toolOutputMore", {
+              labels: toolLabels.slice(0, 2).join(", "),
+              count: String(toolLabels.length - 2),
+            });
     const hasError = cards.some(isToolCardError);
     const activityDisclosureId = `activity:${group.key}`;
     const activityExpanded = opts.isToolMessageExpanded?.(activityDisclosureId) ?? hasError;
@@ -973,7 +976,7 @@ function renderMessageImages(images: RenderableImageBlock[], opts?: ImageRenderO
   const renderImageElement = (img: RenderableImageBlock, previewUrl: string) => html`
     <img
       src=${previewUrl}
-      alt=${img.alt ?? "Attached image"}
+      alt=${img.alt ?? t("chat.messages.attachedImage")}
       class="chat-message-image"
       width=${img.width ?? nothing}
       height=${img.height ?? nothing}
@@ -1006,7 +1009,7 @@ function renderReplyPill(replyTarget: NormalizedMessage["replyTarget"]) {
       <span class="chat-reply-pill__icon">${icons.messageSquare}</span>
       <span class="chat-reply-pill__label">
         ${replyTarget.kind === "current"
-          ? "Replying to current message"
+          ? t("chat.messages.replyingToCurrent")
           : `Replying to ${replyTarget.id}`}
       </span>
     </div>
@@ -1266,7 +1269,11 @@ function resolveAssistantAttachmentAvailability(
     return { status: "available" };
   }
   if (!isLocalAttachmentPreviewAllowed(source, localMediaPreviewRoots)) {
-    return { status: "unavailable", reason: "Outside allowed folders", checkedAt: Date.now() };
+    return {
+      status: "unavailable",
+      reason: t("chat.messages.outsideAllowedFolders"),
+      checkedAt: Date.now(),
+    };
   }
   const normalizedAuthToken = authToken?.trim() ?? "";
   const cacheKey = `${basePath ?? ""}::${normalizedAuthToken}::${source}`;
@@ -1316,7 +1323,7 @@ function resolveAssistantAttachmentAvailability(
             clearAssistantAttachmentRefreshTimer(cacheKey);
             setAssistantAttachmentAvailability(cacheKey, {
               status: "unavailable",
-              reason: "Attachment unavailable",
+              reason: t("chat.messages.attachmentUnavailable"),
               checkedAt: Date.now(),
             });
             return;
@@ -1331,7 +1338,7 @@ function resolveAssistantAttachmentAvailability(
           clearAssistantAttachmentRefreshTimer(cacheKey);
           setAssistantAttachmentAvailability(cacheKey, {
             status: "unavailable",
-            reason: payload?.reason?.trim() || "Attachment unavailable",
+            reason: payload?.reason?.trim() || t("chat.messages.attachmentUnavailable"),
             checkedAt: Date.now(),
           });
         }
@@ -1340,7 +1347,7 @@ function resolveAssistantAttachmentAvailability(
         clearAssistantAttachmentRefreshTimer(cacheKey);
         setAssistantAttachmentAvailability(cacheKey, {
           status: "unavailable",
-          reason: "Attachment unavailable",
+          reason: t("chat.messages.attachmentUnavailable"),
           checkedAt: Date.now(),
         });
       })
@@ -1483,7 +1490,10 @@ function renderAssistantAttachments(
           return renderAssistantAttachmentStatusCard({
             kind: "document",
             label: attachment.label,
-            badge: availability.status === "checking" ? "Checking..." : "Unavailable",
+            badge:
+              availability.status === "checking"
+                ? t("chat.messages.checking")
+                : t("chat.messages.unavailable"),
             reason: availability.status === "unavailable" ? availability.reason : undefined,
           });
         }
@@ -1767,12 +1777,12 @@ function renderGroupedMessage(
   const toolPreview =
     markdown && !toolSummaryLabel ? (formatCollapsedToolPreviewText(markdown) ?? "") : "";
   const toolMessageLabelRaw = toolMessageHasError
-    ? "Tool error"
+    ? t("chat.messages.toolError")
     : singleToolDisplayDetail && !markdown && !hasImages
       ? singleToolDisplayDetail
       : singleToolDisplay && !markdown && !hasImages
         ? singleToolDisplay.label
-        : "Tool output";
+        : t("chat.messages.toolOutput");
   const toolMessageLabel =
     formatCollapsedToolSummaryText(toolMessageLabelRaw) ?? toolMessageLabelRaw;
   const toolMessageIcon = singleToolDisplay ? icons[singleToolDisplay.icon] : icons.zap;

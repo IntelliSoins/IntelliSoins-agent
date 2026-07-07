@@ -4,6 +4,7 @@ import type {
   CommandsListResult,
 } from "../../../../packages/gateway-protocol/src/index.js";
 import { buildBuiltinChatCommands } from "../../../../src/auto-reply/commands-registry.shared.js";
+import { t } from "../../i18n/index.ts";
 import type { GatewayBrowserClient } from "../gateway.ts";
 import type { IconName } from "../icons.ts";
 import { normalizeLowercaseStringOrEmpty } from "../string-coerce.ts";
@@ -101,7 +102,7 @@ const UI_ONLY_COMMANDS: SlashCommandDef[] = [
   {
     key: "clear",
     name: "clear",
-    description: "Clear chat history",
+    description: t("chat.slashCommands.commands.clearDescription"),
     icon: "trash",
     category: "session",
     executeLocal: true,
@@ -110,7 +111,7 @@ const UI_ONLY_COMMANDS: SlashCommandDef[] = [
   {
     key: "redirect",
     name: "redirect",
-    description: "Abort and restart with a new message",
+    description: t("chat.slashCommands.commands.redirectDescription"),
     args: "<message>",
     icon: "refresh",
     category: "agents",
@@ -148,7 +149,7 @@ const CATEGORY_OVERRIDES: Partial<Record<string, SlashCommandCategory>> = {
 };
 
 const COMMAND_DESCRIPTION_OVERRIDES: Partial<Record<string, string>> = {
-  steer: "Inject a message into the active run",
+  steer: t("chat.slashCommands.commands.steerDescription"),
 };
 
 const COMMAND_ARGS_OVERRIDES: Partial<Record<string, string>> = {
@@ -555,11 +556,15 @@ export function resetSlashCommandsForTest(): void {
 
 const CATEGORY_ORDER: SlashCommandCategory[] = ["session", "model", "tools", "agents"];
 
+export function categoryLabel(category: SlashCommandCategory): string {
+  return t(`chat.slashCommands.categories.${category}`);
+}
+
 export const CATEGORY_LABELS: Record<SlashCommandCategory, string> = {
-  session: "Session",
-  model: "Model",
-  agents: "Agents",
-  tools: "Tools",
+  session: categoryLabel("session"),
+  model: categoryLabel("model"),
+  agents: categoryLabel("agents"),
+  tools: categoryLabel("tools"),
 };
 
 const TIER_ORDER: Record<SlashCommandTier, number> = {

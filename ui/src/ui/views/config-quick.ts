@@ -26,6 +26,10 @@ import {
   CONFIG_PRESETS,
   detectActivePreset,
   getPresetById,
+  presetDescription,
+  presetDetail,
+  presetImpact,
+  presetLabel,
   type ConfigPresetId,
 } from "./config-presets.ts";
 
@@ -914,7 +918,9 @@ function renderPresetsCard(props: QuickSettingsProps) {
           <div class="qs-profile-state__text">
             <span class="qs-profile-state__title"
               >${t("quickSettings.profiles.selectedNotSaved", {
-                label: selectedPreset?.label ?? t("quickSettings.states.custom"),
+                label: selectedPreset
+                  ? presetLabel(selectedPreset.id)
+                  : t("quickSettings.states.custom"),
               })}</span
             >
             <span class="qs-profile-state__copy"
@@ -929,7 +935,9 @@ function renderPresetsCard(props: QuickSettingsProps) {
             <span class="qs-status-dot qs-status-dot--ok"></span>
             <div class="qs-profile-state__text">
               <span class="qs-profile-state__title"
-                >${t("quickSettings.profiles.currentDefault", { label: savedPreset.label })}</span
+                >${t("quickSettings.profiles.currentDefault", {
+                  label: presetLabel(savedPreset.id),
+                })}</span
               >
               <span class="qs-profile-state__copy"
                 >${t("quickSettings.profiles.profilesHint")}</span
@@ -950,9 +958,15 @@ function renderPresetsCard(props: QuickSettingsProps) {
             </div>
           </div>
         `;
-  const panelTitle = selectedPreset?.label ?? t("quickSettings.profiles.customConfiguration");
-  const panelDescription = selectedPreset?.detail ?? t("quickSettings.profiles.noMatchBuiltIn");
-  const panelImpact = selectedPreset?.impact ?? t("quickSettings.profiles.pickProfileImpact");
+  const panelTitle = selectedPreset
+    ? presetLabel(selectedPreset.id)
+    : t("quickSettings.profiles.customConfiguration");
+  const panelDescription = selectedPreset
+    ? presetDetail(selectedPreset.id)
+    : t("quickSettings.profiles.noMatchBuiltIn");
+  const panelImpact = selectedPreset
+    ? presetImpact(selectedPreset.id)
+    : t("quickSettings.profiles.pickProfileImpact");
   const commitCopy = hasPendingProfileChange
     ? t("quickSettings.profiles.saveProfileHint")
     : t("quickSettings.profiles.commitPendingEdits");
@@ -992,8 +1006,8 @@ function renderPresetsCard(props: QuickSettingsProps) {
                     <div class="qs-preset__identity">
                       <span class="qs-preset__icon">${preset.icon}</span>
                       <div class="qs-preset__identity-copy">
-                        <span class="qs-preset__label">${preset.label}</span>
-                        <span class="qs-preset__desc muted">${preset.description}</span>
+                        <span class="qs-preset__label">${presetLabel(preset.id)}</span>
+                        <span class="qs-preset__desc muted">${presetDescription(preset.id)}</span>
                       </div>
                     </div>
                     <div class="qs-preset__badges">
