@@ -781,10 +781,6 @@ export const zh_CN: TranslationMap = {
       plugin: "插件",
     },
   },
-  brand: {
-    productEyebrow: "IntelliSoins",
-    productTitle: "IntelliSoins",
-  },
   appearance: {
     interfaceProfile: {
       pharmacy: "Pharmacy mode",
@@ -972,6 +968,11 @@ export const zh_CN: TranslationMap = {
       messaging: "Messaging",
       full: "Full",
     },
+  },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
   },
   nav: {
     chat: "聊天",

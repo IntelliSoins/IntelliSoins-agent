@@ -790,10 +790,6 @@ export const fr: TranslationMap = {
       plugin: "Plugin",
     },
   },
-  brand: {
-    productEyebrow: "IntelliSoins",
-    productTitle: "IntelliSoins",
-  },
   appearance: {
     interfaceProfile: {
       pharmacy: "Mode officine",
@@ -983,6 +979,11 @@ export const fr: TranslationMap = {
       messaging: "Messagerie",
       full: "Complet",
     },
+  },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Assistant officinal",
   },
   nav: {
     chat: "Assistant",

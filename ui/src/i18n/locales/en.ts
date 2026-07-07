@@ -707,10 +707,6 @@ export const en: TranslationMap = {
       plugin: "Plugin",
     },
   },
-  brand: {
-    productEyebrow: "IntelliSoins",
-    productTitle: "IntelliSoins",
-  },
   appearance: {
     interfaceProfile: {
       pharmacy: "Pharmacy mode",
@@ -898,6 +894,11 @@ export const en: TranslationMap = {
       messaging: "Messaging",
       full: "Full",
     },
+  },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
   },
   nav: {
     chat: "Assistant",

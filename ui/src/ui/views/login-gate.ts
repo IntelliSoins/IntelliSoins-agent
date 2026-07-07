@@ -287,6 +287,7 @@ export function renderLoginGate(state: AppViewState) {
         <div class="login-gate__header">
           <img class="login-gate__logo" src=${faviconSrc} alt=${t("brand.productTitle")} />
           <div class="login-gate__title">${t("brand.productTitle")}</div>
+          <div class="login-gate__tagline">${t("brand.productTagline")}</div>
           <div class="login-gate__sub">${t("login.subtitle")}</div>
         </div>
         <div class="login-gate__form">

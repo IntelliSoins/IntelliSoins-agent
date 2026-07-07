@@ -47,6 +47,12 @@
   letter-spacing: -0.02em;
 }
 
+.login-gate__tagline {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
 .login-gate__sub {
   color: var(--muted);
   font-size: 14px;
