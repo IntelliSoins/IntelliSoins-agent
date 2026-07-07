@@ -2,6 +2,7 @@
 import { html, nothing } from "lit";
 import { keyed } from "lit/directives/keyed.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
+import { t } from "../../i18n/index.ts";
 import { resolveCanvasIframeUrl } from "../canvas-url.ts";
 import { resolveEmbedSandbox, type EmbedSandboxMode } from "../embed-sandbox.ts";
 import { icons } from "../icons.ts";
@@ -48,17 +49,17 @@ export function renderMarkdownSidebar(props: MarkdownSidebarProps) {
       <div class="sidebar-header">
         <div class="sidebar-title">
           ${content?.kind === "canvas"
-            ? content.title?.trim() || "Render Preview"
+            ? content.title?.trim() || t("markdownSidebar.renderPreview")
             : content?.kind === "markdown"
-              ? "Markdown Preview"
-              : "Tool Details"}
+              ? t("markdownSidebar.markdownPreview")
+              : t("markdownSidebar.toolDetails")}
         </div>
         <button
           @click=${props.onClose}
           class="btn"
           type="button"
-          title="Close sidebar"
-          aria-label="Close sidebar"
+          title=${t("markdownSidebar.closeSidebar")}
+          aria-label=${t("markdownSidebar.closeSidebar")}
         >
           ${icons.x}
         </button>
@@ -75,7 +76,7 @@ export function renderMarkdownSidebar(props: MarkdownSidebarProps) {
                       type="button"
                       style="margin-top: 12px;"
                     >
-                      View Raw Text
+                      ${t("markdownSidebar.viewRawText")}
                     </button>
                   `
                 : nothing}
@@ -90,7 +91,8 @@ export function renderMarkdownSidebar(props: MarkdownSidebarProps) {
                         html`
                           <iframe
                             class="chat-tool-card__preview-frame"
-                            title=${content.title?.trim() || "Render preview"}
+                            title=${content.title?.trim() ||
+                            t("markdownSidebar.renderPreviewIframe")}
                             sandbox=${canvasSandbox}
                             src=${canvasSrc ?? nothing}
                             style=${content.preferredHeight
@@ -104,7 +106,7 @@ export function renderMarkdownSidebar(props: MarkdownSidebarProps) {
                       ? html`
                           <div style="margin-top: 12px;">
                             <button @click=${props.onViewRawText} class="btn" type="button">
-                              View Raw Text
+                              ${t("markdownSidebar.viewRawText")}
                             </button>
                           </div>
                         `
@@ -117,14 +119,14 @@ export function renderMarkdownSidebar(props: MarkdownSidebarProps) {
                       <div class="sidebar-markdown-shell__intro">
                         <div class="sidebar-markdown-shell__eyebrow">
                           ${icons.scrollText}
-                          <span>Rendered Markdown</span>
+                          <span>${t("markdownSidebar.renderedMarkdown")}</span>
                         </div>
                         <div class="sidebar-markdown-shell__hint">
-                          Sanitized rich-text preview for quick reading.
+                          ${t("markdownSidebar.sanitizedHint")}
                         </div>
                       </div>
                       <button @click=${props.onViewRawText} class="btn btn--sm" type="button">
-                        View Raw Text
+                        ${t("markdownSidebar.viewRawText")}
                       </button>
                     </div>
                     ${markdownHtml
@@ -134,11 +136,13 @@ export function renderMarkdownSidebar(props: MarkdownSidebarProps) {
                           </article>
                         `
                       : html`
-                          <div class="sidebar-markdown-empty">No previewable markdown content.</div>
+                          <div class="sidebar-markdown-empty">
+                            ${t("markdownSidebar.noMarkdown")}
+                          </div>
                         `}
                   </section>
                 `
-            : html` <div class="muted">No content available</div> `}
+            : html` <div class="muted">${t("markdownSidebar.noContent")}</div> `}
       </div>
     </div>
   `;

@@ -1322,7 +1322,7 @@ export function renderConfig(props: ConfigProps) {
 
   const topTabs = [
     ...(showRootTab
-      ? [{ key: null as string | null, label: props.navRootLabel ?? "Settings" }]
+      ? [{ key: null as string | null, label: props.navRootLabel ?? t("config.navSettings") }]
       : []),
     ...[...visibleCategories, ...(otherCategory ? [otherCategory] : [])].flatMap((cat) =>
       cat.sections.map((s) => ({ key: s.key, label: s.label })),
@@ -1812,7 +1812,9 @@ export function renderConfig(props: ConfigProps) {
                         class="config-env-peek-btn ${envSensitiveVisible
                           ? "config-env-peek-btn--active"
                           : ""}"
-                        title=${envSensitiveVisible ? "Hide env values" : "Reveal env values"}
+                        title=${envSensitiveVisible
+                          ? t("config.hideEnvValues")
+                          : t("config.revealEnvValues")}
                         @click=${() => {
                           cvs.envRevealed = !cvs.envRevealed;
                           requestUpdate();
@@ -1906,8 +1908,8 @@ export function renderConfig(props: ConfigProps) {
                                 <button
                                   class="btn btn--icon config-raw-toggle ${blurred ? "" : "active"}"
                                   title=${blurred
-                                    ? "Reveal sensitive values"
-                                    : "Hide sensitive values"}
+                                    ? t("config.revealSensitiveValues")
+                                    : t("config.hideSensitiveValues")}
                                   aria-label=${t("config.toggleRedaction")}
                                   aria-pressed=${!blurred}
                                   @click=${() => {

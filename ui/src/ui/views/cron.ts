@@ -925,7 +925,11 @@ export function renderCron(props: CronProps) {
                       ? html`
                           <label class="field cron-span-2">
                             ${renderFieldLabel(t("cron.form.payloadKind"))}
-                            <input id="cron-payload-kind" .value=${"Command"} readonly />
+                            <input
+                              id="cron-payload-kind"
+                              .value=${t("cron.form.commandPayloadKind")}
+                              readonly
+                            />
                           </label>
                         `
                       : html`
@@ -981,7 +985,7 @@ export function renderCron(props: CronProps) {
                   <label class="field cron-span-2">
                     ${renderFieldLabel(
                       payloadLocked
-                        ? "Command"
+                        ? t("cron.form.commandPayloadKind")
                         : props.form.payloadKind === "systemEvent"
                           ? t("cron.form.mainTimelineMessage")
                           : t("cron.form.assistantTaskPrompt"),
@@ -1409,14 +1413,16 @@ export function renderCron(props: CronProps) {
                                   </select>
                                 </label>
                                 <label class="field">
-                                  ${renderFieldLabel("Alert account ID")}
+                                  ${renderFieldLabel(t("cron.form.failureAlerts.alertAccountId"))}
                                   <input
                                     .value=${props.form.failureAlertAccountId}
                                     @input=${(e: Event) =>
                                       props.onFormChange({
                                         failureAlertAccountId: (e.target as HTMLInputElement).value,
                                       })}
-                                    placeholder="Account ID for multi-account setups"
+                                    placeholder=${t(
+                                      "cron.form.failureAlerts.accountIdMultiPlaceholder",
+                                    )}
                                   />
                                 </label>
                               `
@@ -1745,12 +1751,12 @@ function renderJobPayload(job: CronJob) {
     return html`
       <div class="cron-job-detail">
         <div class="cron-job-detail-section">
-          <span class="cron-job-detail-label">Command</span>
+          <span class="cron-job-detail-label">${t("cron.jobDetail.command")}</span>
           <code class="muted cron-job-detail-value">${payload.argv.join(" ")}</code>
         </div>
         ${payload.cwd
           ? html`<div class="cron-job-detail-section">
-              <span class="cron-job-detail-label">CWD</span>
+              <span class="cron-job-detail-label">${t("cron.jobDetail.cwd")}</span>
               <span class="muted cron-job-detail-value">${payload.cwd}</span>
             </div>`
           : nothing}

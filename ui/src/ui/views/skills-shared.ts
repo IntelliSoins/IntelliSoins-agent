@@ -1,5 +1,6 @@
 // Control UI view renders skills shared screen content.
 import { html, nothing } from "lit";
+import { t } from "../../i18n/index.ts";
 import type { SkillStatusEntry } from "../types.ts";
 
 export function computeSkillMissing(skill: SkillStatusEntry): string[] {
@@ -14,10 +15,10 @@ export function computeSkillMissing(skill: SkillStatusEntry): string[] {
 export function computeSkillReasons(skill: SkillStatusEntry): string[] {
   const reasons: string[] = [];
   if (skill.disabled) {
-    reasons.push("disabled");
+    reasons.push(t("skillsPage.chips.disabled"));
   }
   if (skill.blockedByAllowlist) {
-    reasons.push("blocked by allowlist");
+    reasons.push(t("skillsPage.chips.blockedByAllowlist"));
   }
   return reasons;
 }
@@ -31,11 +32,15 @@ export function renderSkillStatusChips(params: {
   return html`
     <div class="chip-row" style="margin-top: 6px;">
       <span class="chip">${skill.source}</span>
-      ${showBundledBadge ? html` <span class="chip">bundled</span> ` : nothing}
+      ${showBundledBadge
+        ? html` <span class="chip">${t("skillsPage.chips.bundled")}</span> `
+        : nothing}
       <span class="chip ${skill.eligible ? "chip-ok" : "chip-warn"}">
-        ${skill.eligible ? "eligible" : "blocked"}
+        ${skill.eligible ? t("skillsPage.chips.eligible") : t("skillsPage.chips.blocked")}
       </span>
-      ${skill.disabled ? html` <span class="chip chip-warn">disabled</span> ` : nothing}
+      ${skill.disabled
+        ? html` <span class="chip chip-warn">${t("skillsPage.chips.disabled")}</span> `
+        : nothing}
     </div>
   `;
 }

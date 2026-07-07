@@ -1,6 +1,7 @@
 // Control UI component implements the file preview modal element.
 import { LitElement, css, html, type PropertyValues } from "lit";
 import { property, query } from "lit/decorators.js";
+import { t } from "../../i18n/index.ts";
 import { icons } from "../icons.ts";
 
 export type FilePreviewModalFile = {
@@ -13,13 +14,13 @@ export class OpenClawFilePreviewModal extends LitElement {
   @property({ attribute: false }) files: FilePreviewModalFile[] = [];
   @property() activePath = "";
   @property() query = "";
-  @property() label = "Support files";
-  @property() listLabel = "Files";
-  @property() searchPlaceholder = "Search files...";
+  @property() label = t("filePreview.supportFiles");
+  @property() listLabel = t("filePreview.files");
+  @property() searchPlaceholder = t("filePreview.searchPlaceholder");
   @property() contextLabel = "";
-  @property() readOnlyLabel = "read-only";
-  @property() emptyTitle = "No files match";
-  @property() emptySubtitle = "Try another file name or content search.";
+  @property() readOnlyLabel = t("filePreview.readOnly");
+  @property() emptyTitle = t("filePreview.emptyTitle");
+  @property() emptySubtitle = t("filePreview.emptySubtitle");
   @query(".search") private searchInput?: HTMLInputElement;
 
   static override styles = css`
@@ -382,8 +383,11 @@ export class OpenClawFilePreviewModal extends LitElement {
     const activeFile = this.resolveActiveFile(filteredFiles);
     const fileCount =
       filteredFiles.length === this.files.length
-        ? `${this.files.length} files`
-        : `${filteredFiles.length}/${this.files.length} files`;
+        ? t("filePreview.fileCount", { count: String(this.files.length) })
+        : t("filePreview.fileCountFiltered", {
+            filtered: String(filteredFiles.length),
+            total: String(this.files.length),
+          });
 
     return html`
       <div class="backdrop" @click=${this.emitClose}></div>
@@ -410,7 +414,7 @@ export class OpenClawFilePreviewModal extends LitElement {
           <aside class="list">
             <div class="list-section">${this.listLabel} · ${filteredFiles.length}</div>
             ${filteredFiles.length === 0
-              ? html`<div class="empty-list">No files match.</div>`
+              ? html`<div class="empty-list">${t("filePreview.emptyList")}</div>`
               : filteredFiles.map(
                   (file) => html`
                     <button
@@ -429,10 +433,10 @@ export class OpenClawFilePreviewModal extends LitElement {
           ${activeFile ? this.renderFile(activeFile) : this.renderEmpty()}
         </div>
         <footer class="foot">
-          <span class="foot-group"><span class="kbd">↑↓</span> navigate</span>
+          <span class="foot-group"><span class="kbd">↑↓</span> ${t("filePreview.navigate")}</span>
           <span class="spacer"></span>
           <button class="button" @click=${this.emitClose}>
-            Close <span class="kbd">esc</span>
+            ${t("filePreview.close")} <span class="kbd">esc</span>
           </button>
         </footer>
       </div>

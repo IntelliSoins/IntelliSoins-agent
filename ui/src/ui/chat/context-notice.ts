@@ -1,5 +1,6 @@
 // Control UI chat module implements context notice behavior.
 import { html, nothing } from "lit";
+import { t } from "../../i18n/index.ts";
 import { icons } from "../icons.ts";
 import type { GatewaySessionRow } from "../types.ts";
 
@@ -155,8 +156,8 @@ export function renderContextNotice(
                 ? "context-notice__action--busy"
                 : ""}"
               type="button"
-              title="Compact session context"
-              aria-label="Compact recommended session context"
+              title=${t("chat.contextNotice.compactSession")}
+              aria-label=${t("chat.contextNotice.compactRecommended")}
               ?disabled=${compactDisabled}
               @click=${(event: Event) => {
                 event.preventDefault();
@@ -168,7 +169,11 @@ export function renderContextNotice(
               }}
             >
               ${options.compactBusy ? icons.loader : icons.minimize}
-              <span>${options.compactBusy ? "Compacting" : "Compact"}</span>
+              <span
+                >${options.compactBusy
+                  ? t("chat.contextNotice.compacting")
+                  : t("chat.contextNotice.compact")}</span
+              >
             </button>
           `
         : nothing}

@@ -574,7 +574,7 @@ export function renderSessions(props: SessionsProps) {
               <div
                 id="sessions-filter-bar"
                 class="sessions-filter-bar"
-                aria-label="Session filters"
+                aria-label=${t("sessionsView.filtersAria")}
               >
                 <div class="session-filter-primary-row">
                   <label class="session-filter-field" data-tooltip=${activeTooltip}>

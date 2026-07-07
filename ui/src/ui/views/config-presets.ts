@@ -2,6 +2,7 @@
  * Config presets — opinionated configuration bundles that set multiple
  * settings at once. Applied via config.patch.
  */
+import { t } from "../../i18n/index.ts";
 
 export type ConfigPresetId = "personal" | "codeAgent" | "teamBot" | "minimal";
 
@@ -17,21 +18,29 @@ export type ConfigPresetPatch = {
 
 export type ConfigPreset = {
   id: ConfigPresetId;
-  label: string;
-  description: string;
-  detail: string;
-  impact: string;
   icon: string;
   patch: ConfigPresetPatch;
 };
 
+export function presetLabel(id: ConfigPresetId): string {
+  return t(`configPresets.${id}.label`);
+}
+
+export function presetDescription(id: ConfigPresetId): string {
+  return t(`configPresets.${id}.description`);
+}
+
+export function presetDetail(id: ConfigPresetId): string {
+  return t(`configPresets.${id}.detail`);
+}
+
+export function presetImpact(id: ConfigPresetId): string {
+  return t(`configPresets.${id}.impact`);
+}
+
 export const CONFIG_PRESETS: ConfigPreset[] = [
   {
     id: "personal",
-    label: "Personal Assistant",
-    description: "Balanced default for daily use.",
-    detail: "Good fit for chat, docs, and light edits without a large coding budget.",
-    impact: "Injects bootstrap context every turn with a moderate prompt budget.",
     icon: "✨",
     patch: {
       agents: {
@@ -45,10 +54,6 @@ export const CONFIG_PRESETS: ConfigPreset[] = [
   },
   {
     id: "codeAgent",
-    label: "Code Agent",
-    description: "Highest context budget for repo work.",
-    detail: "Best for multi-file changes, long bootstrap docs, and code-heavy sessions.",
-    impact: "Uses the largest prompt budget and reinjects context every turn.",
     icon: "🛠️",
     patch: {
       agents: {
@@ -62,11 +67,6 @@ export const CONFIG_PRESETS: ConfigPreset[] = [
   },
   {
     id: "teamBot",
-    label: "Team Bot",
-    description: "Lean follow-ups for shared bots.",
-    detail:
-      "Best for multi-channel workflows where continuity matters more than large bootstrap payloads.",
-    impact: "Keeps follow-up turns smaller by skipping safe continuation reinjection.",
     icon: "👥",
     patch: {
       agents: {
@@ -80,10 +80,6 @@ export const CONFIG_PRESETS: ConfigPreset[] = [
   },
   {
     id: "minimal",
-    label: "Minimal",
-    description: "Smallest context budget and lowest cost.",
-    detail: "Best for quick utility turns, automations, and cost-sensitive workflows.",
-    impact: "Uses the smallest bootstrap budget and the leanest follow-up behavior.",
     icon: "⚡",
     patch: {
       agents: {
