@@ -620,7 +620,7 @@ describe("config view", () => {
       [...container.querySelectorAll(".config-section-card__title")].map((title) =>
         title.textContent?.trim(),
       ),
-    ).toEqual(["Authentication", "Gateway"]);
+    ).toEqual(["Authentication", "IntelliSoins Connector"]);
   });
 
   it("clears the active search query", () => {

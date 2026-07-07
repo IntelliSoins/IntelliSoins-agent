@@ -128,31 +128,35 @@ export type QuickSettingsProps = {
 // ── Theme options ──
 
 type ThemeOption = { id: ThemeName; label: string };
-const BUILTIN_THEME_OPTIONS: ThemeOption[] = [
-  { id: "claw", label: "Claw" },
-  { id: "knot", label: "Knot" },
-  { id: "dash", label: "Dash" },
-];
+function builtinThemeOptions(): ThemeOption[] {
+  return [
+    { id: "claw", label: t("appearance.theme.families.claw") },
+    { id: "knot", label: t("appearance.theme.families.knot") },
+    { id: "dash", label: t("appearance.theme.families.dash") },
+  ];
+}
 
-const BORDER_RADIUS_STOPS: Array<{ value: BorderRadiusStop; label: string }> = [
-  { value: 0, label: "None" },
-  { value: 25, label: "Slight" },
-  { value: 50, label: "Default" },
-  { value: 75, label: "Round" },
-  { value: 100, label: "Full" },
-];
+function borderRadiusStops(): Array<{ value: BorderRadiusStop; label: string }> {
+  return [
+    { value: 0, label: t("appearance.roundness.none") },
+    { value: 25, label: t("appearance.roundness.slight") },
+    { value: 50, label: t("appearance.roundness.default") },
+    { value: 75, label: t("appearance.roundness.round") },
+    { value: 100, label: t("appearance.roundness.full") },
+  ];
+}
 
-const TEXT_SCALE_OPTIONS: Array<{ value: TextScaleStop; label: string }> = [
-  { value: 90, label: "S" },
-  { value: 100, label: "M" },
-  { value: 110, label: "L" },
-  { value: 125, label: "XL" },
-  { value: 140, label: "XXL" },
+const TEXT_SCALE_OPTIONS = (): Array<{ value: TextScaleStop; label: string }> => [
+  { value: 90, label: t("quickSettings.textScale.s") },
+  { value: 100, label: t("quickSettings.textScale.m") },
+  { value: 110, label: t("quickSettings.textScale.l") },
+  { value: 125, label: t("quickSettings.textScale.xl") },
+  { value: 140, label: t("quickSettings.textScale.xxl") },
 ];
 
 const THINKING_LEVELS = ["off", "low", "medium", "high"];
 const TOOL_PROFILES = ["minimal", "coding", "messaging", "full"];
-const LOCAL_USER_LABEL = "You";
+const LOCAL_USER_LABEL = () => t("quickSettings.localUser");
 // Keep raw uploads comfortably below the 2 MB persisted data URL limit after
 // base64 expansion and a small MIME/header prefix are added.
 const MAX_LOCAL_USER_AVATAR_FILE_BYTES = 1_500_000;
@@ -172,15 +176,15 @@ function renderLocalUserAvatarPreview(avatar: string | null | undefined) {
   const avatarUrl = resolveLocalUserAvatarUrl(identity);
   const avatarText = resolveLocalUserAvatarText(identity);
   if (avatarUrl) {
-    return html`<img class="qs-user-avatar" src=${avatarUrl} alt=${LOCAL_USER_LABEL} />`;
+    return html`<img class="qs-user-avatar" src=${avatarUrl} alt=${LOCAL_USER_LABEL()} />`;
   }
   if (avatarText) {
-    return html`<div class="qs-user-avatar qs-user-avatar--text" aria-label=${LOCAL_USER_LABEL}>
+    return html`<div class="qs-user-avatar qs-user-avatar--text" aria-label=${LOCAL_USER_LABEL()}>
       ${avatarText}
     </div>`;
   }
   return html`
-    <div class="qs-user-avatar qs-user-avatar--default" aria-label=${LOCAL_USER_LABEL}>
+    <div class="qs-user-avatar qs-user-avatar--default" aria-label=${LOCAL_USER_LABEL()}>
       ${renderDefaultUserAvatar()}
     </div>
   `;
@@ -229,25 +233,26 @@ function formatAssistantAvatarIssue(
     return null;
   }
   if (status === "remote") {
-    return "Remote URLs are blocked by Control UI image policy";
+    return t("quickSettings.avatarErrors.remoteBlocked");
   }
   if (reason === "missing") {
-    return "File not found";
+    return t("quickSettings.avatarErrors.fileNotFound");
   }
   if (reason === "unsupported_extension") {
-    return "Unsupported image type";
+    return t("quickSettings.avatarErrors.unsupportedType");
   }
   if (reason === "outside_workspace") {
-    return "Outside workspace";
+    return t("quickSettings.avatarErrors.outsideWorkspace");
   }
   if (reason === "too_large") {
-    return "Image is too large";
+    return t("quickSettings.avatarErrors.tooLarge");
   }
-  return reason ? "Cannot render avatar" : null;
+  return reason ? t("quickSettings.avatarErrors.cannotRender") : null;
 }
 
 function renderAssistantAvatarPreview(props: QuickSettingsProps) {
-  const assistantName = normalizeOptionalString(props.assistantName) ?? "Assistant";
+  const assistantName =
+    normalizeOptionalString(props.assistantName) ?? t("quickSettings.labels.assistant");
   const assistantAvatarOverride = normalizeOptionalString(props.assistantAvatarOverride);
   const assistantAvatarUrl = resolveAssistantPreviewAvatarUrl(props);
   if (assistantAvatarUrl) {
@@ -362,13 +367,15 @@ function formatCharBudget(value: number): string {
 }
 
 function formatContextInjectionLabel(mode: ProfileSettings["contextInjection"]): string {
-  return mode === "always" ? "Every turn" : "Skip safe follow-ups";
+  return mode === "always"
+    ? t("quickSettings.profiles.everyTurn")
+    : t("quickSettings.profiles.skipSafeFollowUps");
 }
 
 function describeContextInjection(mode: ProfileSettings["contextInjection"]): string {
   return mode === "always"
-    ? "Reinject workspace bootstrap context on every turn."
-    : "Skip bootstrap reinjection after a completed safe follow-up.";
+    ? t("quickSettings.profiles.everyTurnDesc")
+    : t("quickSettings.profiles.skipFollowUpsDesc");
 }
 
 function renderProfileStat(params: {
@@ -385,7 +392,9 @@ function renderProfileStat(params: {
         <span class="qs-profile-stat__value">${params.value}</span>
       </div>
       <div class="qs-profile-stat__sub">
-        ${changed ? `Was ${params.previousValue}` : "Matches current default"}
+        ${changed
+          ? t("quickSettings.profiles.wasPrevious", { value: params.previousValue })
+          : t("quickSettings.profiles.matchesDefault")}
       </div>
       <div class="qs-profile-stat__note muted">${params.note}</div>
     </div>
@@ -409,17 +418,17 @@ function renderCardHeader(icon: TemplateResult, title: string, action?: Template
 function renderModelCard(props: QuickSettingsProps) {
   return html`
     <div class="qs-card qs-card--model">
-      ${renderCardHeader(icons.brain, "Model & Thinking")}
+      ${renderCardHeader(icons.brain, t("quickSettings.cards.modelThinking"))}
       <div class="qs-card__body">
         <div class="qs-row">
-          <span class="qs-row__label">Model</span>
+          <span class="qs-row__label">${t("quickSettings.labels.model")}</span>
           <button class="qs-row__value qs-row__value--action" @click=${props.onModelChange}>
             <code>${props.currentModel || "default"}</code>
             <span class="qs-row__chevron">${icons.chevronRight}</span>
           </button>
         </div>
         <div class="qs-row">
-          <span class="qs-row__label">Thinking</span>
+          <span class="qs-row__label">${t("quickSettings.labels.thinking")}</span>
           <div class="qs-segmented">
             ${THINKING_LEVELS.map(
               (level) => html`
@@ -436,12 +445,14 @@ function renderModelCard(props: QuickSettingsProps) {
           </div>
         </div>
         <div class="qs-row">
-          <span class="qs-row__label">Fast mode</span>
+          <span class="qs-row__label">${t("quickSettings.labels.fastMode")}</span>
           <label class="qs-toggle">
             <input type="checkbox" .checked=${props.fastMode} @change=${props.onFastModeToggle} />
             <span class="qs-toggle__track"></span>
             <span class="qs-toggle__hint muted"
-              >${props.fastMode ? "On — cheaper, less capable" : "Off"}</span
+              >${props.fastMode
+                ? t("quickSettings.states.fastModeOn")
+                : t("quickSettings.states.off")}</span
             >
           </label>
         </div>
@@ -454,15 +465,17 @@ function renderChannelsCard(props: QuickSettingsProps) {
   const connectedCount = props.channels.filter((c) => c.connected).length;
   const badge =
     connectedCount > 0
-      ? html`<span class="qs-badge qs-badge--ok">${connectedCount} connected</span>`
+      ? html`<span class="qs-badge qs-badge--ok"
+          >${t("quickSettings.states.connectedCount", { count: String(connectedCount) })}</span
+        >`
       : undefined;
 
   return html`
     <div class="qs-card qs-card--channels">
-      ${renderCardHeader(icons.send, "Channels", badge)}
+      ${renderCardHeader(icons.send, t("quickSettings.cards.channels"), badge)}
       <div class="qs-card__body">
         ${props.channels.length === 0
-          ? html`<div class="qs-empty muted">No channels configured</div>`
+          ? html`<div class="qs-empty muted">${t("quickSettings.states.noChannels")}</div>`
           : props.channels.map(
               (ch) => html`
                 <div class="qs-row">
@@ -472,12 +485,14 @@ function renderChannelsCard(props: QuickSettingsProps) {
                   </span>
                   <span class="qs-row__value">
                     ${ch.connected
-                      ? html`<span class="muted">${ch.detail ?? "Connected"}</span>`
+                      ? html`<span class="muted"
+                          >${ch.detail ?? t("quickSettings.states.connected")}</span
+                        >`
                       : html`<button
                           class="qs-link-btn"
                           @click=${() => props.onChannelConfigure?.(ch.id)}
                         >
-                          Connect →
+                          ${t("quickSettings.actions.connect")}
                         </button>`}
                   </span>
                 </div>
@@ -493,25 +508,37 @@ function renderAutomationsCard(props: QuickSettingsProps) {
 
   return html`
     <div class="qs-card qs-card--automations">
-      ${renderCardHeader(icons.zap, "Automations")}
+      ${renderCardHeader(icons.zap, t("quickSettings.cards.automations"))}
       <div class="qs-card__body">
         <div class="qs-row">
           <span class="qs-row__label">
-            ${cronJobCount} scheduled task${cronJobCount !== 1 ? "s" : ""}
+            ${cronJobCount === 1
+              ? t("quickSettings.states.scheduledTasks", { count: String(cronJobCount) })
+              : t("quickSettings.states.scheduledTasksPlural", { count: String(cronJobCount) })}
           </span>
-          <button class="qs-link-btn" @click=${props.onManageCron}>Manage →</button>
+          <button class="qs-link-btn" @click=${props.onManageCron}>
+            ${t("quickSettings.actions.manage")}
+          </button>
         </div>
         <div class="qs-row">
           <span class="qs-row__label">
-            ${skillCount} skill${skillCount !== 1 ? "s" : ""} installed
+            ${skillCount === 1
+              ? t("quickSettings.states.skillsInstalled", { count: String(skillCount) })
+              : t("quickSettings.states.skillsInstalledPlural", { count: String(skillCount) })}
           </span>
-          <button class="qs-link-btn" @click=${props.onBrowseSkills}>Browse →</button>
+          <button class="qs-link-btn" @click=${props.onBrowseSkills}>
+            ${t("quickSettings.actions.browse")}
+          </button>
         </div>
         <div class="qs-row">
           <span class="qs-row__label">
-            ${mcpServerCount} MCP server${mcpServerCount !== 1 ? "s" : ""}
+            ${mcpServerCount === 1
+              ? t("quickSettings.states.mcpServers", { count: String(mcpServerCount) })
+              : t("quickSettings.states.mcpServersPlural", { count: String(mcpServerCount) })}
           </span>
-          <button class="qs-link-btn" @click=${props.onConfigureMcp}>Configure →</button>
+          <button class="qs-link-btn" @click=${props.onConfigureMcp}>
+            ${t("quickSettings.actions.configure")}
+          </button>
         </div>
       </div>
     </div>
@@ -529,12 +556,14 @@ function renderSecurityCard(props: QuickSettingsProps) {
     <div class="qs-card qs-card--security">
       ${renderCardHeader(
         icons.eye,
-        "Security",
-        html`<button class="qs-link-btn" @click=${props.onSecurityConfigure}>Configure →</button>`,
+        t("quickSettings.cards.security"),
+        html`<button class="qs-link-btn" @click=${props.onSecurityConfigure}>
+          ${t("quickSettings.actions.configure")}
+        </button>`,
       )}
       <div class="qs-card__body">
         <div class="qs-row">
-          <span class="qs-row__label">Gateway auth</span>
+          <span class="qs-row__label">${t("quickSettings.labels.gatewayAuth")}</span>
           <span class="qs-row__value">
             <span class="qs-badge ${gatewayAuth !== "none" ? "qs-badge--ok" : "qs-badge--warn"}"
               >${gatewayAuth}</span
@@ -542,7 +571,7 @@ function renderSecurityCard(props: QuickSettingsProps) {
           </span>
         </div>
         <div class="qs-row">
-          <span class="qs-row__label">Exec policy</span>
+          <span class="qs-row__label">${t("quickSettings.labels.execPolicy")}</span>
           <span class="qs-row__value"><span class="qs-badge">${execPolicy}</span></span>
         </div>
         <div class="qs-row">
@@ -555,7 +584,11 @@ function renderSecurityCard(props: QuickSettingsProps) {
                 props.onBrowserEnabledToggle?.((event.currentTarget as HTMLInputElement).checked)}
             />
             <span class="qs-toggle__track"></span>
-            <span class="qs-toggle__hint muted">${browserEnabled ? "Enabled" : "Disabled"}</span>
+            <span class="qs-toggle__hint muted"
+              >${browserEnabled
+                ? t("quickSettings.states.enabled")
+                : t("quickSettings.states.disabled")}</span
+            >
           </label>
         </div>
         <div class="qs-row qs-row--tool-profile">
@@ -577,10 +610,12 @@ function renderSecurityCard(props: QuickSettingsProps) {
           </div>
         </div>
         <div class="qs-row">
-          <span class="qs-row__label">Device auth</span>
+          <span class="qs-row__label">${t("quickSettings.labels.deviceAuth")}</span>
           <span class="qs-row__value">
             <span class="qs-badge ${deviceAuth ? "qs-badge--ok" : "qs-badge--warn"}"
-              >${deviceAuth ? "Enabled" : "Disabled"}</span
+              >${deviceAuth
+                ? t("quickSettings.states.enabled")
+                : t("quickSettings.states.disabled")}</span
             >
           </span>
         </div>
@@ -591,18 +626,18 @@ function renderSecurityCard(props: QuickSettingsProps) {
 
 function renderAppearanceCard(props: QuickSettingsProps) {
   const importedThemeName = props.hasCustomTheme
-    ? (props.customThemeLabel ?? "Imported theme")
-    : "Import";
+    ? (props.customThemeLabel ?? t("appearance.theme.importedTheme"))
+    : t("appearance.theme.import");
   const themeOptions: ThemeOption[] = [
-    ...BUILTIN_THEME_OPTIONS,
+    ...builtinThemeOptions(),
     { id: "custom", label: importedThemeName },
   ];
   return html`
     <div class="qs-card qs-card--appearance">
-      ${renderCardHeader(icons.spark, "Appearance")}
+      ${renderCardHeader(icons.spark, t("quickSettings.cards.appearance"))}
       <div class="qs-card__body">
         <div class="qs-row">
-          <span class="qs-row__label">Theme</span>
+          <span class="qs-row__label">${t("quickSettings.labels.theme")}</span>
           <div class="qs-segmented">
             ${themeOptions.map(
               (opt) => html`
@@ -629,7 +664,7 @@ function renderAppearanceCard(props: QuickSettingsProps) {
           </div>
         </div>
         <div class="qs-row">
-          <span class="qs-row__label">Mode</span>
+          <span class="qs-row__label">${t("quickSettings.labels.mode")}</span>
           <div class="qs-segmented">
             ${(["light", "dark", "system"] as ThemeMode[]).map(
               (mode) => html`
@@ -652,9 +687,9 @@ function renderAppearanceCard(props: QuickSettingsProps) {
           </div>
         </div>
         <div class="qs-row">
-          <span class="qs-row__label">Roundness</span>
+          <span class="qs-row__label">${t("quickSettings.labels.roundness")}</span>
           <div class="qs-segmented">
-            ${BORDER_RADIUS_STOPS.map(
+            ${borderRadiusStops().map(
               (stop) => html`
                 <button
                   class="qs-segmented__btn qs-segmented__btn--compact ${stop.value ===
@@ -670,9 +705,9 @@ function renderAppearanceCard(props: QuickSettingsProps) {
           </div>
         </div>
         <div class="qs-row">
-          <span class="qs-row__label">Text size</span>
+          <span class="qs-row__label">${t("quickSettings.labels.textSize")}</span>
           <div class="qs-segmented">
-            ${TEXT_SCALE_OPTIONS.map(
+            ${TEXT_SCALE_OPTIONS().map(
               (stop) => html`
                 <button
                   class="qs-segmented__btn qs-segmented__btn--compact ${stop.value ===
@@ -699,7 +734,8 @@ function renderPersonalCard(props: QuickSettingsProps) {
     avatar: props.userAvatar ?? null,
   });
   const avatarText = resolveLocalUserAvatarText(identity) ?? "";
-  const assistantName = normalizeOptionalString(props.assistantName) ?? "Assistant";
+  const assistantName =
+    normalizeOptionalString(props.assistantName) ?? t("quickSettings.labels.assistant");
   const assistantAvatarUrl = resolveAssistantPreviewAvatarUrl(props);
   const assistantAvatarRendered = Boolean(
     assistantAvatarUrl ||
@@ -715,35 +751,42 @@ function renderPersonalCard(props: QuickSettingsProps) {
     assistantAvatarRendered,
     Boolean(assistantAvatarOverride),
   );
-  const assistantAvatarSourceLabel = assistantAvatarOverride ? "UI override" : "IDENTITY.md";
+  const assistantAvatarSourceLabel = assistantAvatarOverride
+    ? t("quickSettings.identity.uiOverride")
+    : "IDENTITY.md";
   const canOverrideAssistantAvatar = Boolean(props.onAssistantAvatarOverrideChange);
   const assistantAvatarSubtitle = assistantAvatarOverride
-    ? "Override from settings"
+    ? t("quickSettings.identity.overrideFromSettings")
     : assistantAvatarIssue
-      ? "Fallback avatar"
+      ? t("quickSettings.identity.fallbackAvatar")
       : assistantAvatarRendered
-        ? "From IDENTITY.md"
-        : "Fallback logo";
+        ? t("quickSettings.identity.fromIdentity")
+        : t("quickSettings.identity.fallbackLogo");
   return html`
     <div class="qs-card qs-card--personal">
-      ${renderCardHeader(icons.image, "Personal")}
+      ${renderCardHeader(icons.image, t("quickSettings.cards.personal"))}
       <div class="qs-card__body">
         <div class="qs-identity-grid">
-          <section class="qs-identity-card" aria-label="Your local chat identity">
+          <section
+            class="qs-identity-card"
+            aria-label=${t("quickSettings.identity.localChatIdentity")}
+          >
             ${renderLocalUserAvatarPreview(props.userAvatar)}
             <div class="qs-identity-card__copy">
-              <div class="qs-identity-card__eyebrow">User</div>
-              <div class="qs-identity-card__title">${LOCAL_USER_LABEL}</div>
-              <div class="qs-identity-card__sub">Avatar is browser-local</div>
+              <div class="qs-identity-card__eyebrow">${t("quickSettings.labels.user")}</div>
+              <div class="qs-identity-card__title">${LOCAL_USER_LABEL()}</div>
+              <div class="qs-identity-card__sub">
+                ${t("quickSettings.identity.avatarBrowserLocal")}
+              </div>
               <div class="qs-identity-card__repair">
                 <label class="qs-field">
-                  <span class="qs-row__label">Avatar text / emoji</span>
+                  <span class="qs-row__label">${t("quickSettings.labels.avatarTextEmoji")}</span>
                   <input
                     class="qs-field__input"
                     type="text"
                     maxlength="16"
                     .value=${avatarText}
-                    placeholder="JD or 🦞"
+                    placeholder=${t("quickSettings.identity.avatarPlaceholder")}
                     @input=${(e: Event) => {
                       const value = (e.target as HTMLInputElement).value;
                       props.onUserAvatarChange?.(value.trim() ? value : null);
@@ -752,7 +795,7 @@ function renderPersonalCard(props: QuickSettingsProps) {
                 </label>
                 <div class="qs-identity-card__actions">
                   <label class="btn btn--sm">
-                    Choose image
+                    ${t("quickSettings.actions.chooseImage")}
                     <input
                       type="file"
                       accept="image/*"
@@ -768,20 +811,20 @@ function renderPersonalCard(props: QuickSettingsProps) {
                       props.onUserAvatarChange?.(null);
                     }}
                   >
-                    Clear avatar
+                    ${t("quickSettings.actions.clearAvatar")}
                   </button>
                 </div>
-                <div class="muted">Stored in this browser only.</div>
+                <div class="muted">${t("quickSettings.identity.storedBrowserOnly")}</div>
               </div>
             </div>
           </section>
           <section
             class="qs-identity-card qs-identity-card--assistant"
-            aria-label="Assistant identity"
+            aria-label=${t("quickSettings.identity.assistantIdentity")}
           >
             ${renderAssistantAvatarPreview(props)}
             <div class="qs-identity-card__copy">
-              <div class="qs-identity-card__eyebrow">Assistant</div>
+              <div class="qs-identity-card__eyebrow">${t("quickSettings.labels.assistant")}</div>
               <div class="qs-identity-card__title">${assistantName}</div>
               <div class="qs-identity-card__sub">${assistantAvatarSubtitle}</div>
               ${assistantAvatarSource
@@ -804,10 +847,10 @@ function renderPersonalCard(props: QuickSettingsProps) {
                       <div class="qs-identity-card__actions">
                         <label class="btn btn--sm">
                           ${props.assistantAvatarUploadBusy
-                            ? "Saving..."
+                            ? t("quickSettings.identity.saving")
                             : assistantAvatarOverride
-                              ? "Replace image"
-                              : "Choose image"}
+                              ? t("quickSettings.actions.replaceImage")
+                              : t("quickSettings.actions.chooseImage")}
                           <input
                             type="file"
                             accept="image/*"
@@ -826,14 +869,12 @@ function renderPersonalCard(props: QuickSettingsProps) {
                                   void props.onAssistantAvatarClearOverride?.();
                                 }}
                               >
-                                Clear override
+                                ${t("quickSettings.actions.clearOverride")}
                               </button>
                             `
                           : nothing}
                       </div>
-                      <div class="muted">
-                        Stores a Control UI override. Clear it to return to IDENTITY.md.
-                      </div>
+                      <div class="muted">${t("quickSettings.identity.overrideHint")}</div>
                     </div>
                   `
                 : nothing}
@@ -872,11 +913,12 @@ function renderPresetsCard(props: QuickSettingsProps) {
           <span class="qs-status-dot"></span>
           <div class="qs-profile-state__text">
             <span class="qs-profile-state__title"
-              >${selectedPreset?.label ?? "Custom"} is selected but not saved yet.</span
+              >${t("quickSettings.profiles.selectedNotSaved", {
+                label: selectedPreset?.label ?? t("quickSettings.states.custom"),
+              })}</span
             >
             <span class="qs-profile-state__copy"
-              >Save Profile writes it as the default. Apply Now writes it and reloads the current
-              session.</span
+              >${t("quickSettings.profiles.saveProfileHint")}</span
             >
           </div>
         </div>
@@ -887,10 +929,10 @@ function renderPresetsCard(props: QuickSettingsProps) {
             <span class="qs-status-dot qs-status-dot--ok"></span>
             <div class="qs-profile-state__text">
               <span class="qs-profile-state__title"
-                >${savedPreset.label} is your current default.</span
+                >${t("quickSettings.profiles.currentDefault", { label: savedPreset.label })}</span
               >
               <span class="qs-profile-state__copy"
-                >Profiles only change bootstrap size and follow-up reinjection behavior.</span
+                >${t("quickSettings.profiles.profilesHint")}</span
               >
             </div>
           </div>
@@ -899,41 +941,37 @@ function renderPresetsCard(props: QuickSettingsProps) {
           <div class="qs-profile-state" aria-live="polite">
             <span class="qs-status-dot"></span>
             <div class="qs-profile-state__text">
-              <span class="qs-profile-state__title">Custom bootstrap settings are active.</span>
+              <span class="qs-profile-state__title"
+                >${t("quickSettings.profiles.customActive")}</span
+              >
               <span class="qs-profile-state__copy"
-                >Choose a built-in profile to replace the current custom values.</span
+                >${t("quickSettings.profiles.chooseBuiltIn")}</span
               >
             </div>
           </div>
         `;
-  const panelTitle = selectedPreset?.label ?? "Custom Configuration";
-  const panelDescription =
-    selectedPreset?.detail ?? "This config does not currently match one of the built-in profiles.";
-  const panelImpact =
-    selectedPreset?.impact ??
-    "Pick a profile to stage a focused change to bootstrap size and follow-up behavior.";
+  const panelTitle = selectedPreset?.label ?? t("quickSettings.profiles.customConfiguration");
+  const panelDescription = selectedPreset?.detail ?? t("quickSettings.profiles.noMatchBuiltIn");
+  const panelImpact = selectedPreset?.impact ?? t("quickSettings.profiles.pickProfileImpact");
   const commitCopy = hasPendingProfileChange
-    ? "Save Profile writes this as the default. Apply Now writes it and reloads the current session."
-    : "Other staged config edits are pending. Saving here will commit all staged config changes.";
+    ? t("quickSettings.profiles.saveProfileHint")
+    : t("quickSettings.profiles.commitPendingEdits");
 
   return html`
     <div class="qs-card qs-card--span-all">
       ${renderCardHeader(
         icons.zap,
-        "Context Profile",
+        t("quickSettings.cards.contextProfile"),
         hasPendingProfileChange
-          ? html`<span class="qs-badge qs-badge--warn">Pending</span>`
+          ? html`<span class="qs-badge qs-badge--warn">${t("quickSettings.states.pending")}</span>`
           : savedPreset
-            ? html`<span class="qs-badge qs-badge--ok">Saved</span>`
-            : html`<span class="qs-badge">Custom</span>`,
+            ? html`<span class="qs-badge qs-badge--ok">${t("quickSettings.states.saved")}</span>`
+            : html`<span class="qs-badge">${t("quickSettings.states.custom")}</span>`,
       )}
       <div class="qs-card__body qs-profiles">
         <div class="qs-profiles__copy">
-          <div class="qs-profiles__eyebrow">Bootstrap Context</div>
-          <p class="qs-profiles__intro">
-            Choose how much workspace context IntelliSoins injects into each run. These profiles do
-            not change your model, tools, channels, or theme.
-          </p>
+          <div class="qs-profiles__eyebrow">${t("quickSettings.labels.bootstrapContext")}</div>
+          <p class="qs-profiles__intro">${t("quickSettings.profiles.intro")}</p>
           ${stateBanner}
           <div class="qs-presets-grid">
             ${CONFIG_PRESETS.map((preset) => {
@@ -960,21 +998,27 @@ function renderPresetsCard(props: QuickSettingsProps) {
                     </div>
                     <div class="qs-preset__badges">
                       ${preset.id === savedPresetId
-                        ? html`<span class="qs-badge qs-badge--ok">Current</span>`
+                        ? html`<span class="qs-badge qs-badge--ok"
+                            >${t("quickSettings.states.current")}</span
+                          >`
                         : nothing}
                       ${hasPendingProfileChange && preset.id === selectedPresetId
-                        ? html`<span class="qs-badge qs-badge--warn">Selected</span>`
+                        ? html`<span class="qs-badge qs-badge--warn"
+                            >${t("quickSettings.states.selected")}</span
+                          >`
                         : nothing}
                     </div>
                   </div>
                   <div class="qs-preset__meta">
                     <span
-                      >${formatCharBudget(Number(presetDefaults.bootstrapMaxChars ?? 0))} per
-                      file</span
+                      >${t("quickSettings.profiles.perFile", {
+                        value: formatCharBudget(Number(presetDefaults.bootstrapMaxChars ?? 0)),
+                      })}</span
                     >
                     <span
-                      >${formatCharBudget(Number(presetDefaults.bootstrapTotalMaxChars ?? 0))}
-                      total</span
+                      >${t("quickSettings.profiles.total", {
+                        value: formatCharBudget(Number(presetDefaults.bootstrapTotalMaxChars ?? 0)),
+                      })}</span
                     >
                     <span>${formatContextInjectionLabel(presetContext)}</span>
                   </div>
@@ -986,7 +1030,9 @@ function renderPresetsCard(props: QuickSettingsProps) {
 
         <div class="qs-profile-panel">
           <div class="qs-profile-panel__eyebrow">
-            ${selectedPreset ? "Selected Profile" : "Current Values"}
+            ${selectedPreset
+              ? t("quickSettings.profiles.selectedProfile")
+              : t("quickSettings.profiles.currentValues")}
           </div>
           <h4 class="qs-profile-panel__title">${panelTitle}</h4>
           <p class="qs-profile-panel__copy">${panelDescription}</p>
@@ -994,19 +1040,19 @@ function renderPresetsCard(props: QuickSettingsProps) {
 
           <div class="qs-profile-panel__stats">
             ${renderProfileStat({
-              label: "Bootstrap Per File",
+              label: t("quickSettings.labels.bootstrapPerFile"),
               value: formatCharBudget(draftSettings.bootstrapMaxChars),
               previousValue: formatCharBudget(savedSettings.bootstrapMaxChars),
-              note: "Maximum context injected from any single bootstrap file.",
+              note: t("quickSettings.profiles.perFileNote"),
             })}
             ${renderProfileStat({
-              label: "Bootstrap Total",
+              label: t("quickSettings.labels.bootstrapTotal"),
               value: formatCharBudget(draftSettings.bootstrapTotalMaxChars),
               previousValue: formatCharBudget(savedSettings.bootstrapTotalMaxChars),
-              note: "Total combined context allowed across all bootstrap files.",
+              note: t("quickSettings.profiles.totalNote"),
             })}
             ${renderProfileStat({
-              label: "Follow-up Turns",
+              label: t("quickSettings.labels.followUpTurns"),
               value: formatContextInjectionLabel(draftSettings.contextInjection),
               previousValue: formatContextInjectionLabel(savedSettings.contextInjection),
               note: describeContextInjection(draftSettings.contextInjection),
@@ -1023,7 +1069,7 @@ function renderPresetsCard(props: QuickSettingsProps) {
                       ?disabled=${props.configSaving === true || props.configApplying === true}
                       @click=${props.onResetConfig}
                     >
-                      Discard
+                      ${t("quickSettings.actions.discard")}
                     </button>
                     <button
                       class="btn btn--sm primary"
@@ -1031,17 +1077,19 @@ function renderPresetsCard(props: QuickSettingsProps) {
                       @click=${props.onSaveConfig}
                     >
                       ${props.configSaving === true
-                        ? "Saving…"
+                        ? t("config.saving")
                         : hasPendingProfileChange
-                          ? "Save Profile"
-                          : "Save Changes"}
+                          ? t("quickSettings.actions.saveProfile")
+                          : t("quickSettings.actions.saveChanges")}
                     </button>
                     <button
                       class="btn btn--sm"
                       ?disabled=${!canCommit}
                       @click=${props.onApplyConfig}
                     >
-                      ${props.configApplying === true ? "Applying…" : "Apply Now"}
+                      ${props.configApplying === true
+                        ? t("config.applying")
+                        : t("quickSettings.actions.applyNow")}
                     </button>
                   </div>
                 </div>
