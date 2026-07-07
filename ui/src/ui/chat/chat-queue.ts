@@ -15,13 +15,13 @@ export type ChatQueueProps = {
 function sendStateLabel(item: ChatQueueItem): string | null {
   switch (item.sendState) {
     case "waiting-model":
-      return "Waiting for model";
+      return t("chat.queue.waitingForModel");
     case "sending":
-      return "Sending";
+      return t("chat.queue.sending");
     case "waiting-reconnect":
-      return "Waiting for reconnect";
+      return t("chat.queue.waitingReconnect");
     case "failed":
-      return "Failed";
+      return t("chat.queue.failed");
     default:
       return null;
   }
@@ -43,7 +43,7 @@ export function renderChatQueue(props: ChatQueueProps) {
             >
               <div class="chat-queue__main">
                 ${item.kind === "steered"
-                  ? html`<span class="chat-queue__badge">Steered</span>`
+                  ? html`<span class="chat-queue__badge">${t("chat.queue.steered")}</span>`
                   : nothing}
                 ${stateLabel ? html`<span class="chat-queue__badge">${stateLabel}</span>` : nothing}
                 <div class="chat-queue__text">
@@ -78,19 +78,19 @@ export function renderChatQueue(props: ChatQueueProps) {
                       <button
                         class="btn chat-queue__steer"
                         type="button"
-                        title="Steer now"
-                        aria-label="Steer queued message"
+                        title=${t("chat.queue.steerNow")}
+                        aria-label=${t("chat.queue.steerAria")}
                         @click=${() => props.onQueueSteer?.(item.id)}
                       >
                         ${icons.cornerDownRight}
-                        <span>Steer</span>
+                        <span>${t("chat.queue.steer")}</span>
                       </button>
                     `
                   : nothing}
                 <button
                   class="btn chat-queue__remove"
                   type="button"
-                  aria-label="Remove queued message"
+                  aria-label=${t("chat.queue.removeAria")}
                   @click=${() => props.onQueueRemove(item.id)}
                 >
                   ${icons.x}

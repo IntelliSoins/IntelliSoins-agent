@@ -70,49 +70,39 @@ const FOCUSABLE_SELECTOR = [
 let activeWorkboardDialog: HTMLElement | null = null;
 let workboardReturnFocusTarget: Element | null = null;
 
-const WORKBOARD_TEMPLATES: Array<{
+const WORKBOARD_TEMPLATE_IDS = [
+  "bugfix",
+  "docs",
+  "release",
+  "pr_review",
+  "plugin",
+] as const satisfies readonly WorkboardTemplateId[];
+
+function resolveWorkboardTemplates(): Array<{
   id: WorkboardTemplateId;
   title: string;
   notes: string;
   labels: string;
   priority: WorkboardPriority;
-}> = [
-  {
-    id: "bugfix",
-    title: "Fix: ",
-    notes: "Symptom:\nCause:\nAcceptance:\nProof:",
-    labels: "fix, test",
-    priority: "high",
-  },
-  {
-    id: "docs",
-    title: "Docs: ",
-    notes: "Page:\nChange:\nSource proof:",
-    labels: "docs",
-    priority: "normal",
-  },
-  {
-    id: "release",
-    title: "Release: ",
-    notes: "Scope:\nVerification:\nCloseout:",
-    labels: "release",
-    priority: "urgent",
-  },
-  {
-    id: "pr_review",
-    title: "Review PR ",
-    notes: "Surface:\nRisks:\nProof:",
-    labels: "review",
-    priority: "normal",
-  },
-  {
-    id: "plugin",
-    title: "Plugin: ",
-    notes: "Boundary:\nConfig/docs:\nTests:",
-    labels: "plugin",
-    priority: "normal",
-  },
-];
+}> {
+  return WORKBOARD_TEMPLATE_IDS.map((id) => ({
+    id,
+    title: t(`workboard.templateTitlePrefix.${id}`),
+    notes: t(`workboard.templateNotes.${id}`),
+    labels:
+      id === "bugfix"
+        ? "fix, test"
+        : id === "docs"
+          ? "docs"
+          : id === "release"
+            ? "release"
+            : id === "pr_review"
+              ? "review"
+              : "plugin",
+    priority:
+      id === "bugfix" ? "high" : id === "release" ? "urgent" : ("normal" as WorkboardPriority),
+  }));
+}
 
 function formatStatusLabel(status: WorkboardStatus): string {
   return t(`workboard.status.${status}`);
@@ -716,7 +706,7 @@ function openEditModal(state: WorkboardUiState, card: WorkboardCard) {
 }
 
 function applyTemplate(state: WorkboardUiState, templateId: WorkboardTemplateId) {
-  const template = WORKBOARD_TEMPLATES.find((entry) => entry.id === templateId);
+  const template = resolveWorkboardTemplates().find((entry) => entry.id === templateId);
   if (!template) {
     return;
   }
@@ -799,7 +789,7 @@ function renderCardModal(props: WorkboardProps) {
         ${!editing
           ? html`
               <div class="workboard-template-strip" aria-label=${t("workboard.templatesLabel")}>
-                ${WORKBOARD_TEMPLATES.map(
+                ${resolveWorkboardTemplates().map(
                   (template) => html`
                     <button
                       class="btn btn--xs ${state.draftTemplateId === template.id

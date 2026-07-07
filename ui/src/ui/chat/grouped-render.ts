@@ -2,6 +2,7 @@
 import { html, nothing } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { until } from "lit/directives/until.js";
+import { t } from "../../i18n/index.ts";
 import { getSafeLocalStorage } from "../../local-storage.ts";
 import type { AssistantIdentity } from "../assistant-identity.ts";
 import type { EmbedSandboxMode } from "../embed-sandbox.ts";
@@ -57,8 +58,8 @@ export function formatChatTimestampForDisplay(timestamp: number): ChatTimestampD
   const date = new Date(timestamp);
   if (!Number.isFinite(date.getTime())) {
     return {
-      label: "Unknown date",
-      title: "Unknown date",
+      label: t("chat.messages.unknownDate"),
+      title: t("chat.messages.unknownDate"),
       dateTime: "",
     };
   }
@@ -516,11 +517,15 @@ export function renderMessageGroup(
             >
               <span class="chat-activity-group__icon">${icons.activity}</span>
               <span class="chat-activity-group__label"
-                >Activity: ${toolCount} tool${toolCount === 1 ? "" : "s"}</span
+                >${toolCount === 1
+                  ? t("chat.messages.activityToolsOne", { count: String(toolCount) })
+                  : t("chat.messages.activityToolsMany", { count: String(toolCount) })}</span
               >
               <span class="chat-activity-group__preview">${preview}</span>
               ${hasError
-                ? html`<span class="chat-activity-group__badge">${icons.x}<span>Error</span></span>`
+                ? html`<span class="chat-activity-group__badge"
+                    >${icons.x}<span>${t("common.error")}</span></span
+                  >`
                 : nothing}
               <span
                 class="collapse-chevron ${activityExpanded ? "" : "collapse-chevron--collapsed"}"
@@ -563,7 +568,7 @@ export function renderMessageGroup(
               : nothing}
           </div>
           <div class="chat-group-footer">
-            <span class="chat-sender-name">Activity</span>
+            <span class="chat-sender-name">${t("chat.messages.activity")}</span>
             ${renderChatTimestamp(group.timestamp)}
             ${opts.onDelete ? renderDeleteButton(opts.onDelete, "right") : nothing}
           </div>
@@ -752,9 +757,9 @@ function renderMessageMeta(meta: GroupMeta | null) {
 
   return html`
     <details class="msg-meta">
-      <summary class="msg-meta__summary" title="Show message context details">
+      <summary class="msg-meta__summary" title=${t("chat.messages.showContextDetails")}>
         <span class="msg-meta__summary-icon" aria-hidden="true">${icons.chevronRight}</span>
-        <span>Context</span>
+        <span>${t("chat.messages.context")}</span>
       </summary>
       <span class="msg-meta__details">${parts}</span>
     </details>
@@ -848,8 +853,8 @@ function renderDeleteButton(onDelete: () => void, side: DeleteConfirmSide) {
     <span class="chat-delete-wrap">
       <button
         class="chat-group-delete"
-        title="Delete"
-        aria-label="Delete message"
+        title=${t("chat.messages.deleteTitle")}
+        aria-label=${t("chat.messages.deleteMessageAria")}
         @click=${(e: Event) => {
           if (shouldSkipDeleteConfirm()) {
             onDelete();
@@ -865,14 +870,14 @@ function renderDeleteButton(onDelete: () => void, side: DeleteConfirmSide) {
           const popover = document.createElement("div");
           popover.className = `chat-delete-confirm chat-delete-confirm--${side}`;
           popover.innerHTML = `
-            <p class="chat-delete-confirm__text">Delete this message?</p>
+            <p class="chat-delete-confirm__text">${t("chat.messages.deleteConfirm")}</p>
             <label class="chat-delete-confirm__remember">
               <input type="checkbox" class="chat-delete-confirm__check" />
-              <span>Don't ask again</span>
+              <span>${t("chat.messages.dontAskAgain")}</span>
             </label>
             <div class="chat-delete-confirm__actions">
-              <button class="chat-delete-confirm__cancel" type="button">Cancel</button>
-              <button class="chat-delete-confirm__yes" type="button">Delete</button>
+              <button class="chat-delete-confirm__cancel" type="button">${t("common.cancel")}</button>
+              <button class="chat-delete-confirm__yes" type="button">${t("common.delete")}</button>
             </div>
           `;
           wrap.appendChild(popover);
@@ -1405,7 +1410,10 @@ function renderAssistantAttachments(
             return renderAssistantAttachmentStatusCard({
               kind: "image",
               label: attachment.label,
-              badge: availability.status === "checking" ? "Checking..." : "Unavailable",
+              badge:
+                availability.status === "checking"
+                  ? t("chat.messages.checking")
+                  : t("chat.messages.unavailable"),
               reason: availability.status === "unavailable" ? availability.reason : undefined,
             });
           }
@@ -1426,10 +1434,14 @@ function renderAssistantAttachments(
                 ${!attachmentUrl
                   ? html`<span
                       class="chat-assistant-attachment-badge chat-assistant-attachment-badge--muted"
-                      >${availability.status === "checking" ? "Checking..." : "Unavailable"}</span
+                      >${availability.status === "checking"
+                        ? t("chat.messages.checking")
+                        : t("chat.messages.unavailable")}</span
                     >`
                   : attachment.isVoiceNote
-                    ? html`<span class="chat-assistant-attachment-badge">Voice note</span>`
+                    ? html`<span class="chat-assistant-attachment-badge"
+                        >${t("chat.messages.voiceNote")}</span
+                      >`
                     : nothing}
               </div>
               ${attachmentUrl
@@ -1447,7 +1459,10 @@ function renderAssistantAttachments(
             return renderAssistantAttachmentStatusCard({
               kind: "video",
               label: attachment.label,
-              badge: availability.status === "checking" ? "Checking..." : "Unavailable",
+              badge:
+                availability.status === "checking"
+                  ? t("chat.messages.checking")
+                  : t("chat.messages.unavailable"),
               reason: availability.status === "unavailable" ? availability.reason : undefined,
             });
           }
@@ -1581,8 +1596,8 @@ function renderExpandButton(
     <button
       class="btn btn--xs chat-expand-btn"
       type="button"
-      title="Open in canvas"
-      aria-label="Open in canvas"
+      title=${t("chat.messages.openInCanvas")}
+      aria-label=${t("chat.messages.openInCanvas")}
       @click=${() =>
         onOpenSidebar({
           kind: "markdown",
@@ -1804,8 +1819,8 @@ function renderGroupedMessage(
                 ${toolMessageHasError
                   ? html`<span
                       class="chat-tool-msg-summary__error-badge"
-                      aria-label="Tool returned an error"
-                      >${icons.x}<span>Error</span></span
+                      aria-label=${t("chat.toolCards.toolReturnedError")}
+                      >${icons.x}<span>${t("common.error")}</span></span
                     >`
                   : nothing}
               </button>
@@ -1831,7 +1846,7 @@ function renderGroupedMessage(
                             ?open=${Boolean(opts.autoExpandToolCalls)}
                           >
                             <summary class="chat-json-summary">
-                              <span class="chat-json-badge">JSON</span>
+                              <span class="chat-json-badge">${t("chat.messages.json")}</span>
                               <span class="chat-json-label"
                                 >${jsonSummaryLabel(jsonResult.parsed)}</span
                               >

@@ -368,28 +368,31 @@ export function buildToolCardSidebarContent(card: ToolCard): string {
   const display = resolveToolDisplay({ name: card.name, args: card.args });
   const detail = formatToolDetail(display);
   const isError = isToolCardError(card);
-  const sections = [`## ${display.label}`, `**Tool:** \`${display.name}\``];
+  const sections = [
+    `## ${display.label}`,
+    `**${t("chat.toolCards.toolLabel")}** \`${display.name}\``,
+  ];
 
   if (detail) {
-    sections.push(`**Summary:** ${detail}`);
+    sections.push(`**${t("chat.toolCards.summaryLabel")}** ${detail}`);
   }
 
   if (card.inputText?.trim()) {
     const inputIsJson = typeof card.args === "object" && card.args !== null;
     sections.push(
-      `### Tool input\n${formatPayloadForSidebar(card.inputText, inputIsJson ? "json" : "text")}`,
+      `### ${t("chat.toolCards.toolInputHeading")}\n${formatPayloadForSidebar(card.inputText, inputIsJson ? "json" : "text")}`,
     );
   }
 
   if (card.outputText?.trim()) {
     sections.push(
-      `### ${isError ? "Tool error" : "Tool output"}\n${formatToolOutputForSidebar(card.outputText)}`,
+      `### ${isError ? t("chat.toolCards.toolErrorHeading") : t("chat.toolCards.toolOutputHeading")}\n${formatToolOutputForSidebar(card.outputText)}`,
     );
   } else {
     sections.push(
       isError
-        ? "### Tool error\n*No output — tool failed.*"
-        : "### Tool output\n*No output — tool completed successfully.*",
+        ? `### ${t("chat.toolCards.toolErrorHeading")}\n*${t("chat.toolCards.toolOutputEmptyError")}*`
+        : `### ${t("chat.toolCards.toolOutputHeading")}\n*${t("chat.toolCards.toolOutputEmptySuccess")}*`,
     );
   }
 
@@ -453,7 +456,9 @@ export function renderToolPreview(
   return html`
     <div class="chat-tool-card__preview" data-kind="canvas" data-surface=${surface}>
       <div class="chat-tool-card__preview-header">
-        <span class="chat-tool-card__preview-label">${preview.title?.trim() || "Canvas"}</span>
+        <span class="chat-tool-card__preview-label"
+          >${preview.title?.trim() || t("chat.toolCards.canvas")}</span
+        >
       </div>
       <div class="chat-tool-card__preview-panel" data-side="canvas">
         ${renderPreviewFrame({
@@ -529,12 +534,12 @@ export function renderRawOutputToggle(text: string) {
         aria-expanded="false"
         @click=${handleRawDetailsToggle}
       >
-        <span>Raw details</span>
+        <span>${t("chat.toolCards.rawDetails")}</span>
         <span class="chat-tool-card__raw-toggle-icon">${icons.chevronDown}</span>
       </button>
       <div class="chat-tool-card__raw-body" hidden>
         ${renderToolDataBlock({
-          label: "Tool output",
+          label: t("chat.toolCards.toolOutput"),
           text,
           expanded: true,
         })}
@@ -591,8 +596,10 @@ function renderCollapsedToolSummary(params: {
         ? html`<span class="chat-tool-msg-summary__names">${displayName}</span>`
         : nothing}
       ${isError
-        ? html`<span class="chat-tool-msg-summary__error-badge" aria-label="Tool returned an error"
-            >${icons.x}<span>Error</span></span
+        ? html`<span
+            class="chat-tool-msg-summary__error-badge"
+            aria-label=${t("chat.toolCards.toolReturnedError")}
+            >${icons.x}<span>${t("common.error")}</span></span
           >`
         : nothing}
     </button>
@@ -731,7 +738,7 @@ export function renderExpandedToolCardContent(
           <span>${display.label}</span>
           ${isError
             ? html`<span class="chat-tool-card__status-badge" role="status"
-                >${icons.x}<span>Error</span></span
+                >${icons.x}<span>${t("common.error")}</span></span
               >`
             : nothing}
         </div>
@@ -742,8 +749,8 @@ export function renderExpandedToolCardContent(
                   class="chat-tool-card__action-btn"
                   type="button"
                   @click=${() => onOpenSidebar?.(sidebarActionContent)}
-                  title="Open in the side panel"
-                  aria-label="Open tool details in side panel"
+                  title=${t("chat.toolCards.openInSidePanel")}
+                  aria-label=${t("chat.toolCards.openToolDetailsAria")}
                 >
                   <span class="chat-tool-card__action-icon">${icons.panelRightOpen}</span>
                 </button>
@@ -754,7 +761,7 @@ export function renderExpandedToolCardContent(
       ${detail ? html`<div class="chat-tool-card__detail">${detail}</div>` : nothing}
       ${hasInput
         ? renderToolDataBlock({
-            label: "Tool input",
+            label: t("chat.toolCards.toolInput"),
             text: card.inputText!,
             expanded: true,
           })
@@ -763,7 +770,7 @@ export function renderExpandedToolCardContent(
         ? card.preview
           ? html`${visiblePreview} ${renderRawOutputToggle(card.outputText!)}`
           : renderToolDataBlock({
-              label: isError ? "Tool error" : "Tool output",
+              label: isError ? t("chat.toolCards.toolError") : t("chat.toolCards.toolOutput"),
               text: card.outputText!,
               expanded: true,
             })

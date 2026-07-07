@@ -156,8 +156,12 @@ export function renderOverview(props: OverviewProps) {
         <div class="muted" style="margin-top: 8px">
           ${t("overview.auth.required")}
           <div style="margin-top: 6px">
-            <span class="mono">intellisoins dashboard --no-open</span> → tokenized URL<br />
-            <span class="mono">intellisoins doctor --generate-gateway-token</span> → set token
+            <span class="mono">intellisoins dashboard --no-open</span> ${t(
+              "overview.connection.arrowTokenizedUrl",
+            )}<br />
+            <span class="mono">intellisoins doctor --generate-gateway-token</span> ${t(
+              "overview.connection.arrowSetToken",
+            )}
           </div>
           <div style="margin-top: 6px">
             <a
@@ -242,10 +246,9 @@ export function renderOverview(props: OverviewProps) {
     }
     return html`
       <div class="muted" style="margin-top: 8px">
-        Auth token must be passed as a URL fragment:
-        <span class="mono">#token=&lt;token&gt;</span>. Query parameters (<span class="mono"
-          >?token=</span
-        >) may appear in server logs.
+        ${t("overview.access.queryTokenHintPrefix")}
+        <span class="mono">${t("overview.access.queryTokenFragment")}</span>.
+        ${t("overview.access.queryTokenQueryWarning", { queryPrefix: "?token=" })}
       </div>
     `;
   })();
@@ -272,7 +275,7 @@ export function renderOverview(props: OverviewProps) {
                   token: v.trim() === props.settings.gatewayUrl.trim() ? props.settings.token : "",
                 });
               }}
-              placeholder="ws://100.x.y.z:18789"
+              placeholder=${t("overview.access.wsUrlPlaceholder")}
             />
           </label>
           ${isTrustedProxy
@@ -290,7 +293,7 @@ export function renderOverview(props: OverviewProps) {
                         const v = (e.target as HTMLInputElement).value;
                         props.onSettingsChange({ ...props.settings, token: v });
                       }}
-                      placeholder="OPENCLAW_GATEWAY_TOKEN"
+                      placeholder=${t("overview.access.tokenPlaceholder")}
                     />
                     <button
                       type="button"

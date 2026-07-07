@@ -80,139 +80,6 @@
     },
     {
       "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/chat/build-chat-items.ts",
-      "text": "The compacted transcript is preserved as a checkpoint. Open session checkpoints to branch or restore from that compacted view."
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/chat/build-chat-items.ts",
-      "text": "Compacted history"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/chat/build-chat-items.ts",
-      "text": "Open checkpoints"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/chat/chat-queue.ts",
-      "text": "Remove queued message"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/chat/chat-queue.ts",
-      "text": "Steer queued message"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "title",
-      "path": "ui/src/ui/chat/chat-queue.ts",
-      "text": "Steer now"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/chat/chat-queue.ts",
-      "text": "Steer"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/chat/chat-queue.ts",
-      "text": "Steered"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/chat/context-notice.ts",
-      "text": "Compact recommended session context"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "title",
-      "path": "ui/src/ui/chat/context-notice.ts",
-      "text": "Compact session context"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/chat/grouped-render.ts",
-      "text": "Delete message"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/chat/grouped-render.ts",
-      "text": "Open in canvas"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/chat/grouped-render.ts",
-      "text": "Tool returned an error"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "title",
-      "path": "ui/src/ui/chat/grouped-render.ts",
-      "text": "Delete"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "title",
-      "path": "ui/src/ui/chat/grouped-render.ts",
-      "text": "Open in canvas"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "title",
-      "path": "ui/src/ui/chat/grouped-render.ts",
-      "text": "Show message context details"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/chat/grouped-render.ts",
-      "text": "Activity"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/chat/grouped-render.ts",
-      "text": "Context"
-    },
-    {
-      "count": 2,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/chat/grouped-render.ts",
-      "text": "Error"
-    },
-    {
-      "count": 2,
       "kind": "html-text",
       "name": "text",
       "path": "ui/src/ui/chat/grouped-render.ts",
@@ -220,73 +87,10 @@
     },
     {
       "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/chat/grouped-render.ts",
-      "text": "Voice note"
-    },
-    {
-      "count": 1,
       "kind": "object-property",
       "name": "label",
       "path": "ui/src/ui/chat/grouped-render.ts",
       "text": "Tool output"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/chat/grouped-render.ts",
-      "text": "Unknown date"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "title",
-      "path": "ui/src/ui/chat/grouped-render.ts",
-      "text": "Unknown date"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/chat/session-controls.ts",
-      "text": "Model"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/chat/session-controls.ts",
-      "text": "Reasoning"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/chat/session-controls.ts",
-      "text": "Speed"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/chat/session-controls.ts",
-      "text": "Default"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/chat/session-controls.ts",
-      "text": "Fast"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/chat/session-controls.ts",
-      "text": "Standard"
     },
     {
       "count": 1,
@@ -350,55 +154,6 @@
       "name": "help",
       "path": "ui/src/ui/chat/slash-commands.ts",
       "text": "tools"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/chat/tool-cards.ts",
-      "text": "Open tool details in side panel"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/chat/tool-cards.ts",
-      "text": "Tool returned an error"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "title",
-      "path": "ui/src/ui/chat/tool-cards.ts",
-      "text": "Open in the side panel"
-    },
-    {
-      "count": 2,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/chat/tool-cards.ts",
-      "text": "Error"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/chat/tool-cards.ts",
-      "text": "Raw details"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/chat/tool-cards.ts",
-      "text": "Tool input"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/chat/tool-cards.ts",
-      "text": "Tool output"
     },
     {
       "count": 1,
@@ -899,13 +654,6 @@
     },
     {
       "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/channels.ts",
-      "text": "Refreshing channel status in the background; showing the last successful snapshot."
-    },
-    {
-      "count": 1,
       "kind": "object-property",
       "name": "subtitle",
       "path": "ui/src/ui/views/channels.whatsapp.ts",
@@ -1176,27 +924,6 @@
       "name": "text",
       "path": "ui/src/ui/views/config.ts",
       "text": "Your config contains fields the form editor can't safely represent. Use Raw mode to edit those entries."
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "placeholder",
-      "path": "ui/src/ui/views/cron.ts",
-      "text": "Account ID for multi-account setups"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/cron.ts",
-      "text": "Command"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/cron.ts",
-      "text": "CWD"
     },
     {
       "count": 1,
@@ -2075,69 +1802,6 @@
     },
     {
       "count": 1,
-      "kind": "html-attribute",
-      "name": "placeholder",
-      "path": "ui/src/ui/views/overview.ts",
-      "text": "OPENCLAW_GATEWAY_TOKEN"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "placeholder",
-      "path": "ui/src/ui/views/overview.ts",
-      "text": "ws://100.x.y.z:18789"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/overview.ts",
-      "text": "?token="
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/overview.ts",
-      "text": ". Query parameters ("
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/overview.ts",
-      "text": ") may appear in server logs."
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/overview.ts",
-      "text": "#token=&lt;token&gt;"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/overview.ts",
-      "text": "→ set token"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/overview.ts",
-      "text": "→ tokenized URL"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/overview.ts",
-      "text": "Auth token must be passed as a URL fragment:"
-    },
-    {
-      "count": 1,
       "kind": "html-text",
       "name": "text",
       "path": "ui/src/ui/views/overview.ts",
@@ -2460,41 +2124,6 @@
     },
     {
       "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/skills.ts",
-      "text": "API key"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/skills.ts",
-      "text": "Full security report"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/skills.ts",
-      "text": "Get your key:"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/skills.ts",
-      "text": "Missing requirements"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/skills.ts",
-      "text": "Source:"
-    },
-    {
-      "count": 1,
       "kind": "object-property",
       "name": "label",
       "path": "ui/src/ui/views/usage-query.ts",
@@ -2590,41 +2219,6 @@
       "name": "aria-label",
       "path": "ui/src/ui/views/usage-render-overview.ts",
       "text": "Remove session filter"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "title",
-      "path": "ui/src/ui/views/workboard.ts",
-      "text": "Docs:"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "title",
-      "path": "ui/src/ui/views/workboard.ts",
-      "text": "Fix:"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "title",
-      "path": "ui/src/ui/views/workboard.ts",
-      "text": "Plugin:"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "title",
-      "path": "ui/src/ui/views/workboard.ts",
-      "text": "Release:"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "title",
-      "path": "ui/src/ui/views/workboard.ts",
-      "text": "Review PR"
     }
   ]
 }
