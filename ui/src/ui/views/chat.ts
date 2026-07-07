@@ -317,35 +317,36 @@ function renderRealtimeTalkOptions(props: ChatProps) {
       ? options.vadThreshold
       : "__custom";
   const sensitivityOptions = isCustomSensitivity
-    ? [...TALK_SENSITIVITY_OPTIONS, { label: "Custom", value: "__custom" }]
+    ? [...TALK_SENSITIVITY_OPTIONS, { label: t("chat.talk.custom"), value: "__custom" }]
     : TALK_SENSITIVITY_OPTIONS;
   const sensitivityLabel =
-    sensitivityOptions.find((entry) => entry.value === sensitivityValue)?.label ?? "Custom";
+    sensitivityOptions.find((entry) => entry.value === sensitivityValue)?.label ??
+    t("chat.talk.custom");
   const updateSensitivity = (value: string) => {
     if (value !== "__custom") {
       onChange({ vadThreshold: value });
     }
   };
   return html`
-    <div class="agent-chat__talk-options" aria-label="Talk options">
+    <div class="agent-chat__talk-options" aria-label=${t("chat.talk.options")}>
       <div class="agent-chat__talk-options-primary">
         ${renderNativeTalkSelect({
-          label: "Voice",
+          label: t("chat.talk.voice"),
           value: options.voice,
           options: TALK_VOICE_OPTIONS,
           onSelect: (voice) => onChange({ voice }),
         })}
         <label class="agent-chat__talk-field">
-          <span>Model</span>
+          <span>${t("chat.talk.model")}</span>
           <input
             .value=${options.model}
             @input=${update("model")}
-            placeholder="Auto"
+            placeholder=${t("chat.talk.auto")}
             spellcheck="false"
           />
         </label>
         ${renderNativeTalkSelect({
-          label: "Sensitivity",
+          label: t("chat.talk.sensitivity"),
           value: sensitivityValue,
           options: sensitivityOptions,
           selectedLabel: sensitivityLabel,
@@ -353,28 +354,28 @@ function renderRealtimeTalkOptions(props: ChatProps) {
         })}
       </div>
       <details class="agent-chat__talk-options-advanced">
-        <summary>Advanced</summary>
+        <summary>${t("chat.talk.advanced")}</summary>
         <div class="agent-chat__talk-options-grid">
           ${renderNativeTalkSelect({
-            label: "Provider",
+            label: t("chat.talk.provider"),
             value: options.provider,
             options: TALK_PROVIDER_OPTIONS,
             onSelect: (provider) => onChange({ provider }),
           })}
           ${renderNativeTalkSelect({
-            label: "Transport",
+            label: t("chat.talk.transport"),
             value: options.transport,
             options: TALK_TRANSPORT_OPTIONS,
             onSelect: (transport) => onChange({ transport }),
           })}
           ${renderNativeTalkSelect({
-            label: "Reasoning",
+            label: t("chat.talk.reasoning"),
             value: options.reasoningEffort,
             options: TALK_REASONING_OPTIONS,
             onSelect: (reasoningEffort) => onChange({ reasoningEffort }),
           })}
           <label class="agent-chat__talk-field">
-            <span>Exact VAD</span>
+            <span>${t("chat.talk.exactVad")}</span>
             <input
               type="number"
               min="0"
@@ -962,7 +963,7 @@ function renderAttachmentPreview(props: ChatProps): TemplateResult | typeof noth
             <button
               class="chat-attachment-remove"
               type="button"
-              aria-label="Remove attachment"
+              aria-label=${t("chat.attachments.remove")}
               @click=${() => {
                 const next = (props.attachments ?? []).filter((a) => a.id !== att.id);
                 releaseChatAttachmentPayload(att.id);
@@ -1017,17 +1018,17 @@ function renderWorkspaceFileRail(
   }
   const files = workspaceFiles.list?.files ?? [];
   return html`
-    <aside class="chat-workspace-rail" aria-label="Workspace files">
+    <aside class="chat-workspace-rail" aria-label=${t("chat.workspace.label")}>
       <div class="chat-workspace-rail__header">
         <div class="chat-workspace-rail__title">
           <span class="chat-workspace-rail__eyebrow">Workspace</span>
-          <strong>Files</strong>
+          <strong>${t("chat.talk.files")}</strong>
         </div>
         <button
           class="btn btn--ghost btn--sm chat-workspace-rail__refresh"
           type="button"
-          title="Refresh files"
-          aria-label="Refresh files"
+          title=${t("chat.workspace.refresh")}
+          aria-label=${t("chat.workspace.refresh")}
           ?disabled=${workspaceFiles.loading}
           @click=${workspaceFiles.onRefresh}
         >
@@ -1340,8 +1341,8 @@ function renderSearchBar(requestUpdate: () => void): TemplateResult | typeof not
       ${icons.search}
       <input
         type="text"
-        placeholder="Search messages..."
-        aria-label="Search messages"
+        placeholder=${t("chat.search.placeholder")}
+        aria-label=${t("chat.search.label")}
         .value=${vs.searchQuery}
         @input=${(e: Event) => {
           vs.searchQuery = (e.target as HTMLInputElement).value;
@@ -1350,7 +1351,7 @@ function renderSearchBar(requestUpdate: () => void): TemplateResult | typeof not
       />
       <button
         class="btn btn--ghost"
-        aria-label="Close search"
+        aria-label=${t("chat.search.close")}
         @click=${() => {
           vs.searchOpen = false;
           vs.searchQuery = "";
@@ -1419,7 +1420,7 @@ function renderPinnedSection(
                         pinned.unpin(index);
                         requestUpdate();
                       }}
-                      title="Unpin"
+                      title=${t("chat.pinned.unpin")}
                     >
                       ${icons.x}
                     </button>
@@ -1449,7 +1450,7 @@ function renderSlashMenu(
         id=${SLASH_MENU_LISTBOX_ID}
         class="slash-menu"
         role="listbox"
-        aria-label="Command arguments"
+        aria-label=${t("chat.slashCommands.arguments")}
       >
         <div class="slash-menu-group">
           <div class="slash-menu-group__label">
@@ -1543,7 +1544,12 @@ function renderSlashMenu(
   const hiddenCount = vs.slashMenuExpanded ? 0 : getHiddenCommandCount();
 
   return html`
-    <div id=${SLASH_MENU_LISTBOX_ID} class="slash-menu" role="listbox" aria-label="Slash commands">
+    <div
+      id=${SLASH_MENU_LISTBOX_ID}
+      class="slash-menu"
+      role="listbox"
+      aria-label=${t("chat.slashCommands.label")}
+    >
       ${sections}
       ${hiddenCount > 0
         ? html`<button
@@ -1664,7 +1670,7 @@ export function renderChat(props: ChatProps) {
       <div class="chat-thread-inner">
         ${showLoadingSkeleton
           ? html`
-              <div class="chat-loading-skeleton" aria-label="Loading chat">
+              <div class="chat-loading-skeleton" aria-label=${t("chat.loading.label")}>
                 <div class="chat-line assistant">
                   <div class="chat-msg">
                     <div class="chat-bubble">
@@ -2013,7 +2019,7 @@ export function renderChat(props: ChatProps) {
                       class="callout__dismiss"
                       type="button"
                       @click=${props.onDismissError}
-                      aria-label="Dismiss error"
+                      aria-label=${t("chat.errors.dismiss")}
                       title="Dismiss error"
                     >
                       ${icons.x}
@@ -2029,7 +2035,7 @@ export function renderChat(props: ChatProps) {
               class="chat-focus-exit"
               type="button"
               @click=${props.onToggleFocusMode}
-              aria-label="Exit focus mode"
+              aria-label=${t("chat.focus.exit")}
               title="Exit focus mode"
             >
               ${icons.x}
@@ -2215,7 +2221,7 @@ export function renderChat(props: ChatProps) {
                       : ""}"
                     @click=${props.onToggleRealtimeTalkOptions}
                     title="Talk settings"
-                    aria-label="Talk settings"
+                    aria-label=${t("chat.talk.settings")}
                     aria-expanded=${props.realtimeTalkOptionsOpen ? "true" : "false"}
                     ?disabled=${!props.connected || props.realtimeTalkActive}
                   >

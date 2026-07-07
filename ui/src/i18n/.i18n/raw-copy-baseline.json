@@ -823,174 +823,6 @@
     {
       "count": 1,
       "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Control canvases"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Control web browser"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Create or overwrite files"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Fetch web content"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Gateway control"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Image understanding"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "List agents"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "List sessions"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Make precise edits"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Manage background processes"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Nodes + devices"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Patch files (OpenAI)"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Read file contents"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Read memory files"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Run shell commands"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Schedule tasks"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Search the web"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Semantic search"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Send messages"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Send to session"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Session history"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Session status"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Spawn sub-agent"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Agents"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
       "name": "label",
       "path": "ui/src/ui/views/agents-utils.ts",
       "text": "agents_list"
@@ -1007,13 +839,6 @@
       "kind": "object-property",
       "name": "label",
       "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Automation"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
       "text": "browser"
     },
     {
@@ -1022,13 +847,6 @@
       "name": "label",
       "path": "ui/src/ui/views/agents-utils.ts",
       "text": "canvas"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Coding"
     },
     {
       "count": 1,
@@ -1056,20 +874,6 @@
       "kind": "object-property",
       "name": "label",
       "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Files"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Full"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
       "text": "gateway"
     },
     {
@@ -1078,20 +882,6 @@
       "name": "label",
       "path": "ui/src/ui/views/agents-utils.ts",
       "text": "image"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Media"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Memory"
     },
     {
       "count": 1,
@@ -1115,32 +905,11 @@
       "text": "message"
     },
     {
-      "count": 2,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Messaging"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Minimal"
-    },
-    {
       "count": 1,
       "kind": "object-property",
       "name": "label",
       "path": "ui/src/ui/views/agents-utils.ts",
       "text": "nodes"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Nodes"
     },
     {
       "count": 1,
@@ -1161,21 +930,7 @@
       "kind": "object-property",
       "name": "label",
       "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Runtime"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
       "text": "session_status"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Sessions"
     },
     {
       "count": 1,
@@ -1204,20 +959,6 @@
       "name": "label",
       "path": "ui/src/ui/views/agents-utils.ts",
       "text": "sessions_spawn"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "UI"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/agents-utils.ts",
-      "text": "Web"
     },
     {
       "count": 1,
@@ -1453,104 +1194,6 @@
     {
       "count": 1,
       "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Close search"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Command arguments"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Dismiss error"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Exit focus mode"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Loading chat"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Refresh files"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Remove attachment"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Search messages"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Slash commands"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Talk options"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Talk settings"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Workspace files"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "placeholder",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Auto"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "placeholder",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Search messages..."
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
       "name": "title",
       "path": "ui/src/ui/views/chat.ts",
       "text": "Dismiss error"
@@ -1567,21 +1210,7 @@
       "kind": "html-attribute",
       "name": "title",
       "path": "ui/src/ui/views/chat.ts",
-      "text": "Refresh files"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "title",
-      "path": "ui/src/ui/views/chat.ts",
       "text": "Talk settings"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "title",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Unpin"
     },
     {
       "count": 1,
@@ -1589,13 +1218,6 @@
       "name": "text",
       "path": "ui/src/ui/views/chat.ts",
       "text": "&times;"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Advanced"
     },
     {
       "count": 2,
@@ -1617,20 +1239,6 @@
       "name": "text",
       "path": "ui/src/ui/views/chat.ts",
       "text": "Esc"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Exact VAD"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Files"
     },
     {
       "count": 2,
@@ -1666,13 +1274,6 @@
       "name": "text",
       "path": "ui/src/ui/views/chat.ts",
       "text": "Missing"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Model"
     },
     {
       "count": 2,
@@ -1780,13 +1381,6 @@
       "text": "Coral"
     },
     {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Custom"
-    },
-    {
       "count": 3,
       "kind": "object-property",
       "name": "label",
@@ -1861,21 +1455,7 @@
       "kind": "object-property",
       "name": "label",
       "path": "ui/src/ui/views/chat.ts",
-      "text": "Provider"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/chat.ts",
       "text": "Provider WebSocket"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Reasoning"
     },
     {
       "count": 1,
@@ -1889,13 +1469,6 @@
       "kind": "object-property",
       "name": "label",
       "path": "ui/src/ui/views/chat.ts",
-      "text": "Sensitivity"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/chat.ts",
       "text": "Shimmer"
     },
     {
@@ -1903,21 +1476,7 @@
       "kind": "object-property",
       "name": "label",
       "path": "ui/src/ui/views/chat.ts",
-      "text": "Transport"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/chat.ts",
       "text": "Verse"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/chat.ts",
-      "text": "Voice"
     },
     {
       "count": 1,
@@ -2922,279 +2481,6 @@
     },
     {
       "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Clear search"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Search settings"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Toggle raw config redaction"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "placeholder",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "https://tweakcn.com/editor/theme?theme=... or amethyst-haze"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "placeholder",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Raw config (JSON/JSON5)"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "placeholder",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Search settings..."
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Adjust corner radius across the UI."
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Assistant"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Browser support"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Changes detected (JSON diff not available)"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Choose a theme family."
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Clear"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Click"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Connection"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Don't remind again"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Form"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Gateway"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Import"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Import from tweakcn"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Loaded"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Loading schema…"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "No changes"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Not available in this browser."
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Notifications are blocked. Update your browser site permissions to allow notifications."
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Open tweakcn.com, choose or create a theme, click Share, then paste the copied theme link here. Share links, editor URLs, registry URLs, theme IDs, and default theme names like amethyst-haze are accepted."
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Peek"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Permission"
-    },
-    {
-      "count": 2,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Push notifications"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Quick Settings"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Raw"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Raw mode disabled (snapshot cannot safely round-trip raw text)."
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Receive browser push notifications from your gateway."
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Roundness"
-    },
-    {
-      "count": 2,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Status"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Text size"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Theme"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Theme link or ID"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "to add one browser-local tweakcn theme. In tweakcn, use Share and paste the copied link here."
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Unavailable"
-    },
-    {
-      "count": 1,
       "kind": "html-text",
       "name": "text",
       "path": "ui/src/ui/views/config.ts",
@@ -3206,34 +2492,6 @@
       "name": "text",
       "path": "ui/src/ui/views/config.ts",
       "text": "Your config contains fields the form editor can't safely represent. Use Raw mode to edit those entries."
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Your configuration is invalid. Some settings may not work as expected."
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Black & red"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Chocolate blueprint"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "description",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Chroma family"
     },
     {
       "count": 1,
@@ -3324,13 +2582,6 @@
       "kind": "object-property",
       "name": "label",
       "path": "ui/src/ui/views/config.ts",
-      "text": "Claw"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/config.ts",
       "text": "Cli"
     },
     {
@@ -3360,13 +2611,6 @@
       "name": "label",
       "path": "ui/src/ui/views/config.ts",
       "text": "Cron"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Dash"
     },
     {
       "count": 1,
@@ -3409,13 +2653,6 @@
       "name": "label",
       "path": "ui/src/ui/views/config.ts",
       "text": "Infrastructure"
-    },
-    {
-      "count": 1,
-      "kind": "object-property",
-      "name": "label",
-      "path": "ui/src/ui/views/config.ts",
-      "text": "Knot"
     },
     {
       "count": 1,
