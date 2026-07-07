@@ -1,5 +1,5 @@
 // Parameterized OpenProse PostgreSQL state operations for prose-pg CLI batching.
-import type { Sql } from "postgres";
+import type { JSONValue, Sql } from "postgres";
 
 export type BindingKind = "input" | "output" | "let" | "const";
 
@@ -31,7 +31,7 @@ export type ExecutionUpsertInput = {
   status: ExecutionStatus;
   parentId?: number | null;
   errorMessage?: string | null;
-  metadata?: Record<string, unknown>;
+  metadata?: JSONValue;
 };
 
 export type RunRegisterInput = {

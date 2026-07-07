@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import postgres from "postgres";
 import { describe, expect, it } from "vitest";
 import { resolveOpenProsePostgresUrl } from "./connection.js";
-import { checkConnection, initSchema, registerRun, runBatch } from "./ops.js";
+import { checkConnection, initSchema, runBatch } from "./ops.js";
 
 const integrationUrl = resolveOpenProsePostgresUrl(process.env);
 const describeIntegration = integrationUrl ? describe : describe.skip;
