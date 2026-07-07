@@ -155,7 +155,9 @@ User-level persistent agents live at:
     Requires the `sqlite3` binary on `PATH`.
   </Accordion>
   <Accordion title="postgres (experimental)">
-    Requires `psql` and a connection string.
+    Prefer the bundled `prose-pg` CLI from the OpenProse plugin for pooled
+    connections and transactional batch writes. Requires a connection string and
+  a running PostgreSQL server. `psql` remains a documented fallback.
 
     <Warning>
       Postgres credentials flow into sub-agent logs. Use a dedicated,

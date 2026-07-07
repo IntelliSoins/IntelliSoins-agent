@@ -189,6 +189,12 @@ OpenProse supports three state management approaches:
 2. **If connection string exists, verify connectivity:**
 
    ```bash
+   pnpm --dir extensions/open-prose exec prose-pg check
+   ```
+
+   Fallback when `prose-pg` is unavailable:
+
+   ```bash
    psql "$OPENPROSE_POSTGRES_URL" -c "SELECT 1" 2>&1
    ```
 
@@ -212,7 +218,9 @@ OpenProse supports three state management approaches:
 
 4. **Only after successful connection check, load `state/postgres.md`**
 
-This mode requires both `psql` CLI and a running PostgreSQL server. If either is unavailable, warn and offer fallback to filesystem state.
+This mode requires a running PostgreSQL server and the bundled `prose-pg` CLI
+(preferred) or `psql` as a fallback. If connectivity checks fail, warn and
+offer fallback to filesystem state.
 
 **Context warning:** `compiler.md` is large. Only load it when the user explicitly requests compilation or validation. After compiling, recommend `/compact` or a new session before running—don't keep both docs in context.
 
