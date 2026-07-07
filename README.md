@@ -1,3 +1,7 @@
+# IntelliSoins Agent
+
+> **IntelliSoins Agent** — assistant IA pour pharmaciens d'officine. Fork de [OpenClaw](https://github.com/openclaw/openclaw), non affilié à [openclaw.ai](https://openclaw.ai). Interface en français, mode officine par défaut.
+
 # 🦞 OpenClaw — Personal AI Assistant
 
 <p align="center">
