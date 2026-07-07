@@ -275,3 +275,13 @@ Skills own workflows; root owns hard policy and routing.
 - Local-only `.agents` ignores: `.git/info/exclude`, not repo `.gitignore`.
 - Provider tool schemas: prefer flat string enum helpers over `Type.Union([Type.Literal(...)])`; some providers reject `anyOf`.
 - External messaging: no token-delta channel messages. Follow `docs/concepts/streaming.md`.
+
+## Cursor Cloud specific instructions
+
+- Runtime: `/exec-daemon/node` (first in PATH) is Node 22.14, below the `>=22.19.0` the `openclaw.mjs` launcher enforces. A one-time `~/.bashrc` edit (marker `OPENCLAW_NODE24_PATH`) prepends the nvm default (Node 24) so login shells get a compliant node; `pnpm` comes from Corepack (`pnpm@11.2.2`). Update script only runs `pnpm install`; env prep is not re-done per run.
+- Standard commands are unchanged: install/build/test/lint/run per `## Commands` and README "From source". No external services or DB needed (state is embedded SQLite under `~/.openclaw`).
+- First-run local state: `pnpm openclaw setup` writes `~/.openclaw/openclaw.json` + workspace + sessions (safe to re-run). This is not in the repo.
+- No LLM keys required to exercise the agent: use the bundled QA mock. One-shot turn: `pnpm openclaw qa manual --provider-mode aimock --message "hi"` (replies `AIMOCK_QA_OK`). For the real Gateway, run `pnpm openclaw qa aimock --port 45080` and point `~/.openclaw/openclaw.json` at model `aimock/gpt-5.5` (provider `aimock`: `api: openai-responses`, `baseUrl http://127.0.0.1:45080/v1`, `apiKey "test"`, `request.allowPrivateNetwork: true`). Model config shape lives in `extensions/qa-lab/src/providers/shared/mock-model-config.ts`.
+- Gateway in a container refuses `bind=auto` without auth. Start on loopback with a token: `OPENCLAW_GATEWAY_TOKEN=<t> pnpm openclaw gateway --port 18789 --bind loopback --auth token --token <t> --verbose`. CLI clients (`openclaw agent`, `openclaw status`) must have `OPENCLAW_GATEWAY_TOKEN` set to reach it. Dashboard/Control UI at `http://127.0.0.1:18789/` (prompts for the token). `openclaw agent` needs a target, e.g. `--agent main`.
+- The Control UI here is a French-branded fork ("IntelliSoins/IntelliCare") that renders sessions as a summary list; assistant replies can surface as a sidebar conversation entry rather than an inline bubble.
+- Lint (`pnpm lint`) currently reports pre-existing errors in `ui/src/ui/{navigation,app-settings,app-render}.ts` (fork code); the tooling itself works.
