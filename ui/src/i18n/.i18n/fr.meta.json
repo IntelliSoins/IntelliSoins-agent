@@ -1036,12 +1036,12 @@
     "workboard.unknownStatus",
     "workboard.viewDetails"
   ],
-  "generatedAt": "2026-07-07T15:50:47.998Z",
+  "generatedAt": "2026-07-07T15:59:29.609Z",
   "locale": "fr",
   "model": "claude-opus-4-8",
   "provider": "anthropic",
-  "sourceHash": "6288c081301e02a889d3cc3bc7b481c0d9551ec7b94661386afe409a76b413f8",
-  "totalKeys": 1370,
-  "translatedKeys": 335,
+  "sourceHash": "eb2721ff07ebf57f939d56db34905420ad54a3d5654d0160d134245a67c7bf36",
+  "totalKeys": 1386,
+  "translatedKeys": 351,
   "workflow": 1
 }

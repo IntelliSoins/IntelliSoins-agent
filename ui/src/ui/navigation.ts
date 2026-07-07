@@ -55,6 +55,63 @@ export const SETTINGS_TABS = [
   "logs",
 ] as const satisfies readonly Tab[];
 
+export type InterfaceProfile = "pharmacy" | "admin";
+
+export const INTERFACE_PROFILES = [
+  "pharmacy",
+  "admin",
+] as const satisfies readonly InterfaceProfile[];
+
+const PHARMACY_SIDEBAR_TABS = new Set<Tab>([
+  "chat",
+  "overview",
+  "workboard",
+  "cron",
+  "rag",
+  "skills",
+  "config",
+]);
+
+const PHARMACY_SETTINGS_TABS = new Set<Tab>(["appearance", "communications", "channels"]);
+
+export function normalizeInterfaceProfile(value: unknown): InterfaceProfile {
+  return value === "admin" ? "admin" : "pharmacy";
+}
+
+export function isTabVisibleForProfile(tab: Tab, profile: InterfaceProfile): boolean {
+  if (profile === "admin") {
+    return true;
+  }
+  if (isSettingsTab(tab)) {
+    return PHARMACY_SETTINGS_TABS.has(tab);
+  }
+  return PHARMACY_SIDEBAR_TABS.has(tab);
+}
+
+export function resolveTabForProfile(tab: Tab, profile: InterfaceProfile): Tab {
+  if (isTabVisibleForProfile(tab, profile)) {
+    return tab;
+  }
+  if (isSettingsTab(tab)) {
+    return "appearance";
+  }
+  return "overview";
+}
+
+export function tabGroupsForProfile(profile: InterfaceProfile) {
+  return TAB_GROUPS.map((group) => ({
+    ...group,
+    tabs: group.tabs.filter((tab) => isTabVisibleForProfile(tab as Tab, profile)),
+  })).filter((group) => group.tabs.length > 0);
+}
+
+export function settingsTabsForProfile(profile: InterfaceProfile): Tab[] {
+  if (profile === "admin") {
+    return [...SETTINGS_TABS];
+  }
+  return SETTINGS_TABS.filter((tab) => PHARMACY_SETTINGS_TABS.has(tab));
+}
+
 const TAB_PATHS: Record<Tab, string> = {
   agents: "/agents",
   activity: "/activity",

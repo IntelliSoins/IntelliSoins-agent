@@ -395,6 +395,20 @@ export const fr: TranslationMap = {
       plugin: "Plugin",
     },
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins",
+  },
+  appearance: {
+    interfaceProfile: {
+      pharmacy: "Mode officine",
+      admin: "Mode avancé",
+      switchToPharmacy: "Passer en mode officine",
+      switchToAdmin: "Afficher les sections avancées",
+      heading: "Mode d’interface",
+      hint: "Le mode officine masque les sections techniques avancées.",
+    },
+  },
   agentTools: {
     connectedSource: "Connecté : {id}",
     connected: "Connecté",
@@ -507,6 +521,13 @@ export const fr: TranslationMap = {
       useCurrentChatAria: "Utilisez le chat actuel pour les demandes de révision",
       useCurrentChatTooltip:
         "Envoyer des demandes de révision à la session de discussion en cours au lieu de la session d'atelier de la proposition.",
+    },
+    mode: {
+      workshopView: "Vue atelier",
+      boardView: "Vue tableau",
+      todayView: "Vue du jour",
+      board: "Tableau",
+      today: "Aujourd’hui",
     },
   },
   activity: {
@@ -1334,7 +1355,12 @@ export const fr: TranslationMap = {
     },
   },
   chat: {
-    disconnected: "Déconnecté du Gateway.",
+    disconnected: "Déconnecté du Connecteur IntelliSoins.",
+    realtimeTalk: {
+      asking: "IntelliSoins réfléchit…",
+      connecting: "Connexion vocale…",
+      live: "Voix active",
+    },
     refreshTitle: "Actualiser les données du chat",
     settings: "Paramètres de chat",
     thinkingToggle: "Afficher/masquer la sortie de réflexion/travail de l’assistant",
@@ -1347,7 +1373,7 @@ export const fr: TranslationMap = {
     showCronSessions: "Afficher les sessions cron",
     showCronSessionsHidden: "Afficher les sessions cron ({count} masquées)",
     onboardingDisabled: "Désactivé pendant la configuration",
-    gatewayStatus: "État du Gateway : {status}",
+    gatewayStatus: "État du connecteur : {status}",
     commandPaletteTitle: "Rechercher ou accéder à… (⌘K)",
     openCommandPalette: "Ouvrir la palette de commandes",
     docsOpensInNewTab: "{label} (s’ouvre dans un nouvel onglet)",

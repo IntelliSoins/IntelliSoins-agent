@@ -2129,10 +2129,10 @@ export function renderChat(props: ChatProps) {
                   ? props.realtimeTalkTranscript
                   : null) ??
                 (props.realtimeTalkStatus === "thinking"
-                  ? "Asking OpenIntellisoins..."
+                  ? t("chat.realtimeTalk.asking")
                   : props.realtimeTalkStatus === "connecting"
-                    ? "Connecting Talk..."
-                    : "Talk live")}
+                    ? t("chat.realtimeTalk.connecting")
+                    : t("chat.realtimeTalk.live"))}
               </div>
             `
           : nothing}

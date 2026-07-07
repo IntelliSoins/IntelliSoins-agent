@@ -3,52 +3,10 @@
   "entries": [
     {
       "count": 1,
-      "kind": "html-attribute",
-      "name": "aria-label",
-      "path": "ui/src/ui/app-render.ts",
-      "text": "Workshop view"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "title",
-      "path": "ui/src/ui/app-render.ts",
-      "text": "Board view"
-    },
-    {
-      "count": 1,
-      "kind": "html-attribute",
-      "name": "title",
-      "path": "ui/src/ui/app-render.ts",
-      "text": "Today view"
-    },
-    {
-      "count": 1,
       "kind": "html-text",
       "name": "text",
       "path": "ui/src/ui/app-render.ts",
       "text": "⌘K"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/app-render.ts",
-      "text": "Board"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/app-render.ts",
-      "text": "OpenIntellisoins"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/app-render.ts",
-      "text": "Today"
     },
     {
       "count": 1,
@@ -4046,13 +4004,6 @@
       "name": "placeholder",
       "path": "ui/src/ui/views/login-gate.ts",
       "text": "ws://127.0.0.1:18789"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/login-gate.ts",
-      "text": "OpenIntellisoins"
     },
     {
       "count": 1,

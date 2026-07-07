@@ -389,6 +389,20 @@ export const en: TranslationMap = {
       plugin: "Plugin",
     },
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins",
+  },
+  appearance: {
+    interfaceProfile: {
+      pharmacy: "Pharmacy mode",
+      admin: "Advanced mode",
+      switchToPharmacy: "Switch to pharmacy mode",
+      switchToAdmin: "Show advanced sections",
+      heading: "Interface mode",
+      hint: "Pharmacy mode hides advanced technical sections.",
+    },
+  },
   agentTools: {
     connectedSource: "Connected: {id}",
     connected: "Connected",
@@ -501,6 +515,13 @@ export const en: TranslationMap = {
       useCurrentChatAria: "Use current chat for revision requests",
       useCurrentChatTooltip:
         "Send revision requests to the current chat session instead of the proposal's workshop session.",
+    },
+    mode: {
+      workshopView: "Workshop view",
+      boardView: "Board view",
+      todayView: "Today view",
+      board: "Board",
+      today: "Today",
     },
   },
   activity: {
@@ -1311,7 +1332,12 @@ export const en: TranslationMap = {
     },
   },
   chat: {
-    disconnected: "Disconnected from gateway.",
+    disconnected: "Disconnected from IntelliSoins Connector.",
+    realtimeTalk: {
+      asking: "Asking IntelliSoins...",
+      connecting: "Connecting voice...",
+      live: "Voice active",
+    },
     refreshTitle: "Refresh chat data",
     settings: "Chat settings",
     thinkingToggle: "Toggle assistant thinking/working output",
@@ -1324,7 +1350,7 @@ export const en: TranslationMap = {
     showCronSessions: "Show cron sessions",
     showCronSessionsHidden: "Show cron sessions ({count} hidden)",
     onboardingDisabled: "Disabled during setup",
-    gatewayStatus: "Gateway status: {status}",
+    gatewayStatus: "Connector status: {status}",
     commandPaletteTitle: "Search or jump to… (⌘K)",
     openCommandPalette: "Open command palette",
     docsOpensInNewTab: "{label} (opens in new tab)",
