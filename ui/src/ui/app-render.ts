@@ -2305,11 +2305,12 @@ export function renderApp(state: AppViewState) {
                       <img
                         class="sidebar-brand__logo"
                         src="${agentLogoUrl(basePath)}"
-                        alt="OpenIntellisoins"
+                        alt=${t("brand.productTitle")}
                       />
                       <span class="sidebar-brand__copy">
-                        <span class="sidebar-brand__eyebrow">${t("nav.control")}</span>
-                        <span class="sidebar-brand__title">OpenIntellisoins</span>
+                        <span class="sidebar-brand__eyebrow">${t("brand.productEyebrow")}</span>
+                        <span class="sidebar-brand__title">${t("brand.productTitle")}</span>
+                        <span class="sidebar-brand__tagline">${t("brand.productTagline")}</span>
                       </span>
                     `}
               </div>

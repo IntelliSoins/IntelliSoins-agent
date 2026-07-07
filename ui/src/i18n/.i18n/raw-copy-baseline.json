@@ -41,13 +41,6 @@
       "kind": "html-text",
       "name": "text",
       "path": "ui/src/ui/app-render.ts",
-      "text": "OpenIntellisoins"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/app-render.ts",
       "text": "Today"
     },
     {
@@ -4046,13 +4039,6 @@
       "name": "placeholder",
       "path": "ui/src/ui/views/login-gate.ts",
       "text": "ws://127.0.0.1:18789"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/login-gate.ts",
-      "text": "OpenIntellisoins"
     },
     {
       "count": 1,

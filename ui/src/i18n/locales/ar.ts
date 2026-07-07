@@ -397,6 +397,11 @@ export const ar: TranslationMap = {
     channel: "القناة",
     builtIn: "مدمج",
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
+  },
   nav: {
     chat: "الدردشة",
     control: "التحكم",

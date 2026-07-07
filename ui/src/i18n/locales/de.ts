@@ -401,6 +401,11 @@ export const de: TranslationMap = {
     channel: "Kanal",
     builtIn: "Integriert",
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
+  },
   nav: {
     chat: "Chat",
     control: "Steuerung",

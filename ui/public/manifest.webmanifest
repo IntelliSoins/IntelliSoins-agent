@@ -1,11 +1,12 @@
 {
-  "name": "IntelliSoins Control",
+  "name": "IntelliSoins Agent",
   "short_name": "IntelliSoins",
-  "description": "Multi-channel AI gateway control panel",
+  "description": "Interface de contrôle pour l'assistant IA officinal IntelliSoins",
+  "lang": "fr",
   "start_url": "./",
   "display": "standalone",
-  "theme_color": "#0a0a0a",
-  "background_color": "#0a0a0a",
+  "theme_color": "#151b21",
+  "background_color": "#101418",
   "icons": [
     {
       "src": "./favicon.svg",

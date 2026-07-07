@@ -1,22 +1,32 @@
-<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IntelliSoins">
   <defs>
-    <linearGradient id="lobster-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff4d4d"/>
-      <stop offset="100%" stop-color="#991b1b"/>
+    <linearGradient id="is-bg" x1="16" y1="12" x2="104" y2="108" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1B2730"/>
+      <stop offset="1" stop-color="#101820"/>
+    </linearGradient>
+    <linearGradient id="is-accent" x1="34" y1="28" x2="86" y2="92" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9BE4FF"/>
+      <stop offset="1" stop-color="#3BA8D9"/>
+    </linearGradient>
+    <linearGradient id="is-cross" x1="44" y1="38" x2="76" y2="82" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7FD8B8"/>
+      <stop offset="1" stop-color="#2FA67A"/>
     </linearGradient>
   </defs>
-  <!-- Body -->
-  <path d="M60 10 C30 10 15 35 15 55 C15 75 30 95 45 100 L45 110 L55 110 L55 100 C55 100 60 102 65 100 L65 110 L75 110 L75 100 C90 95 105 75 105 55 C105 35 90 10 60 10Z" fill="url(#lobster-gradient)"/>
-  <!-- Left Claw -->
-  <path d="M20 45 C5 40 0 50 5 60 C10 70 20 65 25 55 C28 48 25 45 20 45Z" fill="url(#lobster-gradient)"/>
-  <!-- Right Claw -->
-  <path d="M100 45 C115 40 120 50 115 60 C110 70 100 65 95 55 C92 48 95 45 100 45Z" fill="url(#lobster-gradient)"/>
-  <!-- Antenna -->
-  <path d="M45 15 Q35 5 30 8" stroke="#ff4d4d" stroke-width="3" stroke-linecap="round"/>
-  <path d="M75 15 Q85 5 90 8" stroke="#ff4d4d" stroke-width="3" stroke-linecap="round"/>
-  <!-- Eyes -->
-  <circle cx="45" cy="35" r="6" fill="#050810"/>
-  <circle cx="75" cy="35" r="6" fill="#050810"/>
-  <circle cx="46" cy="34" r="2.5" fill="#00e5cc"/>
-  <circle cx="76" cy="34" r="2.5" fill="#00e5cc"/>
+  <rect x="8" y="8" width="104" height="104" rx="28" fill="url(#is-bg)"/>
+  <rect x="8.5" y="8.5" width="103" height="103" rx="27.5" stroke="#66C2FF" stroke-opacity="0.35"/>
+  <path
+    d="M60 30c-14.5 0-26 11.5-26 26s11.5 26 26 26 26-11.5 26-26-11.5-26-26-26Z"
+    fill="url(#is-accent)"
+    fill-opacity="0.18"
+  />
+  <rect x="54" y="38" width="12" height="44" rx="4" fill="url(#is-cross)"/>
+  <rect x="38" y="54" width="44" height="12" rx="4" fill="url(#is-cross)"/>
+  <path
+    d="M38 86h44"
+    stroke="#8BD3FF"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-opacity="0.85"
+  />
 </svg>

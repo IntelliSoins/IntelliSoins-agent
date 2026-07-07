@@ -401,6 +401,11 @@ export const ja_JP: TranslationMap = {
     channel: "チャンネル",
     builtIn: "組み込み",
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
+  },
   nav: {
     chat: "チャット",
     control: "コントロール",

@@ -398,6 +398,11 @@ export const vi: TranslationMap = {
     channel: "Kênh",
     builtIn: "Tích hợp sẵn",
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
+  },
   nav: {
     chat: "Trò chuyện",
     control: "Điều khiển",

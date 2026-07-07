@@ -1,5 +1,8 @@
 {
   "fallbackKeys": [
+    "brand.productEyebrow",
+    "brand.productTagline",
+    "brand.productTitle",
     "rag.jobs.chunks",
     "rag.jobs.empty",
     "rag.jobs.failed",
@@ -69,12 +72,12 @@
     "workboard.unknownStatus",
     "workboard.viewDetails"
   ],
-  "generatedAt": "2026-06-10T00:53:02.793Z",
+  "generatedAt": "2026-07-07T20:53:21.696Z",
   "locale": "es",
   "model": "claude-opus-4-8",
   "provider": "anthropic",
-  "sourceHash": "b920ce9cd2614a65f7d9d5b48b6550a14736b2068a8644ff15d65083aaabb405",
-  "totalKeys": 1370,
+  "sourceHash": "367f33da1c8ad2e85074396a93ca3b5a6432004bc46b6ff220bc0c8ca48aff04",
+  "totalKeys": 1373,
   "translatedKeys": 1302,
   "workflow": 1
 }

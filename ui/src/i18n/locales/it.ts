@@ -400,6 +400,11 @@ export const it: TranslationMap = {
     channel: "Canale",
     builtIn: "Integrato",
   },
+  brand: {
+    productEyebrow: "IntelliSoins",
+    productTitle: "IntelliSoins Agent",
+    productTagline: "Pharmacy assistant",
+  },
   nav: {
     chat: "Chat",
     control: "Controllo",
