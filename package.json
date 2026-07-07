@@ -1,17 +1,17 @@
 {
   "name": "openclaw",
   "version": "2026.6.2",
-  "description": "Passerelle IA multi-canal pour professionnels de la santé",
-  "keywords": [],
-  "homepage": "https://github.com/openclaw/openclaw#readme",
+  "description": "Assistant IA pour pharmaciens d'officine — interface IntelliSoins en français, basé sur OpenClaw.",
+  "keywords": ["intellisoins", "pharmacy", "healthcare", "ai-assistant"],
+  "homepage": "https://github.com/IntelliSoins/IntelliSoins-agent#readme",
   "bugs": {
-    "url": "https://github.com/openclaw/openclaw/issues"
+    "url": "https://github.com/IntelliSoins/IntelliSoins-agent/issues"
   },
   "license": "MIT",
   "author": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openclaw/openclaw.git"
+    "url": "git+https://github.com/IntelliSoins/IntelliSoins-agent.git"
   },
   "bin": {
     "openclaw": "openclaw.mjs"
