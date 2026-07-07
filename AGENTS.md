@@ -275,3 +275,11 @@ Skills own workflows; root owns hard policy and routing.
 - Local-only `.agents` ignores: `.git/info/exclude`, not repo `.gitignore`.
 - Provider tool schemas: prefer flat string enum helpers over `Type.Union([Type.Literal(...)])`; some providers reject `anyOf`.
 - External messaging: no token-delta channel messages. Follow `docs/concepts/streaming.md`.
+
+## Cursor Cloud specific instructions
+
+- Toolchain: Node 24 (via `nvm`) + pnpm 11.2.2 (via Corepack) are the active dev toolchain. Login shells auto-select Node 24; if a non-login/non-interactive shell resolves the daemon's `/exec-daemon/node` (v22.14, below the `>=22.19` engine floor), run `nvm use 24` first. Startup runs `pnpm install` under Node 24. Install with the same Node major you run, since some deps ship native/N-API binaries.
+- Standard build/lint/test/run commands are already documented — see `README.md` "From source (development)", root `package.json` scripts, and root `AGENTS.md` "Commands"/"Tests". No extra install steps are needed beyond the startup `pnpm install`.
+- First run needs local state: `pnpm openclaw setup` writes `~/.openclaw/openclaw.json` + workspace and compiles `dist/` (safe to re-run).
+- Gateway is the core service. Run it with plain `node scripts/run-node.mjs gateway` (or `pnpm gateway:dev`). Do NOT add `--dev`/`--profile dev` when you want it to honor a hand-written `gateway.port`: the dev profile overrides the port (e.g. binds 19001) and uses its own profile config, which silently defeats a custom port. Config must include `gateway.mode: "local"` and `gateway.auth`, or startup is blocked as "missing gateway.mode".
+- Keyless end-to-end (no provider API keys): point `models.providers.openai.baseUrl` at a local OpenAI-compatible mock (Responses API: `POST /v1/responses` SSE; see the pattern in `scripts/e2e/lib/mock-openai-http.mjs` and `scripts/e2e/lib/openai-web-search-minimal/mock-server.mjs`), set a dummy `OPENAI_API_KEY`, then drive a turn with `openclaw agent --agent main --session-key agent:main:<name> --message "…"`. The `openclaw agent` CLI reads the gateway URL/token from the active config, so it must match the running gateway's port/token.
