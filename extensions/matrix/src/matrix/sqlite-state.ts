@@ -1,5 +1,6 @@
 // Matrix plugin module implements sqlite state behavior.
 import os from "node:os";
+import { resolveScopedStateEnv } from "openclaw/plugin-sdk/scoped-state-env";
 import { getMatrixRuntime } from "../runtime.js";
 
 export type MatrixSqliteStateOptions = {
@@ -34,8 +35,5 @@ export function resolveMatrixSqliteStateEnv(
   if (!stateDir) {
     return options?.env;
   }
-  return {
-    ...(options?.env ?? process.env),
-    OPENCLAW_STATE_DIR: stateDir,
-  };
+  return resolveScopedStateEnv({ env: options?.env, stateDir });
 }

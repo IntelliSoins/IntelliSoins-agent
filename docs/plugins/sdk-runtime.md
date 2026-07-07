@@ -526,6 +526,22 @@ two-party event loops that do not go through the shared inbound reply runner.
 
     Keyed stores survive restarts and are isolated by the runtime-bound plugin id. Use `registerIfAbsent(...)` for atomic dedupe claims: it returns `true` when the key was missing or expired and registered, or `false` when a live value already exists without overwriting its value, creation time, or TTL. Limits: `maxEntries` per namespace, 6,000 live rows per plugin, JSON values under 64KB, and optional TTL expiry. When a write would exceed the plugin row cap, the runtime may evict the oldest live rows from the namespace being written; sibling namespaces are not evicted for that write, and the write still fails if the namespace cannot free enough rows.
 
+    Multi-account channel plugins can scope plugin-state to a per-account state root with `resolveScopedStateEnv` from `openclaw/plugin-sdk/scoped-state-env`:
+
+    ```typescript
+    import { resolveScopedStateEnv } from "openclaw/plugin-sdk/scoped-state-env";
+
+    const env = resolveScopedStateEnv({
+      env: process.env,
+      stateDir: accountStateRoot,
+    });
+    const store = api.runtime.state.openKeyedStore<MyRecord>({
+      namespace: "my-feature",
+      maxEntries: 200,
+      ...(env ? { env } : {}),
+    });
+    ```
+
     <Warning>
     Bundled plugins only in this release.
     </Warning>

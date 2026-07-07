@@ -2,7 +2,12 @@
   "name": "openclaw",
   "version": "2026.6.2",
   "description": "Assistant IA pour pharmaciens d'officine — interface IntelliSoins en français, basé sur OpenClaw.",
-  "keywords": ["intellisoins", "pharmacy", "healthcare", "ai-assistant"],
+  "keywords": [
+    "intellisoins",
+    "pharmacy",
+    "healthcare",
+    "ai-assistant"
+  ],
   "homepage": "https://github.com/IntelliSoins/IntelliSoins-agent#readme",
   "bugs": {
     "url": "https://github.com/IntelliSoins/IntelliSoins-agent/issues"
@@ -653,6 +658,10 @@
     "./plugin-sdk/plugin-state-runtime": {
       "types": "./dist/plugin-sdk/plugin-state-runtime.d.ts",
       "default": "./dist/plugin-sdk/plugin-state-runtime.js"
+    },
+    "./plugin-sdk/scoped-state-env": {
+      "types": "./dist/plugin-sdk/scoped-state-env.d.ts",
+      "default": "./dist/plugin-sdk/scoped-state-env.js"
     },
     "./plugin-sdk/markdown-table-runtime": {
       "types": "./dist/plugin-sdk/markdown-table-runtime.d.ts",
