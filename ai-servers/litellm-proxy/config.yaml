@@ -3,6 +3,7 @@ model_list:
   litellm_params:
     model: together_ai/zai-org/GLM-5.1
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -15,16 +16,31 @@ model_list:
     api_key: os.environ/OMLX_API_KEY
     timeout: 600.0
     api_base: http://127.0.0.1:8211/v1
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
   model_info:
     id: 12f2845c-158f-5ece-b2fe-ebff88ee2108
     db_model: false
+- model_name: Qwen3.6-35B-A3B-CP-lmhead8
+  litellm_params:
+    model: openai/Qwen3.6-35B-A3B-CP-lmhead8
+    api_key: os.environ/OMLX_API_KEY
+    timeout: 600.0
+    api_base: http://127.0.0.1:8211/v1
+    use_xai_oauth: false
+    use_litellm_proxy: false
+    use_in_pass_through: false
+    merge_reasoning_content_in_choices: false
+  model_info:
+    id: 71bb17b0-8089-54b9-a706-1410c2256742
+    db_model: false
 - model_name: claude-together-deepseek-v3-1
   litellm_params:
     model: together_ai/deepseek-ai/DeepSeek-V3.1
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -35,6 +51,7 @@ model_list:
   litellm_params:
     model: together_ai/deepseek-ai/DeepSeek-R1
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -47,6 +64,7 @@ model_list:
     api_key: os.environ/OMLX_API_KEY
     timeout: 600.0
     api_base: http://127.0.0.1:8211/v1
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -57,6 +75,7 @@ model_list:
   litellm_params:
     model: openai/gpt-4o
     api_key: os.environ/OPENAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -67,16 +86,29 @@ model_list:
   litellm_params:
     model: together_ai/Qwen/Qwen3-235B-A22B-Instruct-2507-tput
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
   model_info:
     id: 29f9e474-33f1-5ce6-8c33-7cc9bce43718
     db_model: false
+- model_name: openrouter-claude-fable-5
+  litellm_params:
+    model: openrouter/anthropic/claude-fable-5
+    api_key: os.environ/OPENROUTER_API_KEY
+    use_xai_oauth: false
+    use_litellm_proxy: false
+    use_in_pass_through: false
+    merge_reasoning_content_in_choices: false
+  model_info:
+    id: 2be27361-b0a1-5fe3-8d81-dcdcedbac0e9
+    db_model: false
 - model_name: claude-together-kimi-k2-6
   litellm_params:
     model: together_ai/moonshotai/Kimi-K2.6
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -88,6 +120,7 @@ model_list:
     model: anthropic/claude-opus-4-7
     extra_headers:
       anthropic-beta: context-1m-2025-08-07
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -97,6 +130,7 @@ model_list:
 - model_name: anthropic-claude-opus
   litellm_params:
     model: anthropic/claude-opus-4-7
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -107,6 +141,7 @@ model_list:
   litellm_params:
     model: together_ai/zai-org/GLM-5.1
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -116,6 +151,7 @@ model_list:
 - model_name: vertex-claude-opus-4-8
   litellm_params:
     model: vertex_ai/claude-opus-4-8
+    use_xai_oauth: false
     vertex_project: intellisoins-vertex
     vertex_location: global
     use_litellm_proxy: false
@@ -128,6 +164,7 @@ model_list:
   litellm_params:
     model: together_ai/moonshotai/Kimi-K2.6
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -138,29 +175,19 @@ model_list:
   litellm_params:
     model: together_ai/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
   model_info:
     id: 6a7d5334-9406-53d2-a14b-3141a38ff9c2
     db_model: false
-- model_name: Qwen3.6-35B-A3B-4bit
-  litellm_params:
-    model: openai/Qwen3.6-35B-A3B-4bit
-    api_key: os.environ/OMLX_API_KEY
-    timeout: 600.0
-    api_base: http://127.0.0.1:8211/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: 71bb17b0-8089-54b9-a706-1410c2256742
-    db_model: false
 - model_name: bge-reranker-v2-m3
   litellm_params:
     model: infinity/BAAI/bge-reranker-v2-m3
     api_key: dummy
     api_base: http://127.0.0.1:8085/v1
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -171,6 +198,7 @@ model_list:
   litellm_params:
     model: openai/gpt-4o
     api_key: os.environ/OPENAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -183,6 +211,7 @@ model_list:
     api_key: os.environ/OMLX_API_KEY
     timeout: 600.0
     api_base: http://127.0.0.1:8211/v1
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -192,6 +221,7 @@ model_list:
 - model_name: anthropic-claude-sonnet
   litellm_params:
     model: anthropic/claude-sonnet-4-6
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -201,6 +231,7 @@ model_list:
 - model_name: vertex-claude-sonnet-4-6
   litellm_params:
     model: vertex_ai/claude-sonnet-4-6
+    use_xai_oauth: false
     vertex_project: intellisoins-vertex
     vertex_location: global
     use_litellm_proxy: false
@@ -212,6 +243,7 @@ model_list:
 - model_name: claude-opus-4-8[1m]
   litellm_params:
     model: anthropic/claude-opus-4-8
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -222,6 +254,7 @@ model_list:
   litellm_params:
     model: openai/gpt-5.5
     api_key: os.environ/OPENAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -232,6 +265,7 @@ model_list:
   litellm_params:
     model: together_ai/moonshotai/Kimi-K2.6
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -242,6 +276,7 @@ model_list:
   litellm_params:
     model: together_ai/Qwen/Qwen3-235B-A22B-Instruct-2507-tput
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -252,6 +287,7 @@ model_list:
   litellm_params:
     model: together_ai/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -262,6 +298,7 @@ model_list:
   litellm_params:
     model: together_ai/deepseek-ai/DeepSeek-R1
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -273,28 +310,18 @@ model_list:
     model: openai/whisper-large-v3-turbo
     api_key: dummy
     api_base: http://127.0.0.1:2022/v1
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
   model_info:
     id: 9bcb9d56-ce4b-5112-8844-e9e7512cf1a7
     db_model: false
-- model_name: Qwen3-Coder-30B-A3B-Instruct-4bit
-  litellm_params:
-    model: openai/Qwen3-Coder-30B-A3B-Instruct-4bit
-    api_key: os.environ/OMLX_API_KEY
-    timeout: 600.0
-    api_base: http://127.0.0.1:8211/v1
-    use_litellm_proxy: false
-    use_in_pass_through: false
-    merge_reasoning_content_in_choices: false
-  model_info:
-    id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
-    db_model: false
 - model_name: deepseek-v3.1
   litellm_params:
     model: together_ai/deepseek-ai/DeepSeek-V3.1
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -305,6 +332,7 @@ model_list:
   litellm_params:
     model: openai/gpt-4o
     api_key: os.environ/OPENAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -315,6 +343,7 @@ model_list:
   litellm_params:
     model: together_ai/moonshotai/Kimi-K2.6
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -325,6 +354,7 @@ model_list:
   litellm_params:
     model: together_ai/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8
     api_key: os.environ/TOGETHERAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -336,6 +366,7 @@ model_list:
     model: openai/qwen3-embedding
     api_key: dummy
     api_base: http://127.0.0.1:8084/v1
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -345,6 +376,7 @@ model_list:
 - model_name: anthropic-claude-opus-4-8
   litellm_params:
     model: anthropic/claude-opus-4-8
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -355,6 +387,7 @@ model_list:
   litellm_params:
     model: openrouter/*
     api_key: os.environ/OPENROUTER_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -366,6 +399,7 @@ model_list:
     model: openai//Users/michaelahern/nlp/whisper-finetune/datasets/vibevoice-fused
     api_key: dummy
     api_base: http://127.0.0.1:8882/v1
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -377,6 +411,7 @@ model_list:
     model: anthropic/claude-opus-4-7
     extra_headers:
       anthropic-beta: context-1m-2025-08-07
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -387,6 +422,7 @@ model_list:
   litellm_params:
     model: openai/gpt-5.5
     api_key: os.environ/OPENAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -397,6 +433,7 @@ model_list:
   litellm_params:
     model: openai/gpt-4o
     api_key: os.environ/OPENAI_API_KEY
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
@@ -408,11 +445,54 @@ model_list:
     model: openai/michael-v6-mlx-8bit
     api_key: dummy
     api_base: http://127.0.0.1:8883/v1
+    use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
     merge_reasoning_content_in_choices: false
   model_info:
     id: f1e2d3c4-b5a6-7890-cdef-123456789abc
+    db_model: false
+# ── DGX Spark (mesh WG 10.0.0.5) — services centralisés, deploy 2026-07-08
+#    Compose : dgx_spark:~/ai-spark/ (sparkctl). LLM profil `llm`, embeddings/reranker profil `core`.
+- model_name: spark-qwen3.6-35b
+  litellm_params:
+    model: hosted_vllm/nvidia/Qwen3.6-35B-A3B-NVFP4
+    api_key: dummy
+    api_base: http://10.0.0.5:8000/v1
+    timeout: 600.0
+    use_xai_oauth: false
+    use_litellm_proxy: false
+    use_in_pass_through: false
+    merge_reasoning_content_in_choices: false
+  model_info:
+    id: a0295f36-025c-4e2d-b688-26ef6d52760c
+    db_model: false
+- model_name: spark-embeddings
+  litellm_params:
+    model: hosted_vllm/voyageai/voyage-4-nano
+    api_key: dummy
+    api_base: http://10.0.0.5:8084/v1
+    use_xai_oauth: false
+    use_litellm_proxy: false
+    use_in_pass_through: false
+    merge_reasoning_content_in_choices: false
+  model_info:
+    id: a47dfd2d-a9cc-43d4-8e79-4eb2f117311a
+    db_model: false
+- model_name: spark-bge-reranker-v2-m3
+  litellm_params:
+    # hosted_vllm (pas infinity) : le Spark sert le rerank via vLLM, dont la
+    # reponse renvoie document={text,...} (objet) — le provider infinity attend
+    # un string et crash en validation Pydantic.
+    model: hosted_vllm/BAAI/bge-reranker-v2-m3
+    api_key: dummy
+    api_base: http://10.0.0.5:8085/v1
+    use_xai_oauth: false
+    use_litellm_proxy: false
+    use_in_pass_through: false
+    merge_reasoning_content_in_choices: false
+  model_info:
+    id: d69088fa-77a8-4e52-b314-16d7bde3e76b
     db_model: false
 router_settings:
   routing_strategy: simple-shuffle
@@ -425,20 +505,22 @@ router_settings:
     claude-sonnet-4-6-together-deepseek-r1: claude-together-deepseek-r1
     claude-sonnet-4-6-together-glm-5-1: claude-together-glm-5-1
     claude-haiku-4-5-openai-gpt-4o: claude-openai-gpt-4o
-    claude-sonnet-4-6-local-qwen3-coder-30b: Qwen3-Coder-30B-A3B-Instruct-4bit
+    claude-sonnet-4-6-local-qwen3-coder-30b: Qwen3.6-35B-A3B-CP-lmhead8
     pgml-auto-general: gemma4-12b
     pgml-auto-code: qwen3-coder-480b
     pgml-auto-reasoning: deepseek-r1
     pgml-auto-medical: gemma4-12b
     pgml-auto-vision: gemma4-12b
-    claude-local-qwen3-coder-30b: Qwen3-Coder-30B-A3B-Instruct-4bit
+    claude-local-qwen3-coder-30b: Qwen3.6-35B-A3B-CP-lmhead8
     gemma4-12b-mlx: gemma4-12b
-    code-local: Qwen3-Coder-30B-A3B-Instruct-4bit
-    general-local: Qwen3.6-35B-A3B-4bit
+    code-local: Qwen3.6-35B-A3B-CP-lmhead8
+    general-local: Qwen3.6-35B-A3B-CP-lmhead8
+    Qwen3.6-35B-A3B-Custom-Precision: Qwen3.6-35B-A3B-CP-lmhead8
     sonnet-together-coder: claude-together-qwen3-coder-480b
     opus-anthropic: anthropic-claude-opus
     vertex-sonnet: vertex-claude-sonnet-4-6
     vertex-opus: vertex-claude-opus-4-8
+    spark-translate: spark-qwen3.6-35b
   num_retries: 2
   timeout: 300
   allowed_fails: 3
