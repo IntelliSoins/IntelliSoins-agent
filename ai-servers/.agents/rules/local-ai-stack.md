@@ -62,7 +62,7 @@ Source de vérité = `~/ai-servers/servers.yaml` (lire avant toute affirmation).
 | NER          | gliner                    | :8091     | GLiNER Biomed, PyTorch CPU                              |
 | OCR          | docling                   | :5010     | Docling                                                 |
 | STT          | whisper-stt               | :2022     | Whisper large-v3-turbo (LoRA voix Michael)              |
-| TTS          | voxcpm-tts                | :8025     | VoxCPM2 Michael v6 MLX 8bit                             |
+| TTS          | voxcpm-tts                | :8025     | VoxCPM2 Michael v7 MLX 8bit                             |
 | TTS          | voxcpm-openai-bridge      | :8883     | Pont OpenAI-compatible → OpenClaw TTS                   |
 | Translation  | translation               | :6060     | NLLB-200                                                |
 | VLM          | mlx-vlm-omni              | :8089     | Gemma 4 12B omni (démarrage manuel, contrôle RAM)       |
@@ -92,7 +92,7 @@ curl -s -H "Authorization: Bearer $(jq -r .auth.api_key ~/.omlx/settings.json)" 
   http://127.0.0.1:8211/v1/models | python3 -m json.tool
 ```
 
-Modèles typiques : `Qwen3.6-35B-A3B-4bit` (général), `Qwen3-Coder-30B-A3B-Instruct-4bit` (code), `mlx-community--gemma-4-12B-it-8bit` (Gemma 4).
+Modèles typiques : `Qwen3.6-35B-A3B-CP-lmhead8` (général + code, modèle unique depuis 2026-07-07), `mlx-community--gemma-4-12B-it-8bit` (Gemma 4).
 
 Logs : `$(brew --prefix)/var/log/omlx.log` + `~/.omlx/logs/server.log`.
 Rule détaillée : `~/.claude/rules/omlx.md`.
@@ -109,7 +109,7 @@ Config `~/.continue/config.yaml` routée sur ports locaux, zéro cloud.
 | embed               | :8084 | Qwen/Qwen3-Embedding-0.6B       | aictl embedding      |
 | rerank              | :8085 | BAAI/bge-reranker-v2-m3         | aictl reranker       |
 
-Pour FIM/autocomplete direct oMLX : `:8211` (modèle `Qwen3-Coder-30B-A3B-Instruct-4bit`).
+Pour FIM/autocomplete direct oMLX : `:8211` (modèle `Qwen3.6-35B-A3B-CP-lmhead8` ; Coder-30B retiré 2026-07-07).
 
 ## Toujours router via le LiteLLM Proxy (host perso uniquement)
 
@@ -141,7 +141,7 @@ redis-cli -n 1 ping
 
 | model_name / alias                                                                       | Type                           |
 | ---------------------------------------------------------------------------------------- | ------------------------------ |
-| `general-local`, `code-local`, `Qwen3.6-35B-A3B-4bit`                                    | LLM local via oMLX :8211       |
+| `general-local`, `code-local`, `Qwen3.6-35B-A3B-CP-lmhead8`                              | LLM local via oMLX :8211       |
 | `gemma4-12b`, `gemma4-12b-mlx`, `voice-local`                                            | Gemma 4 via oMLX :8211         |
 | `qwen3-embedding` (1024D), `bge-reranker-v2-m3`                                          | Embedding / Rerank             |
 | `whisper-stt`                                                                            | STT :2022                      |

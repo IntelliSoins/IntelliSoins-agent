@@ -13,7 +13,7 @@ Source de vérité = `~/ai-servers/servers.yaml` (lire avant toute affirmation).
 | NER          | gliner                    | :8091     | GLiNER Biomed, PyTorch CPU                              |
 | OCR          | docling                   | :5010     | Docling                                                 |
 | STT          | whisper-stt               | :2022     | Whisper large-v3-turbo (LoRA voix Michael)              |
-| TTS          | voxcpm-tts                | :8025     | VoxCPM2 Michael v6 MLX 8bit                             |
+| TTS          | voxcpm-tts                | :8025     | VoxCPM2 Michael v7 MLX 8bit                             |
 | TTS          | voxcpm-openai-bridge      | :8883     | Pont OpenAI-compatible → OpenClaw TTS                   |
 | Translation  | translation               | :6060     | NLLB-200                                                |
 | VLM          | mlx-vlm-omni              | :8089     | Gemma 4 12B omni (démarrage manuel, contrôle RAM)       |

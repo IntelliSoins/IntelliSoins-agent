@@ -40,6 +40,20 @@ Le package `mlx-audio` intègre un serveur FastAPI compatible avec l'API OpenAI 
       --play
   ```
 
+#### Performance VoxCPM2 MLX (bench M3 Max 2026-07-07, checkpoint v7 8-bit + ref voix)
+
+| inference_timesteps          | vitesse (× realtime) | usage       |
+| ---------------------------- | -------------------- | ----------- |
+| 10 (défaut mlx-audio)        | ~2.5×                | qualité max |
+| 7 (reco model card)          | ~3.4×                | —           |
+| **6 (défaut serveur local)** | ~3.8×                | équilibre   |
+| 4 (borne basse officielle)   | ~4.9×                | latence min |
+
+- Serveur dédié : `~/apple_all/voxcpm/pipeline/voxcpm2-lora/voxcpm_server_mlx.py` (port 8025, lancé par `~/ai-servers/launchers/voxcpm-tts.sh`) — modèle + ref voix chargés une fois, champs `inference_timesteps`/`cfg_value`/`stream` exposés ; `stream=true` = streaming par phrases, TTFA ~0.5 s.
+- `mlx_audio.server` générique : fige timesteps à 10 et ne passe ni `inference_timesteps` ni `cfg_value` (absents de `SpeechRequest`) — éviter pour la latence.
+- Le port MLX ne fait PAS de vrai streaming intra-phrase (un seul yield en fin de `generate()`) ; l'upstream PyTorch a `generate_streaming()` chunk-par-chunk. <citation>https://github.com/OpenBMB/VoxCPM (§ Streaming API), https://huggingface.co/mlx-community/VoxCPM2-8bit — consulté 2026-07-07</citation>
+- CFG double le calcul DiT à chaque pas (batch 2×, `dit.py solve_euler`) ; `retry_badcase` (PyTorch) peut tripler le temps — off si latence critique.
+
 ### Voxtral-TTS (Mistral-based)
 
 - **Rôle** : Modèle 4B de haute qualité multilingue (9 langues, 20 presets).

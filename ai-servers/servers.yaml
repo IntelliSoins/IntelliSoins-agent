@@ -77,7 +77,7 @@ servers:
     throttle: 30
 
   voxcpm-tts:
-    name: "VoxCPM2 Michael v6 (MLX 8bit)"
+    name: "VoxCPM2 Michael v7 (MLX 8bit)"
     category: tts
     port: 8025
     host: 127.0.0.1
@@ -112,7 +112,8 @@ servers:
     launcher: launchers/whisper-stt.sh
     autostart: true
     keepalive: true
-    requires_disk: false
+    # ~/nlp → /Volumes/pro-g40-mike (symlink 2026-07-06) : venv + datasets sur le disque externe
+    requires_disk: true
     log_stdout: logs/whisper-stt.log
     log_stderr: logs/whisper-stt.error.log
     health_endpoint: /health
@@ -247,20 +248,22 @@ servers:
     throttle: 30
 
   mlx-vlm-omni:
-    name: "gemma-4-12B omni (mlx-vlm, 4 modalites)"
+    name: "gemma-4-12B omni (mlx-vlm 0.6.4, 4 modalites)"
     category: vlm
     port: 8089
     host: 127.0.0.1
     launcher: launchers/mlx-vlm-omni.sh
-    autostart: false
-    keepalive: false
+    autostart: true
+    keepalive: true
     requires_disk: false
     log_stdout: logs/mlx-vlm-omni.log
     log_stderr: logs/mlx-vlm-omni.error.log
     health_endpoint: /health
-    throttle: 30
-    # Demarrage manuel sous controle RAM (modele 8bit lourd)
-    # Modele: mlx-community/gemma-4-12B-it-8bit (texte+image+audio+video)
+    throttle: 60
+    # Autostart depuis 2026-07-07 : backend de l'agent vocal Hammerspoon (⌥⌘ç / ⌥4).
+    # Modele: mlx-community/gemma-4-12B-it-8bit (texte+image+audio+video), ~13 Go RAM.
+    # mlx-vlm 0.6.4 = fixes Gemma 4 (tool calls, vision mask, soft-token budgets, audio preproc,
+    # plus de full reload a la 1re requete #1403).
 
   # --- Serveurs externes (affiches en status, pas controles par aictl) ---
 
@@ -272,6 +275,7 @@ servers:
     managed_by: brew
     health_endpoint: /health
     # Lance par LaunchAgent Homebrew (homebrew.mxcl.omlx)
-    # Config: ~/.omlx/settings.json (hot cache 35GB, SSD cache 92GB)
+    # Config: ~/.omlx/settings.json (hot cache 40GB RAM, SSD cache 92GB, 16 requetes concurrentes)
     # API key requise: cat ~/.omlx/settings.json | jq -r .auth.api_key
-    # Models: ~/.omlx/models/ (charge a la demande, multi-modele)
+    # Models: ~/.omlx/models/ (Qwen3.6-35B-A3B-CP-lmhead8 seul epingle/preloade au boot pour claude-local
+    #   — pas de cold start, prefix KV cache survit aux restarts ; v1 Custom-Precision + Coder-30B retires 2026-07-07)

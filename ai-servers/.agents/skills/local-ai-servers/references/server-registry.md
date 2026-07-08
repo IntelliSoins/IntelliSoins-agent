@@ -11,7 +11,7 @@ Last synced: 2026-07-06 (consolidation oMLX :8211 + LiteLLM :8092).
 | reranker                  | BGE-reranker-v2-m3                   | reranker     | 8085  | 127.0.0.1 | aictl      | Yes       | /health            |
 | gliner                    | GLiNER Biomed NER                    | ner          | 8091  | 127.0.0.1 | aictl      | Yes       | /health            |
 | docling                   | Docling OCR/Extraction               | ocr          | 5010  | 127.0.0.1 | aictl      | Yes       | /health            |
-| voxcpm-tts                | VoxCPM2 Michael v6 (MLX 8bit)        | tts          | 8025  | 127.0.0.1 | aictl      | Yes       | /v1/models         |
+| voxcpm-tts                | VoxCPM2 Michael v7 (MLX 8bit)        | tts          | 8025  | 127.0.0.1 | aictl      | Yes       | /v1/models         |
 | voxcpm-openai-bridge      | VoxCPM OpenAI bridge (OpenClaw TTS)  | tts          | 8883  | 127.0.0.1 | aictl      | Yes       | /health            |
 | whisper-stt               | Whisper large-v3-turbo STT           | stt          | 2022  | 127.0.0.1 | aictl      | Yes       | /health            |
 | translation               | NLLB-200 Traduction                  | translation  | 6060  | 127.0.0.1 | aictl      | Yes       | /health            |
@@ -46,18 +46,18 @@ Last synced: 2026-07-06 (consolidation oMLX :8211 + LiteLLM :8092).
 
 The following were removed from `servers.yaml` (2026-07-06). LLM/VLM routing goes through **oMLX :8211** or **LiteLLM :8092**. Re-entry rules: `litellm-proxy/standby-models.yaml`.
 
-| Former ID    | Port  | Successor                       |
-| ------------ | ----- | ------------------------------- |
-| medgemma-27b | 8080  | standby / oMLX on demand        |
-| qwen3-email  | 8081  | standby                         |
-| nemotron-30b | 8082  | standby                         |
-| qwen3-merged | 8083  | standby                         |
-| gemma3-4b    | 8086  | standby                         |
-| qwen35-35b   | 8087  | `Qwen3.6-35B-A3B-4bit` via oMLX |
-| gemma4-e4b   | 8088  | `gemma4-12b` via oMLX           |
-| gemma4-12b   | 8098  | `gemma4-12b` via oMLX           |
-| kokoro-tts   | 8880  | voxcpm-tts :8025                |
-| ollama       | 11434 | **removed** (2026-07-06)        |
+| Former ID    | Port  | Successor                             |
+| ------------ | ----- | ------------------------------------- |
+| medgemma-27b | 8080  | standby / oMLX on demand              |
+| qwen3-email  | 8081  | standby                               |
+| nemotron-30b | 8082  | standby                               |
+| qwen3-merged | 8083  | standby                               |
+| gemma3-4b    | 8086  | standby                               |
+| qwen35-35b   | 8087  | `Qwen3.6-35B-A3B-CP-lmhead8` via oMLX |
+| gemma4-e4b   | 8088  | `gemma4-12b` via oMLX                 |
+| gemma4-12b   | 8098  | `gemma4-12b` via oMLX                 |
+| kokoro-tts   | 8880  | voxcpm-tts :8025                      |
+| ollama       | 11434 | **removed** (2026-07-06)              |
 
 ## API Compatibility
 
