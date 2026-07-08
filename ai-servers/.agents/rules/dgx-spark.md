@@ -1,0 +1,67 @@
+---
+paths:
+  - "~/ai-servers/**"
+  - "**/ai-spark/**"
+  - "**/*spark*"
+  - "**/servers.yaml"
+---
+
+# DGX Spark (spark-a4cf) — Serveur d'inférence GB10 sur le mesh WireGuard
+
+NVIDIA DGX Spark **GB10** (aarch64, 121 Go de mémoire unifiée, ~3.7 To libres), hostname `spark-a4cf`, utilisateur `intellisoins`. Sert LLM + embeddings + reranker + docling au mesh WG. Déployé et validé bout-en-bout le 2026-07-08. Charger quand on mentionne « spark », « DGX », « GB10 », « sparkctl », « 10.0.0.5 », « ai-spark ».
+
+## Accès
+
+| Chemin                   | Valeur                                                                                                                                                                                                                    |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mesh WG (primaire)       | `ssh spark` → `intellisoins@10.0.0.5` (clé `id_ed25519`, entrée dans `~/.ssh/config`)                                                                                                                                     |
+| LAN (secours si WG down) | `intellisoins@spark-a4cf.local` / `192.168.2.149` (clé NVIDIA Sync via `Host dgx_spark`)                                                                                                                                  |
+| Hub WG                   | peer enregistré sur le VPS `10.0.0.1` (`/etc/wireguard/wg0.conf`, AllowedIPs `10.0.0.5/32`)                                                                                                                               |
+| Pubkey WG                | archivée dans Proton Pass, note « WireGuard DGX Spark (spark-a4cf) », vault Personal                                                                                                                                      |
+| sudo                     | **PAS de NOPASSWD** : mot de passe requis (celui de `intellisoins` sur le Spark, connu de Michael seulement). Docker fonctionne sans sudo (groupe `docker`). Toute action UFW/WireGuard/apt côté Spark passe par Michael. |
+| UFW                      | SSH ouvert partout (LAN + mesh) ; ports AI accessibles **seulement via le mesh** 10.0.0.0/24                                                                                                                              |
+
+## Services (docker compose, `~/ai-spark/` sur le Spark)
+
+Gérés par **`~/ai-spark/sparkctl`** (équivalent aictl) : `up/down/status/logs {core|llm}` + `finetune start/stop`.
+
+| Service          | Port | Profil | Modèle / image                        | Note                                                                    |
+| ---------------- | ---- | ------ | ------------------------------------- | ----------------------------------------------------------------------- |
+| spark-vllm-llm   | 8000 | `llm`  | `nvidia/Qwen3.6-35B-A3B-NVFP4` (vLLM) | 131k contexte, ~55 Go, thinking mode actif (`reasoning_content` séparé) |
+| spark-embeddings | 8084 | `core` | `voyageai/voyage-4-nano` (vLLM)       | 2048 dims — voir recette obligatoire ci-dessous                         |
+| spark-reranker   | 8085 | `core` | `BAAI/bge-reranker-v2-m3` (vLLM)      | `--runner pooling`                                                      |
+| spark-docling    | 5010 | `core` | docling-serve                         | API REST directe (pas dans LiteLLM)                                     |
+
+`sparkctl finetune start` = protection anti-catastrophe mémoire : arrête le LLM (~100 Go libérés) et ouvre le container NGC PyTorch (workspace persistant) ; `finetune stop` relance le LLM.
+
+## ⚠️ Recette embeddings voyage-4-nano sur vLLM (NE PAS simplifier)
+
+Sans ces flags, crash-loop `ValueError: no module or parameter named 'linear' in Qwen3ForEmbedding` (10 restarts observés au déploiement). Recette officielle de la carte HF `voyageai/voyage-4-nano` § "Via vllm" :
+
+```
+--runner pooling --convert embed
+--hf-overrides '{"architectures": ["VoyageQwen3BidirectionalEmbedModel"]}'
+--pooler-config '{"pooling_type": "MEAN"}'
+--dtype bfloat16 --max-model-len 32768 --enforce-eager --trust-remote-code
+```
+
+**Équivalence prouvée** avec BHS5/Infinity (10.0.0.3:8004) : cosinus **0.999965** sur le même texte → vecteurs pgvector interchangeables, aucun ré-embedding. Les prompts requête/document (`Represent the query for retrieving supporting documents: ` / `Represent the document for retrieval: `) sont à la charge du client.
+
+## LiteLLM Mac (:8092) — modèles exposés
+
+`litellm-proxy/config.yaml` (commit `a38f501`) :
+
+| model_name                 | provider                                   | api_base                                  |
+| -------------------------- | ------------------------------------------ | ----------------------------------------- |
+| `spark-qwen3.6-35b`        | `hosted_vllm/nvidia/Qwen3.6-35B-A3B-NVFP4` | `http://10.0.0.5:8000/v1`                 |
+| `spark-embeddings`         | `hosted_vllm/voyageai/voyage-4-nano`       | `http://10.0.0.5:8084/v1`                 |
+| `spark-bge-reranker-v2-m3` | `hosted_vllm/BAAI/bge-reranker-v2-m3`      | `http://10.0.0.5:8085/v1`                 |
+| `spark-translate`          | alias → `spark-qwen3.6-35b`                | (remplace live-translator :6060, disparu) |
+
+**⚠️ Rerank vLLM = provider `hosted_vllm/`, JAMAIS `infinity/`** : vLLM renvoie `document` comme objet `{text, multi_modal}` alors que le provider infinity attend un string → erreur de validation Pydantic `RerankResponse`. (Le `infinity/` local :8085 du Mac reste correct : c'est un vrai serveur Infinity.)
+
+## Frontières
+
+- **Stack Mac intouchée** : whisper fine-tuné, voxcpm2, gemma4 restent locaux (latence Hammerspoon + fine-tunes MLX inexistants ailleurs).
+- **BHS5 (10.0.0.3)** continue de servir voyage-4-nano + bge-reranker via Infinity `127.0.0.1:8004` (localhost only, accès via ssh) pour le pipeline VPS.
+- opencode/clients passent par LiteLLM :8092 (fallbacks + budgets), pas d'accès direct au Spark sauf docling.
