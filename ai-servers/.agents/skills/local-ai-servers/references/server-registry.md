@@ -1,7 +1,7 @@
 # Server Registry Reference
 
 Source of truth: `~/ai-servers/servers.yaml`
-Last synced: 2026-07-08 (agent vocal realtime : voice-agent-gradio :7860, bridge TTS streaming, Whisper sans word_timestamps).
+Last synced: 2026-07-08 (agent vocal realtime : front FastRTC :8024 reconstruit, bridge TTS streaming, Whisper sans word_timestamps).
 
 ## Server Inventory
 
@@ -23,7 +23,7 @@ Last synced: 2026-07-08 (agent vocal realtime : voice-agent-gradio :7860, bridge
 | signal-api                | Signal Messenger REST API            | app          | 8094  | 127.0.0.1 | aictl      | No        | /v1/health         |
 | signal-agent-router       | Signal Agent Router                  | app          | 8096  | 127.0.0.1 | aictl      | No        | /health            |
 | openclaw                  | OpenClaw (IntelliSoins Gateway)      | app          | 18789 | 127.0.0.1 | aictl      | Yes       | /healthz           |
-| voice-agent-gradio        | Agent vocal (frontend Gradio)        | app          | 7860  | 127.0.0.1 | aictl      | Yes       | /                  |
+| voice-agent-webrtc        | Agent vocal (front WebRTC FastRTC)   | app          | 8024  | 127.0.0.1 | aictl      | Yes       | /                  |
 | mlx-vlm-omni              | gemma-4-12B omni (mlx-vlm)           | vlm          | 8089  | 127.0.0.1 | aictl      | Yes       | /health            |
 | omlx                      | oMLX (multi-model, KV cache RAM+SSD) | llm          | 8211  | 127.0.0.1 | brew       | brew      | /health            |
 
@@ -40,7 +40,7 @@ Last synced: 2026-07-08 (agent vocal realtime : voice-agent-gradio :7860, bridge
 | tts          | voxcpm-tts, voxcpm-openai-bridge                                                                      | Text-to-speech (streaming par phrases)        |
 | stt          | whisper-stt                                                                                           | Speech-to-text                                |
 | translation  | translation                                                                                           | Neural machine translation FR/EN              |
-| app          | study-chat-bridge, litellm-config-sync, signal-api, signal-agent-router, openclaw, voice-agent-gradio | Utility apps, gateway, frontend vocal         |
+| app          | study-chat-bridge, litellm-config-sync, signal-api, signal-agent-router, openclaw, voice-agent-webrtc | Utility apps, gateway, front vocal            |
 | vector_store | litellm-pgvector, litellm-pgvector-openclaw                                                           | pgvector sidecars                             |
 
 ## Retired Standalone MLX Backends
