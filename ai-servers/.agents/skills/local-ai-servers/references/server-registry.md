@@ -1,7 +1,7 @@
 # Server Registry Reference
 
 Source of truth: `~/ai-servers/servers.yaml`
-Last synced: 2026-07-06 (consolidation oMLX :8211 + LiteLLM :8092).
+Last synced: 2026-07-08 (agent vocal realtime : voice-agent-gradio :7860, bridge TTS streaming, Whisper sans word_timestamps).
 
 ## Server Inventory
 
@@ -23,24 +23,25 @@ Last synced: 2026-07-06 (consolidation oMLX :8211 + LiteLLM :8092).
 | signal-api                | Signal Messenger REST API            | app          | 8094  | 127.0.0.1 | aictl      | No        | /v1/health         |
 | signal-agent-router       | Signal Agent Router                  | app          | 8096  | 127.0.0.1 | aictl      | No        | /health            |
 | openclaw                  | OpenClaw (IntelliSoins Gateway)      | app          | 18789 | 127.0.0.1 | aictl      | Yes       | /healthz           |
+| voice-agent-gradio        | Agent vocal (frontend Gradio)        | app          | 7860  | 127.0.0.1 | aictl      | Yes       | /                  |
 | mlx-vlm-omni              | gemma-4-12B omni (mlx-vlm)           | vlm          | 8089  | 127.0.0.1 | aictl      | Yes       | /health            |
 | omlx                      | oMLX (multi-model, KV cache RAM+SSD) | llm          | 8211  | 127.0.0.1 | brew       | brew      | /health            |
 
 ## Categories
 
-| Category     | Servers                                                                           | Purpose                                       |
-| ------------ | --------------------------------------------------------------------------------- | --------------------------------------------- |
-| llm          | litellm-proxy, omlx                                                               | Text generation, hub routing, multi-model MLX |
-| vlm          | mlx-vlm-omni                                                                      | Agent vocal (autostart, APC + draft MTP)      |
-| embedding    | embedding                                                                         | Vector embeddings (1024D) for pgvector RAG    |
-| reranker     | reranker                                                                          | Re-ranking search results                     |
-| ner          | gliner                                                                            | Biomedical NER for SQL/RAG pipelines          |
-| ocr          | docling                                                                           | Document OCR and extraction                   |
-| tts          | voxcpm-tts, voxcpm-openai-bridge                                                  | Text-to-speech                                |
-| stt          | whisper-stt                                                                       | Speech-to-text                                |
-| translation  | translation                                                                       | Neural machine translation FR/EN              |
-| app          | study-chat-bridge, litellm-config-sync, signal-api, signal-agent-router, openclaw | Utility apps and gateway                      |
-| vector_store | litellm-pgvector, litellm-pgvector-openclaw                                       | pgvector sidecars                             |
+| Category     | Servers                                                                                               | Purpose                                       |
+| ------------ | ----------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| llm          | litellm-proxy, omlx                                                                                   | Text generation, hub routing, multi-model MLX |
+| vlm          | mlx-vlm-omni                                                                                          | Agent vocal (autostart, APC + draft MTP)      |
+| embedding    | embedding                                                                                             | Vector embeddings (1024D) for pgvector RAG    |
+| reranker     | reranker                                                                                              | Re-ranking search results                     |
+| ner          | gliner                                                                                                | Biomedical NER for SQL/RAG pipelines          |
+| ocr          | docling                                                                                               | Document OCR and extraction                   |
+| tts          | voxcpm-tts, voxcpm-openai-bridge                                                                      | Text-to-speech (streaming par phrases)        |
+| stt          | whisper-stt                                                                                           | Speech-to-text                                |
+| translation  | translation                                                                                           | Neural machine translation FR/EN              |
+| app          | study-chat-bridge, litellm-config-sync, signal-api, signal-agent-router, openclaw, voice-agent-gradio | Utility apps, gateway, frontend vocal         |
+| vector_store | litellm-pgvector, litellm-pgvector-openclaw                                                           | pgvector sidecars                             |
 
 ## Retired Standalone MLX Backends
 

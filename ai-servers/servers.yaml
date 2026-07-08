@@ -271,6 +271,23 @@ servers:
     # (pas de kv-bits : protege la compat APC et la precision ; 262k ctx ≈ 17 Go KV max).
     # Needle-test 35k tokens PASS ; tool calls valides avec drafter. Detail : launchers/mlx-vlm-omni.sh
 
+  voice-agent-gradio:
+    name: "Agent vocal (frontend Gradio)"
+    category: app
+    port: 7860
+    host: 127.0.0.1
+    launcher: launchers/voice-agent-gradio.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/voice-agent-gradio.log
+    log_stderr: logs/voice-agent-gradio.error.log
+    health_endpoint: /
+    throttle: 30
+    # Frontend web de l'agent vocal (meme pipeline que Hammerspoon ⌥⌘ç, sans tools) :
+    # micro → whisper-stt :2022 → mlx-vlm-omni :8089 (SSE) → voxcpm-tts :8025
+    # (TTS par phrase pendant que Gemma genere → premier son ~1-2 s).
+
   # --- Serveurs externes (affiches en status, pas controles par aictl) ---
 
   omlx:

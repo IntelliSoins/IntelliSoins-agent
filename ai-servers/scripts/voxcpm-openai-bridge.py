@@ -17,6 +17,8 @@ import uvicorn
 from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+from starlette.background import BackgroundTask
+from starlette.responses import StreamingResponse
 
 DEFAULT_BACKEND = os.environ.get("VOXCPM_BACKEND_URL", "http://127.0.0.1:8025")
 DEFAULT_MODEL = os.environ.get(
@@ -67,6 +69,9 @@ class SpeechRequest(BaseModel):
     voice: str | None = None
     response_format: str | None = "wav"
     speed: float | None = None
+    # stream=true : propagé au backend voxcpm_server_mlx (streaming par phrases,
+    # TTFA ~0.5 s au lieu d'attendre toute la génération) — agent vocal realtime.
+    stream: bool = False
     ref_audio: str | None = None
     ref_text: str | None = None
 
@@ -81,6 +86,9 @@ app.add_middleware(
 )
 
 backend_url = DEFAULT_BACKEND
+# Client persistant : évite le handshake TCP/TLS par requête et porte les
+# réponses streamées (fermées via BackgroundTask après envoi complet).
+_client = httpx.AsyncClient(timeout=300.0)
 
 
 @app.get("/health")
@@ -96,12 +104,13 @@ async def models() -> dict[str, object]:
     }
 
 
-async def _openai_backend(req: SpeechRequest) -> httpx.Response:
+def _openai_payload(req: SpeechRequest) -> dict:
     model = resolve_model(req.model)
     payload = {
         "model": model,
         "input": req.input,
         "response_format": req.response_format or "wav",
+        "stream": req.stream,
     }
     if req.voice:
         payload["voice"] = req.voice
@@ -119,21 +128,25 @@ async def _openai_backend(req: SpeechRequest) -> httpx.Response:
         payload["ref_audio"] = ref_audio
         if ref_text:
             payload["ref_text"] = ref_text
+    return payload
 
-    async with httpx.AsyncClient(timeout=300.0) as client:
-        return await client.post(
-            f"{backend_url.rstrip('/')}/v1/audio/speech",
-            json=payload,
-        )
+
+async def _openai_backend(req: SpeechRequest) -> httpx.Response:
+    request = _client.build_request(
+        "POST",
+        f"{backend_url.rstrip('/')}/v1/audio/speech",
+        json=_openai_payload(req),
+    )
+    # stream=True : les octets partent vers le client dès la première phrase
+    # générée par le backend (TTFA) au lieu d'être bufferisés ici.
+    return await _client.send(request, stream=req.stream)
 
 
 async def _native_backend(req: SpeechRequest) -> httpx.Response:
     payload = {"text": req.input}
     if req.speed is not None:
         payload["speed"] = req.speed
-
-    async with httpx.AsyncClient(timeout=300.0) as client:
-        return await client.post(f"{backend_url.rstrip('/')}/tts", json=payload)
+    return await _client.post(f"{backend_url.rstrip('/')}/tts", json=payload)
 
 
 @app.post("/v1/audio/speech")
@@ -141,14 +154,25 @@ async def speech(req: SpeechRequest) -> Response:
     try:
         response = await _openai_backend(req)
         if response.status_code == 404:
+            # backend natif legacy (mlx_audio.server) : pas de streaming
+            await response.aclose()
             response = await _native_backend(req)
     except httpx.HTTPError as exc:
         raise HTTPException(status_code=502, detail=f"VoxCPM backend unreachable: {exc}") from exc
 
-    if response.status_code >= 400:
-        raise HTTPException(status_code=response.status_code, detail=response.text)
-
     media_type = "audio/wav" if (req.response_format or "wav") == "wav" else "audio/mpeg"
+
+    if response.status_code >= 400:
+        body = await response.aread()  # ok même si déjà lu (contenu caché)
+        await response.aclose()
+        raise HTTPException(status_code=response.status_code, detail=body.decode(errors="replace"))
+
+    if req.stream and not response.is_closed:
+        return StreamingResponse(
+            response.aiter_bytes(),
+            media_type=media_type,
+            background=BackgroundTask(response.aclose),
+        )
     return Response(content=response.content, media_type=media_type)
 
 

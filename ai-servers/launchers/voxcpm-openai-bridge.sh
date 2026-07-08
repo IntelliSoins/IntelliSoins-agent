@@ -4,11 +4,11 @@
 
 export PATH="/opt/homebrew/bin:/usr/bin:/bin"
 
-# Checkpoint v6 mergé perdu — fallback voix de base VoxCPM2 MLX (mlx-community/VoxCPM2-bf16,
-# openbmb/VoxCPM2 = poids PyTorch, incompatibles loader mlx-audio : 233 params audio_vae manquants).
-# Retirer ce bloc quand le ckpt v6 fine-tuné revient.
-V6_CKPT="/Users/michaelahern/apple_all/voxcpm/pipeline/voxcpm2-lora/checkpoints-merged-michael-v6-mlx-8bit"
-if [ ! -d "$V6_CKPT" ]; then
+# v6 mergé perdu ; v7 en ré-entraînement (2026-07-07) — fallback voix de base VoxCPM2 MLX
+# (mlx-community/VoxCPM2-bf16 ; openbmb/VoxCPM2 = poids PyTorch, incompatibles loader mlx-audio).
+# Ce bloc devient inactif dès que le ckpt v7 mergé existe.
+V7_CKPT="/Users/michaelahern/apple_all/voxcpm/pipeline/voxcpm2-lora/checkpoints-merged-michael-v7-mlx-8bit"
+if [ ! -d "$V7_CKPT" ]; then
   export VOXCPM_MODEL="${VOXCPM_MODEL:-mlx-community/VoxCPM2-bf16}"
 fi
 
