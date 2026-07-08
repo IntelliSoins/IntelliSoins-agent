@@ -105,7 +105,7 @@ servers:
     throttle: 15
 
   whisper-stt:
-    name: "Whisper large-v3-turbo STT (fine-tuné voix Michael, LoRA v2 — rescué du PRO-G40 2026-07-08)"
+    name: "Whisper large-v3-turbo STT (fine-tuné voix Michael, LoRA v3 2026-07-08 — 380 paires)"
     category: stt
     port: 2022
     host: 127.0.0.1

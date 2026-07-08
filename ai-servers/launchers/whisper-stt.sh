@@ -29,4 +29,7 @@ if [[ ! -f "$VENV_PYTHON" ]]; then
 fi
 
 cd "$WHISPER_DIR"
+# LoRA v3 (2026-07-08, 380 paires) ; rollback v2 : models/whisper-michael-mlx,
+# rollback base : mlx-community/whisper-large-v3-turbo.
+export WHISPER_MODEL_PATH="$WHISPER_DIR/models/whisper-michael-mlx-v3"
 exec "$VENV_PYTHON" mlx_whisper_server.py
