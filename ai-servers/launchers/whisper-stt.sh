@@ -17,8 +17,9 @@ fi
 
 # 2026-07-08 : PRO-G40 corrompu (2e fois) — retour sur le disque INTERNE.
 # ~/services/whisper-finetune = workspace local (serveur + fine-tuning, venv-ft py3.14).
-# Modèle: base mlx-community/whisper-large-v3-turbo (cache HF) en attendant le
-# retrain LoRA voix Michael (dataset: datasets/dictee-v3, cf. tools/export_dictations_dataset.py).
+# Modèle: LoRA v2 voix Michael rescué du PRO-G40 (models/whisper-michael-mlx) ;
+# rollback base : WHISPER_MODEL_PATH=mlx-community/whisper-large-v3-turbo.
+# Dataset retrain v3 prêt : datasets/dictee-v3 (cf. tools/export_dictations_dataset.py).
 WHISPER_DIR="$HOME/services/whisper-finetune"
 VENV_PYTHON="$WHISPER_DIR/venv-ft/bin/python3"
 
