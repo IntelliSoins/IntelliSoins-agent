@@ -15,8 +15,12 @@ if [ -n "$HF_TOKEN" ]; then
     export HF_TOKEN
 fi
 
-WHISPER_DIR="$HOME/nlp/whisper-finetune"
-VENV_PYTHON="$WHISPER_DIR/venv/bin/python3"
+# 2026-07-08 : PRO-G40 corrompu (2e fois) — retour sur le disque INTERNE.
+# ~/services/whisper-finetune = workspace local (serveur + fine-tuning, venv-ft py3.14).
+# Modèle: base mlx-community/whisper-large-v3-turbo (cache HF) en attendant le
+# retrain LoRA voix Michael (dataset: datasets/dictee-v3, cf. tools/export_dictations_dataset.py).
+WHISPER_DIR="$HOME/services/whisper-finetune"
+VENV_PYTHON="$WHISPER_DIR/venv-ft/bin/python3"
 
 if [[ ! -f "$VENV_PYTHON" ]]; then
     echo "ERROR: venv python not found at $VENV_PYTHON"

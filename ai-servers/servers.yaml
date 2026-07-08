@@ -105,15 +105,16 @@ servers:
     throttle: 15
 
   whisper-stt:
-    name: "Whisper large-v3-turbo STT (fine-tuné voix Michael, LoRA v2 2026-06-18)"
+    name: "Whisper large-v3-turbo STT (BASE — LoRA voix perdu avec PRO-G40, retrain v3 à venir)"
     category: stt
     port: 2022
     host: 127.0.0.1
     launcher: launchers/whisper-stt.sh
     autostart: true
     keepalive: true
-    # ~/nlp → /Volumes/pro-g40-mike (symlink 2026-07-06) : venv + datasets sur le disque externe
-    requires_disk: true
+    # 2026-07-08 : PRO-G40 corrompu → retour disque interne (~/services/whisper-finetune,
+    # venv-ft, modèle base large-v3-turbo du cache HF en attendant le retrain LoRA v3).
+    requires_disk: false
     log_stdout: logs/whisper-stt.log
     log_stderr: logs/whisper-stt.error.log
     health_endpoint: /health
