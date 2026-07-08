@@ -261,9 +261,14 @@ servers:
     health_endpoint: /health
     throttle: 60
     # Autostart depuis 2026-07-07 : backend de l'agent vocal Hammerspoon (⌥⌘ç / ⌥4).
-    # Modele: mlx-community/gemma-4-12B-it-8bit (texte+image+audio+video), ~13 Go RAM.
+    # Modele: mlx-community/gemma-4-12B-it-8bit (texte+image+audio+video), ~13.6 Go RAM.
     # mlx-vlm 0.6.4 = fixes Gemma 4 (tool calls, vision mask, soft-token budgets, audio preproc,
     # plus de full reload a la 1re requete #1403).
+    # Optimisations 2026-07-07 (agent vocal) : APC_ENABLED=1 (prefix caching exact —
+    # TTFT warm 9.3s → 0.22s a 4k tokens, 42x) + draft MTP gemma-4-12B-it-assistant-4bit
+    # (decodage speculatif : generation 25.7 → ~36 tok/s, +40%). KV fp16 conserve
+    # (pas de kv-bits : protege la compat APC et la precision ; 262k ctx ≈ 17 Go KV max).
+    # Needle-test 35k tokens PASS ; tool calls valides avec drafter. Detail : launchers/mlx-vlm-omni.sh
 
   # --- Serveurs externes (affiches en status, pas controles par aictl) ---
 
