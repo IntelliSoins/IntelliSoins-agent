@@ -24,7 +24,7 @@ NVIDIA DGX Spark **GB10** (aarch64, 121 Go de mémoire unifiée, ~3.7 To libres)
 
 ## Services (docker compose, `~/ai-spark/` sur le Spark)
 
-Gérés par **`~/ai-spark/sparkctl`** (équivalent aictl) : `up/down/status/logs {core|llm}` + `finetune start/stop`.
+Gérés par **`~/ai-spark/sparkctl`** (équivalent aictl) : `up/down/status/logs {core|llm}` + `sleep/wake` (mode sommeil LLM) + `finetune start/stop`.
 
 | Service          | Port | Profil | Modèle / image                        | Note                                                                    |
 | ---------------- | ---- | ------ | ------------------------------------- | ----------------------------------------------------------------------- |
@@ -34,6 +34,21 @@ Gérés par **`~/ai-spark/sparkctl`** (équivalent aictl) : `up/down/status/logs
 | spark-docling    | 5010 | `core` | docling-serve                         | API REST directe (pas dans LiteLLM)                                     |
 
 `sparkctl finetune start` = protection anti-catastrophe mémoire : arrête le LLM (~100 Go libérés) et ouvre le container NGC PyTorch (workspace persistant) ; `finetune stop` relance le LLM.
+
+## Mode sommeil vLLM (sleep/wake, validé 2026-07-08)
+
+`sparkctl sleep` / `sparkctl wake` = pause rapide du LLM sans reboot (`--enable-sleep-mode` + `VLLM_SERVER_DEV_MODE=1` dans le compose ; endpoints `/sleep /wake_up /is_sleeping`, mesh+localhost seulement).
+
+| Opération                  | Durée    | Mémoire                                                 |
+| -------------------------- | -------- | ------------------------------------------------------- |
+| `sleep` (niveau 1)         | ~9 s     | libère ~60 Go (KV cache jeté, poids parqués en RAM CPU) |
+| `wake`                     | ~60 s    | restaure tout ; qualité vérifiée (3 cycles)             |
+| reboot complet (référence) | ~3-5 min | —                                                       |
+
+- **Niveau 1 SEULEMENT.** Le niveau 2 jette les poids et `/wake_up` ne les recharge PAS (conçu pour le swap de poids RLHF) → charabia vérifié. Ne jamais exposer level=2 dans sparkctl.
+- **Coût résiduel** : après le 1er sleep, ~16 Go de RAM restent réservés (buffer CPU des poids, réutilisé — ne grossit pas aux cycles suivants) ; `docker compose --profile llm restart` les récupère.
+- **Fine-tuning lourd** : rester sur `finetune start` (down complet, ~85-100 Go libérés) ; sleep = LoRA léger / pauses courtes.
+- **Patch upstream obligatoire** : bug vLLM 0.24.0 (encore présent sur main 2026-07-08) — avec KV fp8 + flashinfer/MTP, `init_fp8_kv_scales` crash au wake (`'list' object has no attribute 'zero_'`). Corrigé par `~/ai-spark/patches/gpu_model_runner.py` bind-monté ro dans le conteneur ; **l'image est pinnée par digest** (`vllm/vllm-openai@sha256:251eba5c…`) pour garder patch et image cohérents. Toute mise à jour d'image = re-extraire le fichier, réappliquer le patch (en-tête `PATCH ai-spark`), re-pinner le digest. Backups : `docker-compose.yml.bak-20260708-sleepmode`, `sparkctl.bak-20260708-sleepmode`.
 
 ## ⚠️ Recette embeddings voyage-4-nano sur vLLM (NE PAS simplifier)
 
