@@ -63,6 +63,21 @@ Sans ces flags, crash-loop `ValueError: no module or parameter named 'linear' in
 
 **Équivalence prouvée** avec BHS5/Infinity (10.0.0.3:8004) : cosinus **0.999965** sur le même texte → vecteurs pgvector interchangeables, aucun ré-embedding. Les prompts requête/document (`Represent the query for retrieving supporting documents: ` / `Represent the document for retrieval: `) sont à la charge du client.
 
+## Tunnel sparklan — peering WG direct Mac↔Spark via LAN (2026-07-08)
+
+Bypass du hub VPS pour les ports AI quand le Mac est à la maison : **42 ms → ~4 ms** de RTT, bande passante gigabit locale. Clés et sous-réseau **distincts du mesh** (aucun conflit avec l'app WireGuard `wg-full`).
+
+| Côté  | Interface  | IP         | Détail                                                                                                                                |
+| ----- | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Spark | `wg1`      | `10.0.1.1` | `ListenPort 51821`, UFW allow UDP 51821 depuis `192.168.2.0/24` seulement, `wg-quick@wg1` enabled                                     |
+| Mac   | `sparklan` | `10.0.1.2` | `/opt/homebrew/etc/wireguard/sparklan.conf` (wg-quick brew), endpoint `192.168.2.149:51821`, LaunchDaemon `com.michaelahern.sparklan` |
+
+- **Activation/réparation Mac** : `sudo /opt/homebrew/etc/wireguard/activate-sparklan.sh` (idempotent : up + LaunchDaemon + vérification).
+- Le compose publie aussi le LLM sur `10.0.1.1:8000` (drop-in systemd étendu : Docker attend `wg-quick@wg1` en plus de `wg0`).
+- **LiteLLM :8092 route seul** : 2 déploiements `spark-qwen3.6-35b` (weight 9 → `10.0.1.1` LAN ; weight 1 → `10.0.0.5` mesh). Hors maison, le LAN échoue → cooldown 60 s → tout passe par le mesh automatiquement. Rien à toucher côté clients.
+- ⚠️ Endpoint = IP DHCP du Spark (`192.168.2.149`) : faire une réservation DHCP sur le routeur, sinon re-pointer `sparklan.conf` si l'IP change (le fallback mesh couvre l'intervalle).
+- `AllowedIPs` Mac = `10.0.1.1/32` SEULEMENT — ne jamais y mettre `10.0.0.5` (ça volerait la route mesh et blackholerait le Spark hors maison).
+
 ## LiteLLM Mac (:8092) — modèles exposés
 
 `litellm-proxy/config.yaml` (commit `a38f501`) :

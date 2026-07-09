@@ -452,14 +452,32 @@ model_list:
   model_info:
     id: f1e2d3c4-b5a6-7890-cdef-123456789abc
     db_model: false
-# ── DGX Spark (mesh WG 10.0.0.5) — services centralisés, deploy 2026-07-08
+# ── DGX Spark (mesh WG 10.0.0.5 + LAN direct 10.0.1.1) — services centralisés, deploy 2026-07-08
 #    Compose : dgx_spark:~/ai-spark/ (sparkctl). LLM profil `llm`, embeddings/reranker profil `core`.
+#    2 déploiements du même model_name = routage résilient : weight 9 → tunnel sparklan
+#    (LAN, ~4 ms) prioritaire à la maison ; hors maison le LAN tombe en cooldown (60 s)
+#    et TOUT passe par le mesh WG (42 ms via hub VPS). Ne pas fusionner en un seul.
+- model_name: spark-qwen3.6-35b
+  litellm_params:
+    model: hosted_vllm/nvidia/Qwen3.6-35B-A3B-NVFP4
+    api_key: dummy
+    api_base: http://10.0.1.1:8000/v1
+    timeout: 600.0
+    weight: 9
+    use_xai_oauth: false
+    use_litellm_proxy: false
+    use_in_pass_through: false
+    merge_reasoning_content_in_choices: false
+  model_info:
+    id: 5b7c9d21-4f3a-4e8b-9c6d-2a1e8f0b3c4d
+    db_model: false
 - model_name: spark-qwen3.6-35b
   litellm_params:
     model: hosted_vllm/nvidia/Qwen3.6-35B-A3B-NVFP4
     api_key: dummy
     api_base: http://10.0.0.5:8000/v1
     timeout: 600.0
+    weight: 1
     use_xai_oauth: false
     use_litellm_proxy: false
     use_in_pass_through: false
