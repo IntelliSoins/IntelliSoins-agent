@@ -26,14 +26,20 @@ NVIDIA DGX Spark **GB10** (aarch64, 121 Go de mémoire unifiée, ~3.7 To libres)
 
 Gérés par **`~/ai-spark/sparkctl`** (équivalent aictl) : `up/down/status/logs {core|llm}` + `sleep/wake` (mode sommeil LLM) + `finetune start/stop`.
 
-| Service          | Port | Profil | Modèle / image                        | Note                                                                    |
-| ---------------- | ---- | ------ | ------------------------------------- | ----------------------------------------------------------------------- |
-| spark-vllm-llm   | 8000 | `llm`  | `nvidia/Qwen3.6-35B-A3B-NVFP4` (vLLM) | 131k contexte, ~55 Go, thinking mode actif (`reasoning_content` séparé) |
-| spark-embeddings | 8084 | `core` | `voyageai/voyage-4-nano` (vLLM)       | 2048 dims — voir recette obligatoire ci-dessous                         |
-| spark-reranker   | 8085 | `core` | `BAAI/bge-reranker-v2-m3` (vLLM)      | `--runner pooling`                                                      |
-| spark-docling    | 5010 | `core` | docling-serve                         | API REST directe (pas dans LiteLLM)                                     |
+| Service          | Port | Profil | Modèle / image                                                                                                                                                 | Note                                                                    |
+| ---------------- | ---- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| spark-vllm-llm   | 8000 | `llm`  | **`/models/qwen36-fable5-nvfp4`** (vLLM) — fine-tune dgx-fable5-mix 2026-07-09, servi sous le nom `nvidia/Qwen3.6-35B-A3B-NVFP4` + alias `qwen36-fable5-nvfp4` | 131k contexte, ~55 Go, thinking mode actif (`reasoning_content` séparé) |
+| spark-embeddings | 8084 | `core` | `voyageai/voyage-4-nano` (vLLM)                                                                                                                                | 2048 dims — voir recette obligatoire ci-dessous                         |
+| spark-reranker   | 8085 | `core` | `BAAI/bge-reranker-v2-m3` (vLLM)                                                                                                                               | `--runner pooling`                                                      |
+| spark-docling    | 5010 | `core` | docling-serve                                                                                                                                                  | API REST directe (pas dans LiteLLM)                                     |
 
 `sparkctl finetune start` = protection anti-catastrophe mémoire : arrête le LLM (~100 Go libérés) et ouvre le container NGC PyTorch (workspace persistant) ; `finetune stop` relance le LLM.
+
+## Modèle fine-tuné qwen36-fable5-nvfp4 (déployé 2026-07-09)
+
+LoRA r=16 (mix dgx-fable5, 7888 ex/30M tok, eval_loss 1.364, token acc 0.701) mergé puis quantizé **NVFP4 miroir de la recette NVIDIA** (FP8 attention ×130, NVFP4 g16 experts ×160, mtp/gates/conv1d bf16). Checkpoint : `~/finetune-workspace/qwen36-fable5-nvfp4` (21 Go + mtp 1.7 Go + vision 0.9 Go), bind-monté ro dans le compose. Scripts (aussi dans `~/openclaw/pipeline/training-data/dgx-fable5-mix/`) : `merge_and_nvfp4.py` (merge CPU + PTQ ; **modelopt ≥0.45 requis** — 0.37 saute les experts fusionnés Qwen3.5-MoE → 66 Go bf16), `inject_mtp.py` (transformers jette `mtp.*` au merge → réinjection des 19 tenseurs bf16 du base), `fixup_to_vl.py` (layout `Qwen3_5MoeForConditionalGeneration` + tour vision NVIDIA — vLLM 0.24 ne supporte PAS le MTP de la classe texte-seule `Qwen3_5MoeForCausalLM`). Rollback : remettre `nvidia/Qwen3.6-35B-A3B-NVFP4` dans le compose (toujours en cache HF).
+
+**Speculative decoding MTP (validé A/B 2026-07-09)** : `--speculative-config '{"method":"mtp","num_speculative_tokens":3,"moe_backend":"triton"}'` — `moe_backend triton` OBLIGATOIRE (draft MTP bf16 ; marlin global ne supporte pas le MoE non quantizé → crash au boot). Gain réel single-stream : 58→68 tok/s (**+18 %**, PAS 2x — MoE A3B : les tokens vérifiés en batch activent des experts différents, la BP mémoire GB10 ne s'amortit pas comme sur un dense). Acceptance ~70 % (benchmark) / ~39 % (charge agentique réelle). k=2 testé : pas mieux (~65 tok/s).
 
 ## Mode sommeil vLLM (sleep/wake, validé 2026-07-08)
 
