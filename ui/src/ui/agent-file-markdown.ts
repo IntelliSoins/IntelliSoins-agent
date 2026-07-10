@@ -138,7 +138,7 @@ function parseBulletFields(text: string): {
     }
     while (index < lines.length) {
       const line = lines[index] ?? "";
-      if (/^- \*\*.+?:\*\*/.test(line) || /^## /.test(line) || /^---\s*$/.test(line)) {
+      if (/^- \*\*.+?:\*\*/.test(line) || line.startsWith("## ") || /^---\s*$/.test(line)) {
         break;
       }
       valueLines.push(line);

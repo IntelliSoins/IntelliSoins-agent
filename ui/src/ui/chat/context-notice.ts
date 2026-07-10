@@ -89,12 +89,12 @@ export function getContextNoticeViewModel(
   const { warnRgb, dangerRgb } = getThemeNoticeColors();
   const [wr, wg, wb] = warnRgb;
   const [dr, dg, db] = dangerRgb;
-  const t = Math.min(Math.max((ratio - 0.85) / 0.1, 0), 1);
-  const r = Math.round(wr + (dr - wr) * t);
-  const g = Math.round(wg + (dg - wg) * t);
-  const b = Math.round(wb + (db - wb) * t);
+  const blend = Math.min(Math.max((ratio - 0.85) / 0.1, 0), 1);
+  const r = Math.round(wr + (dr - wr) * blend);
+  const g = Math.round(wg + (dg - wg) * blend);
+  const b = Math.round(wb + (db - wb) * blend);
   const color = `rgb(${r}, ${g}, ${b})`;
-  const bgOpacity = 0.08 + 0.08 * t;
+  const bgOpacity = 0.08 + 0.08 * blend;
   const bg = `rgba(${r}, ${g}, ${b}, ${bgOpacity})`;
   return {
     pct,

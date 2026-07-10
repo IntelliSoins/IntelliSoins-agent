@@ -99,10 +99,10 @@ export function resolveTabForProfile(tab: Tab, profile: InterfaceProfile): Tab {
 }
 
 export function tabGroupsForProfile(profile: InterfaceProfile) {
-  return TAB_GROUPS.map((group) => ({
-    ...group,
-    tabs: group.tabs.filter((tab) => isTabVisibleForProfile(tab as Tab, profile)),
-  })).filter((group) => group.tabs.length > 0);
+  return TAB_GROUPS.map((group) => {
+    const tabs = group.tabs.filter((tab) => isTabVisibleForProfile(tab as Tab, profile));
+    return { label: group.label, tabs };
+  }).filter((group) => group.tabs.length > 0);
 }
 
 export function settingsTabsForProfile(profile: InterfaceProfile): Tab[] {

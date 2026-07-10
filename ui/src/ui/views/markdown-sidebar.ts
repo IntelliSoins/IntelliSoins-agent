@@ -8,6 +8,7 @@ import { resolveEmbedSandbox, type EmbedSandboxMode } from "../embed-sandbox.ts"
 import { icons } from "../icons.ts";
 import { toSanitizedMarkdownHtml } from "../markdown.ts";
 import type { SidebarContent } from "../sidebar-content.ts";
+import { resolveSidebarRawText } from "../sidebar-content.ts";
 
 function resolveSidebarCanvasSandbox(
   content: SidebarContent,
@@ -68,7 +69,7 @@ export function renderMarkdownSidebar(props: MarkdownSidebarProps) {
         ${props.error
           ? html`
               <div class="callout danger">${props.error}</div>
-              ${content?.rawText?.trim()
+              ${resolveSidebarRawText(content)?.trim()
                 ? html`
                     <button
                       @click=${props.onViewRawText}
@@ -102,7 +103,7 @@ export function renderMarkdownSidebar(props: MarkdownSidebarProps) {
                         `,
                       )}
                     </div>
-                    ${content.rawText?.trim()
+                    ${resolveSidebarRawText(content)?.trim()
                       ? html`
                           <div style="margin-top: 12px;">
                             <button @click=${props.onViewRawText} class="btn" type="button">
