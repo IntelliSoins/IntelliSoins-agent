@@ -1,11 +1,16 @@
 // Control UI tests cover navigation behavior.
 import { describe, expect, it, vi } from "vitest";
-import { mountApp as mountTestApp, registerAppMountHooks } from "./test-helpers/app-mount.ts";
+import { isDesktopShellLayout } from "./shell-layout.ts";
+import {
+  mountApp as mountTestApp,
+  registerAppMountHooks,
+  setViewportWidth,
+} from "./test-helpers/app-mount.ts";
 
 registerAppMountHooks();
 
-function mountApp(pathname: string) {
-  return mountTestApp(pathname);
+function mountApp(pathname: string, viewportWidth?: number) {
+  return mountTestApp(pathname, viewportWidth);
 }
 
 function nextFrame() {
@@ -371,8 +376,8 @@ describe("control UI routing", () => {
 
     expectElement(app, ".sidebar-version", HTMLElement);
     const statusDot = expectElement(app, ".sidebar-version__status", HTMLElement);
-    expect(statusDot.getAttribute("aria-label")).toBe("Gateway status: Online");
-    expect(statusDot.getAttribute("title")).toBe("Gateway status: Online");
+    expect(statusDot.getAttribute("aria-label")).toBe("Connector status: Online");
+    expect(statusDot.getAttribute("title")).toBe("Connector status: Online");
     expect([...statusDot.classList]).toEqual([
       "sidebar-version__status",
       "sidebar-connection-status--online",
@@ -383,7 +388,7 @@ describe("control UI routing", () => {
 
     expect(app.querySelector(".sidebar-resizer")).toBeNull();
     const shell = expectElement(app, ".shell", HTMLElement);
-    expect(shell.style.getPropertyValue("--shell-nav-width")).toBe("");
+    expect(shell.style.getPropertyValue("--shell-nav-width")).toBe("360px");
 
     const split = expectElement(app, ".chat-split-container", HTMLElement);
     split.classList.add("chat-split-container--open");
@@ -446,6 +451,39 @@ describe("control UI routing", () => {
     expect(item.querySelector(".nav-item__text")).toBeNull();
     expect(app.querySelector(".sidebar-brand__copy")).toBeNull();
     expectElement(header, ".nav-collapse-toggle", HTMLElement);
+  });
+
+  it("renders a draggable sidebar resizer on desktop and persists width", async () => {
+    const app = mountApp("/chat", 1280);
+    setViewportWidth(1280);
+    app.requestUpdate();
+    await app.updateComplete;
+
+    expect(isDesktopShellLayout()).toBe(true);
+    expect(app.settings.navCollapsed).toBe(false);
+
+    const shell = expectElement(app, ".shell", HTMLElement);
+    const resizer = expectElement(app, "sidebar-resizer", HTMLElement);
+
+    expect(shell.style.getPropertyValue("--shell-nav-width")).toBe(`${app.settings.navWidth}px`);
+    expect(resizer.getAttribute("aria-label")).toBe("Resize sidebar");
+
+    resizer.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true, cancelable: true }),
+    );
+    await app.updateComplete;
+
+    expect(app.settings.navWidth).toBe(230);
+    expect(shell.style.getPropertyValue("--shell-nav-width")).toBe("230px");
+
+    const persisted = JSON.parse(localStorage.getItem("openclaw.control.settings.v1") ?? "{}");
+    expect(persisted.navWidth).toBe(230);
+
+    app.applySettings({ ...app.settings, navCollapsed: true });
+    await app.updateComplete;
+
+    expect(app.querySelector(".sidebar-resizer")).toBeNull();
+    expect(shell.style.getPropertyValue("--shell-nav-width")).toBe("");
   });
 
   it("hides child nav items when the active group is collapsed", async () => {
