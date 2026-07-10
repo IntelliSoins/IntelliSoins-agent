@@ -909,7 +909,8 @@ describe("chat composer workbench", () => {
       "/workspace",
     );
     const file = container.querySelector<HTMLButtonElement>(".chat-workspace-rail__file");
-    expect(file?.textContent).toContain("AGENTS.md");
+    expect(file?.textContent).toContain("AGENTS");
+    expect(file?.textContent).not.toContain("AGENTS.md");
     expect(file?.textContent).toContain("2 KB");
 
     file?.click();

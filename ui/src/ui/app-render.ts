@@ -4,7 +4,6 @@ import { guard } from "lit/directives/guard.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { i18n, t } from "../i18n/index.ts";
 import { getSafeLocalStorage } from "../local-storage.ts";
-import { isEditableAgentConfigFile } from "./agent-file-markdown.ts";
 import {
   createChatSessionsLoadOverrides,
   hasAbortableSessionRun,
@@ -1286,14 +1285,6 @@ function renderCronQuickCreateForTab(
   });
 }
 
-function buildWorkspaceFileSidebarContent(name: string, content: string): string {
-  if (/\.(?:md|markdown|mdx)$/i.test(name)) {
-    return content;
-  }
-  const language = name.match(/\.([a-z0-9_-]+)$/i)?.[1]?.toLowerCase() ?? "";
-  return `# ${name}\n\n\`\`\`${language}\n${content}\n\`\`\``;
-}
-
 export function renderApp(state: AppViewState) {
   const updatableState = state as AppViewState & { requestUpdate?: () => void };
   const requestHostUpdate =
@@ -2205,19 +2196,11 @@ export function renderApp(state: AppViewState) {
         state.agentFileContents = { ...state.agentFileContents, [name]: content };
         state.agentFileDrafts = { ...state.agentFileDrafts, [name]: content };
         state.agentFileShowRaw = false;
-        if (isEditableAgentConfigFile(name)) {
-          state.handleOpenSidebar({
-            kind: "agentFile",
-            fileName: name,
-            agentId: chatAgentId,
-            missing: res?.file?.missing,
-          });
-          return;
-        }
         state.handleOpenSidebar({
-          kind: "markdown",
-          content: buildWorkspaceFileSidebarContent(name, content),
-          rawText: content,
+          kind: "agentFile",
+          fileName: name,
+          agentId: chatAgentId,
+          missing: res?.file?.missing,
         });
       } catch (err) {
         if (isCurrentOpenRequest()) {
@@ -3742,7 +3725,7 @@ export function renderApp(state: AppViewState) {
                             draft,
                             saving: state.agentFileSaving,
                             missing: state.sidebarContent.missing,
-                            showRaw: state.agentFileShowRaw,
+                            showRaw: false,
                             onDraftChange: (content: string) => {
                               state.agentFileDrafts = {
                                 ...state.agentFileDrafts,
@@ -3761,9 +3744,6 @@ export function renderApp(state: AppViewState) {
                                 ...state.agentFileDrafts,
                                 [fileName]: baseContent,
                               };
-                            },
-                            onToggleRaw: () => {
-                              state.agentFileShowRaw = !state.agentFileShowRaw;
                             },
                           };
                         })()
