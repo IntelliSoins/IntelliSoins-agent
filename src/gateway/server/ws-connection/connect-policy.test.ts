@@ -376,6 +376,13 @@ describe("ws connect policy", () => {
     expectClearsUnboundScopes(
       {
         controlUiAuthPolicy: nonControlUi,
+        authMethod: "user-account",
+      },
+      true,
+    );
+    expectClearsUnboundScopes(
+      {
+        controlUiAuthPolicy: nonControlUi,
         authMethod: "password",
       },
       true,

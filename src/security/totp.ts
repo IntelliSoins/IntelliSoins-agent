@@ -119,6 +119,38 @@ export function verifyTotpCode(
   return false;
 }
 
+/** Resolve the TOTP counter when a code is valid inside the configured clock-skew window. */
+export function resolveTotpCounterForCode(
+  secretBase32: string,
+  code: string,
+  options?: { unixSeconds?: number; windowSteps?: number },
+): number | null {
+  const normalizedCode = code.trim();
+  if (!/^\d{6}$/.test(normalizedCode)) {
+    return null;
+  }
+  const secret = decodeBase32(secretBase32);
+  if (!secret) {
+    return null;
+  }
+  const unixSeconds = options?.unixSeconds ?? Math.floor(Date.now() / 1000);
+  const windowSteps = options?.windowSteps ?? DEFAULT_WINDOW_STEPS;
+  const counterBase = Math.floor(unixSeconds / DEFAULT_PERIOD_SECONDS);
+  for (let offset = -windowSteps; offset <= windowSteps; offset += 1) {
+    const counter = counterBase + offset;
+    const expected = totpAt(
+      secret,
+      counter * DEFAULT_PERIOD_SECONDS,
+      DEFAULT_PERIOD_SECONDS,
+      DEFAULT_DIGITS,
+    );
+    if (safeEqualSecret(expected, normalizedCode)) {
+      return counter;
+    }
+  }
+  return null;
+}
+
 /** Constant-time compare for TOTP codes (used in tests). */
 export function equalTotpCode(left: string, right: string): boolean {
   const leftBuffer = Buffer.from(left.padStart(DEFAULT_DIGITS, "0"));

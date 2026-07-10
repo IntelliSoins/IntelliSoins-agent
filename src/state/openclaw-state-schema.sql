@@ -1168,6 +1168,7 @@ CREATE TABLE IF NOT EXISTS control_ui_users (
   password_hash TEXT NOT NULL,
   totp_secret_encrypted TEXT,
   totp_enabled INTEGER NOT NULL DEFAULT 0,
+  totp_last_counter INTEGER,
   created_at_ms INTEGER NOT NULL,
   updated_at_ms INTEGER NOT NULL
 );

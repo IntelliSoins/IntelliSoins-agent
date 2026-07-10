@@ -18,7 +18,7 @@ import {
   authorizeControlUiUserAccountAuth,
   hasExplicitUserAccountAuth,
 } from "./control-ui-user-auth.js";
-import { hasControlUiUsers } from "./control-ui-users.sqlite.js";
+import { hasControlUiUsers, hasControlUiUserWithoutMfaEnabled } from "./control-ui-users.sqlite.js";
 import {
   isLoopbackAddress,
   resolveLocalInterfaceAddressMatch,
@@ -312,6 +312,11 @@ export function assertGatewayAuthConfigured(
       `gateway auth mode is users, but no Control UI user accounts exist. Run intellisoins doctor --create-control-ui-user to create the first operator account.${LEGACY_OPENCLAW_ENV_NOTE}`,
     );
   }
+  if (auth.mode === "users" && hasControlUiUserWithoutMfaEnabled()) {
+    throw new Error(
+      `gateway auth mode is users, but at least one Control UI user does not have MFA enabled. Run intellisoins doctor --create-control-ui-user or complete MFA enrollment before starting the gateway.${LEGACY_OPENCLAW_ENV_NOTE}`,
+    );
+  }
 }
 
 /**
@@ -594,7 +599,7 @@ async function authorizeGatewayConnectCore(
     if (userAccountResult) {
       return userAccountResult;
     }
-    if (auth.token && connectAuth?.token) {
+    if (authSurface !== "ws-control-ui" && auth.token && connectAuth?.token) {
       return authorizeTokenAuth({
         authToken: auth.token,
         connectToken: connectAuth.token,

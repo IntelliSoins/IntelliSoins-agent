@@ -16,6 +16,17 @@ function decodeBase64Url(value: string): Buffer {
   return Buffer.from(value, "base64url");
 }
 
+// Fixed dummy hash so unknown-user auth checks always run scrypt with stable timing.
+const DUMMY_PASSWORD_HASH = (() => {
+  const salt = Buffer.alloc(SCRYPT_SALT_BYTES, 0);
+  const derived = scryptSync("__openclaw_dummy_user_auth__", salt, SCRYPT_KEY_BYTES, {
+    N: SCRYPT_N,
+    r: SCRYPT_R,
+    p: SCRYPT_P,
+  });
+  return `${SCRYPT_PREFIX}$${encodeBase64Url(salt)}$${encodeBase64Url(derived)}`;
+})();
+
 /** Hash a plaintext password for storage; never persist the input password. */
 export function hashPassword(password: string): string {
   const salt = randomBytes(SCRYPT_SALT_BYTES);
@@ -47,4 +58,9 @@ export function verifyPassword(password: string, storedHash: string): boolean {
     return false;
   }
   return timingSafeEqual(actual, expected);
+}
+
+/** Run a scrypt verify against a fixed dummy hash to normalize unknown-user timing. */
+export function runDummyPasswordVerify(password: string): void {
+  verifyPassword(password, DUMMY_PASSWORD_HASH);
 }

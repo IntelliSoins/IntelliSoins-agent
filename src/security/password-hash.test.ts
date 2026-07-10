@@ -1,6 +1,6 @@
 // Password hashing tests for Control UI user accounts.
 import { describe, expect, it } from "vitest";
-import { hashPassword, verifyPassword } from "./password-hash.js";
+import { hashPassword, runDummyPasswordVerify, verifyPassword } from "./password-hash.js";
 
 describe("password-hash", () => {
   it("hashes and verifies a password", () => {
@@ -12,5 +12,9 @@ describe("password-hash", () => {
 
   it("rejects malformed stored hashes", () => {
     expect(verifyPassword("secret", "bcrypt$abc")).toBe(false);
+  });
+
+  it("runs dummy scrypt without throwing", () => {
+    expect(() => runDummyPasswordVerify("probe-password")).not.toThrow();
   });
 });

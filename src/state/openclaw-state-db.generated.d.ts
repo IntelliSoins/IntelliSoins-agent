@@ -240,6 +240,7 @@ export interface ControlUiUsers {
   created_at_ms: number;
   password_hash: string;
   totp_enabled: Generated<number>;
+  totp_last_counter: number | null;
   totp_secret_encrypted: string | null;
   updated_at_ms: number;
   user_id: string;

@@ -10,6 +10,7 @@ import { verifyTotpCode } from "../security/totp.js";
 export type DoctorControlUiUserOptions = {
   username?: string;
   password?: string;
+  mfaCode?: string;
   nonInteractive?: boolean;
   yes?: boolean;
 };
@@ -21,7 +22,7 @@ type DoctorPrompter = {
   confirm: (params: { message: string; initialValue?: boolean }) => Promise<boolean>;
 };
 
-/** Create the first Control UI user and optionally enroll MFA during doctor. */
+/** Create the first Control UI user and enroll MFA during doctor. */
 export async function runDoctorCreateControlUiUser(params: {
   cfg: OpenClawConfig;
   prompter: DoctorPrompter;
@@ -45,59 +46,51 @@ export async function runDoctorCreateControlUiUser(params: {
     (options.nonInteractive
       ? ""
       : await prompter.password({
-          message: "Mot de passe (min. 8 caractères)",
+          message: "Mot de passe (min. 12 caractères)",
         }));
   if (!password) {
     throw new Error("Control UI password is required.");
   }
-  const enrollTotp =
-    options.nonInteractive === true
-      ? options.yes === true
-      : await prompter.confirm({
-          message: "Configurer l'authentification MFA (TOTP) maintenant ?",
-          initialValue: true,
-        });
   const created = createControlUiUser({
     username,
     password,
-    enrollTotp,
+    enrollTotp: true,
   });
-  if (enrollTotp && created.totpSecret && created.totpOtpauthUri) {
-    prompter.note(
-      [
-        "Scannez ce secret MFA dans votre application d'authentification :",
-        created.totpSecret,
-        "",
-        "URI otpauth :",
-        created.totpOtpauthUri,
-        "",
-        buildTotpOtpauthUri({
-          issuer: "IntelliSoins",
-          accountName: username,
-          secret: created.totpSecret,
-        }),
-      ].join("\n"),
-      "MFA TOTP",
-    );
-    const confirmCode = options.nonInteractive
+  if (!created.totpSecret || !created.totpOtpauthUri) {
+    throw new Error("Control UI MFA enrollment failed.");
+  }
+  prompter.note(
+    [
+      "Scannez ce secret MFA dans votre application d'authentification :",
+      created.totpSecret,
+      "",
+      "URI otpauth :",
+      created.totpOtpauthUri,
+      "",
+      buildTotpOtpauthUri({
+        issuer: "IntelliSoins",
+        accountName: username,
+        secret: created.totpSecret,
+      }),
+    ].join("\n"),
+    "MFA TOTP",
+  );
+  const confirmCode =
+    options.mfaCode?.trim() ||
+    (options.nonInteractive
       ? ""
       : await prompter.text({
           message: "Saisissez le code MFA à 6 chiffres pour confirmer l'inscription",
-        });
-    if (confirmCode) {
-      confirmControlUiUserTotpEnrollment({
-        username,
-        totpCode: confirmCode,
-        verifyTotp: verifyTotpCode,
-      });
-      prompter.note("MFA activée pour ce compte.", "Control UI");
-    } else if (!options.nonInteractive) {
-      prompter.note(
-        "Compte créé. Exécutez à nouveau doctor avec confirmation MFA pour activer TOTP.",
-        "Control UI",
-      );
-    }
+        }));
+  if (!confirmCode) {
+    throw new Error("MFA confirmation code is required before enabling users mode.");
   }
+  confirmControlUiUserTotpEnrollment({
+    username,
+    totpCode: confirmCode,
+    verifyTotp: verifyTotpCode,
+  });
+  prompter.note("MFA activée pour ce compte.", "Control UI");
   cfg = {
     ...cfg,
     gateway: {

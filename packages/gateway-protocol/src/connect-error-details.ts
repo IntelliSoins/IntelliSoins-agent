@@ -40,6 +40,7 @@ export const ConnectErrorDetailCodes = {
   AUTH_RATE_LIMITED: "AUTH_RATE_LIMITED",
   AUTH_USER_NOT_FOUND: "AUTH_USER_NOT_FOUND",
   AUTH_USER_PASSWORD_MISMATCH: "AUTH_USER_PASSWORD_MISMATCH",
+  AUTH_USER_CREDENTIALS_INVALID: "AUTH_USER_CREDENTIALS_INVALID",
   AUTH_USER_MFA_REQUIRED: "AUTH_USER_MFA_REQUIRED",
   AUTH_USER_MFA_INVALID: "AUTH_USER_MFA_INVALID",
   AUTH_USER_REQUIRED: "AUTH_USER_REQUIRED",
@@ -199,9 +200,9 @@ export function resolveAuthConnectErrorDetailCode(
     case "rate_limited":
       return ConnectErrorDetailCodes.AUTH_RATE_LIMITED;
     case "user_not_found":
-      return ConnectErrorDetailCodes.AUTH_USER_NOT_FOUND;
     case "user_password_mismatch":
-      return ConnectErrorDetailCodes.AUTH_USER_PASSWORD_MISMATCH;
+    case "user_credentials_invalid":
+      return ConnectErrorDetailCodes.AUTH_USER_CREDENTIALS_INVALID;
     case "user_mfa_required":
       return ConnectErrorDetailCodes.AUTH_USER_MFA_REQUIRED;
     case "user_mfa_invalid":

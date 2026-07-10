@@ -78,7 +78,7 @@ describe("resolveLoginFailureFeedback", () => {
     const feedback = resolveLoginFailureFeedback({
       connected: false,
       lastError: "unauthorized",
-      lastErrorCode: ConnectErrorDetailCodes.AUTH_USER_PASSWORD_MISMATCH,
+      lastErrorCode: ConnectErrorDetailCodes.AUTH_USER_CREDENTIALS_INVALID,
       hasToken: false,
       hasPassword: true,
       hasUsername: true,

@@ -130,8 +130,7 @@ export function isNonRecoverableAuthError(error: GatewayErrorInfo | undefined): 
     code === ConnectErrorDetailCodes.AUTH_PASSWORD_MISSING ||
     code === ConnectErrorDetailCodes.AUTH_PASSWORD_MISMATCH ||
     code === ConnectErrorDetailCodes.AUTH_USER_REQUIRED ||
-    code === ConnectErrorDetailCodes.AUTH_USER_NOT_FOUND ||
-    code === ConnectErrorDetailCodes.AUTH_USER_PASSWORD_MISMATCH ||
+    code === ConnectErrorDetailCodes.AUTH_USER_CREDENTIALS_INVALID ||
     code === ConnectErrorDetailCodes.AUTH_USER_MFA_REQUIRED ||
     code === ConnectErrorDetailCodes.AUTH_USER_MFA_INVALID ||
     code === ConnectErrorDetailCodes.AUTH_RATE_LIMITED ||
@@ -751,15 +750,7 @@ export class GatewayBrowserClient {
     // Gateways may reject this unless gateway.controlUi.allowInsecureAuth is enabled.
     const isSecureContext = typeof crypto !== "undefined" && Boolean(crypto.subtle);
     let deviceIdentity: Awaited<ReturnType<typeof loadOrCreateDeviceIdentity>> | null = null;
-    let selectedAuth: SelectedConnectAuth = {
-      authToken: explicitUsername ? undefined : explicitGatewayToken,
-      authPassword: explicitPassword,
-      authUsername: explicitUsername,
-      authMfaCode: explicitMfaCode,
-      canFallbackToShared: false,
-    };
-
-    if (isSecureContext && !explicitUsername) {
+    if (isSecureContext) {
       deviceIdentity = await loadOrCreateDeviceIdentity();
       this.emitConnectTiming(generation, "device-identity-ready", {
         secureContext: true,
@@ -769,6 +760,14 @@ export class GatewayBrowserClient {
         role,
         deviceId: deviceIdentity.deviceId,
       });
+    } else {
+      selectedAuth = {
+        authToken: explicitUsername ? undefined : explicitGatewayToken,
+        authPassword: explicitPassword,
+        authUsername: explicitUsername,
+        authMfaCode: explicitMfaCode,
+        canFallbackToShared: false,
+      };
     }
     const scopes = resolveControlUiConnectScopes(selectedAuth);
     const device = await buildGatewayConnectDevice({
@@ -989,10 +988,25 @@ export class GatewayBrowserClient {
     const authUsername = this.opts.username?.trim() || undefined;
     const authMfaCode = this.opts.mfaCode?.trim() || undefined;
     if (authUsername) {
+      const storedEntry = loadDeviceAuthToken({
+        deviceId: params.deviceId,
+        role: params.role,
+      });
+      const storedScopes = storedEntry?.scopes ?? [];
+      const storedTokenCanRead =
+        params.role !== CONTROL_UI_OPERATOR_ROLE ||
+        storedScopes.includes("operator.read") ||
+        storedScopes.includes("operator.write") ||
+        storedScopes.includes("operator.admin");
+      const storedToken = storedTokenCanRead ? storedEntry?.token : undefined;
       return {
         authPassword,
         authUsername,
         authMfaCode,
+        authDeviceToken: storedToken,
+        resolvedDeviceToken: storedToken,
+        storedToken: storedToken ?? undefined,
+        storedScopes: storedEntry?.scopes ?? undefined,
         canFallbackToShared: false,
       };
     }

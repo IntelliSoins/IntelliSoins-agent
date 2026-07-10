@@ -9,7 +9,11 @@ import {
   getNodeSqliteKysely,
 } from "../infra/kysely-sync.js";
 import { hashPassword, verifyPassword } from "../security/password-hash.js";
-import { decryptTotpSecret, encryptTotpSecret } from "../security/totp-secret-crypto.js";
+import {
+  decryptLegacyTotpSecret,
+  decryptTotpSecret,
+  encryptTotpSecret,
+} from "../security/totp-secret-crypto.js";
 import { generateTotpSecret } from "../security/totp.js";
 import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
 import {
@@ -27,9 +31,12 @@ export type ControlUiUserRecord = {
   passwordHash: string;
   totpSecretEncrypted: string | null;
   totpEnabled: boolean;
+  totpLastCounter: number | null;
   createdAtMs: number;
   updatedAtMs: number;
 };
+
+const MIN_CONTROL_UI_PASSWORD_LENGTH = 12;
 
 export type CreateControlUiUserInput = {
   username: string;
@@ -55,6 +62,10 @@ function mapRow(row: ControlUiUserRow): ControlUiUserRecord {
     passwordHash: row.password_hash,
     totpSecretEncrypted: row.totp_secret_encrypted,
     totpEnabled: row.totp_enabled === 1,
+    totpLastCounter:
+      row.totp_last_counter === null || row.totp_last_counter === undefined
+        ? null
+        : Number(row.totp_last_counter),
     createdAtMs: row.created_at_ms,
     updatedAtMs: row.updated_at_ms,
   };
@@ -104,6 +115,22 @@ export function findControlUiUserByUsername(
   return row ? mapRow(row) : null;
 }
 
+/** Return true when at least one Control UI user exists without MFA enabled. */
+export function hasControlUiUserWithoutMfaEnabled(
+  options: OpenClawStateDatabaseOptions = {},
+): boolean {
+  const { db } = openOpenClawStateDatabase(options);
+  const kysely = getUsersKysely(db);
+  const row = executeSqliteQueryTakeFirstSync(
+    db,
+    kysely
+      .selectFrom("control_ui_users")
+      .select((eb) => eb.fn.countAll<number>().as("count"))
+      .where("totp_enabled", "=", 0),
+  );
+  return Number(row?.count ?? 0) > 0;
+}
+
 /** Decrypt the stored TOTP secret for a user when MFA is enabled. */
 export function resolveControlUiUserTotpSecret(
   user: ControlUiUserRecord,
@@ -112,7 +139,55 @@ export function resolveControlUiUserTotpSecret(
   if (!user.totpEnabled || !user.totpSecretEncrypted) {
     return null;
   }
-  return decryptTotpSecret(user.totpSecretEncrypted, env);
+  const payload = user.totpSecretEncrypted;
+  const decrypted = decryptTotpSecret(payload, env);
+  if (decrypted) {
+    return decrypted;
+  }
+  const legacy = decryptLegacyTotpSecret(payload, env);
+  if (!legacy) {
+    return null;
+  }
+  reencryptControlUiUserTotpSecret(user.userId, legacy, { env });
+  return legacy;
+}
+
+function reencryptControlUiUserTotpSecret(
+  userId: string,
+  secret: string,
+  options: OpenClawStateDatabaseOptions = {},
+): void {
+  const now = Date.now();
+  const totpSecretEncrypted = encryptTotpSecret(secret, options.env);
+  runOpenClawStateWriteTransaction(options, (db) => {
+    const kysely = getUsersKysely(db);
+    executeSqliteQuerySync(
+      db,
+      kysely
+        .updateTable("control_ui_users")
+        .set({ totp_secret_encrypted: totpSecretEncrypted, updated_at_ms: now })
+        .where("user_id", "=", userId),
+    );
+  });
+}
+
+/** Record the latest accepted TOTP counter to block replay within the skew window. */
+export function recordControlUiUserTotpSuccess(
+  userId: string,
+  counter: number,
+  options: OpenClawStateDatabaseOptions = {},
+): void {
+  const now = Date.now();
+  runOpenClawStateWriteTransaction(options, (db) => {
+    const kysely = getUsersKysely(db);
+    executeSqliteQuerySync(
+      db,
+      kysely
+        .updateTable("control_ui_users")
+        .set({ totp_last_counter: counter, updated_at_ms: now })
+        .where("user_id", "=", userId),
+    );
+  });
 }
 
 /** Create a new Control UI user with optional TOTP enrollment material. */
@@ -124,8 +199,13 @@ export function createControlUiUser(
   if (!username || username.length < 2) {
     throw new Error("Control UI username must be at least 2 characters.");
   }
-  if (!input.password || input.password.length < 8) {
-    throw new Error("Control UI password must be at least 8 characters.");
+  if (!input.password || input.password.length < MIN_CONTROL_UI_PASSWORD_LENGTH) {
+    throw new Error(
+      `Control UI password must be at least ${MIN_CONTROL_UI_PASSWORD_LENGTH} characters.`,
+    );
+  }
+  if (input.enrollTotp !== true) {
+    throw new Error("Control UI users mode requires MFA enrollment.");
   }
   const now = Date.now();
   const userId = randomUUID();
