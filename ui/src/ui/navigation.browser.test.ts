@@ -9,8 +9,8 @@ import {
 
 registerAppMountHooks();
 
-function mountApp(pathname: string) {
-  return mountTestApp(pathname);
+function mountApp(pathname: string, viewportWidth?: number) {
+  return mountTestApp(pathname, viewportWidth);
 }
 
 function nextFrame() {

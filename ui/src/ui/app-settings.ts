@@ -76,9 +76,7 @@ import {
   normalizeInterfaceProfile,
   pathForTab,
   resolveTabForProfile,
-  settingsTabsForProfile,
   tabFromPath,
-  tabGroupsForProfile,
   type Tab,
 } from "./navigation.ts";
 import { normalizeAgentId, parseAgentSessionKey } from "./session-key.ts";

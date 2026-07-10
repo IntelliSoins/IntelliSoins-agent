@@ -571,6 +571,14 @@
         "lines"
       ]
     },
+    "rag_search": {
+      "emoji": "📚",
+      "title": "RAG Search",
+      "detailKeys": [
+        "action",
+        "query"
+      ]
+    },
     "web_search": {
       "emoji": "🔎",
       "title": "Web Search",

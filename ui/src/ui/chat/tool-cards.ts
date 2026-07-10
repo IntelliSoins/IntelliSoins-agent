@@ -6,7 +6,7 @@ import { t } from "../../i18n/index.ts";
 import { resolveCanvasIframeUrl } from "../canvas-url.ts";
 import { resolveEmbedSandbox, type EmbedSandboxMode } from "../embed-sandbox.ts";
 import { icons } from "../icons.ts";
-import type { SidebarContent } from "../sidebar-content.ts";
+import type { SidebarContent, SidebarFullMessageRequest } from "../sidebar-content.ts";
 import { formatToolDetail, resolveToolDisplay } from "../tool-display.ts";
 import type { ToolCard } from "../types/chat-types.ts";
 import { extractTextCached } from "./message-extract.ts";
@@ -15,7 +15,7 @@ import { formatToolOutputForSidebar, getTruncatedPreview } from "./tool-helpers.
 
 export type ToolPreview = NonNullable<ToolCard["preview"]>;
 
-type FullMessageRequest = NonNullable<SidebarContent["fullMessageRequest"]>;
+type FullMessageRequest = SidebarFullMessageRequest;
 
 function resolveCanvasPreviewSandbox(preview: ToolPreview): string {
   return resolveEmbedSandbox(preview.kind === "canvas" ? "scripts" : "scripts");
