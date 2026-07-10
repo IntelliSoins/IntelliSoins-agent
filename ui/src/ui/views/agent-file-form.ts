@@ -194,7 +194,7 @@ export type AgentFileSidebarProps = {
   onDraftChange: (content: string) => void;
   onSave: () => void;
   onReset: () => void;
-  onToggleRaw: () => void;
+  onToggleRaw?: () => void;
 };
 
 export function renderAgentFileSidebar(props: AgentFileSidebarProps) {

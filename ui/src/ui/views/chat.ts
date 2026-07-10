@@ -193,7 +193,7 @@ export type ChatProps = {
     onDraftChange: (content: string) => void;
     onSave: () => void;
     onReset: () => void;
-    onToggleRaw: () => void;
+    onToggleRaw?: () => void;
   };
   onChatScroll?: (event: Event) => void;
   basePath?: string;
@@ -1088,6 +1088,7 @@ function renderWorkspaceFileRail(
                   ${files.map((file) => {
                     const size = formatWorkspaceFileSize(file);
                     const isActive = file.name === workspaceFiles.activeName;
+                    const label = file.name.replace(/\.md$/i, "");
                     return html`
                       <button
                         class="chat-workspace-rail__file ${isActive
@@ -1100,7 +1101,7 @@ function renderWorkspaceFileRail(
                       >
                         <span class="chat-workspace-rail__file-icon">${icons.fileText}</span>
                         <span class="chat-workspace-rail__file-main">
-                          <span class="chat-workspace-rail__file-name">${file.name}</span>
+                          <span class="chat-workspace-rail__file-name">${label}</span>
                           ${size
                             ? html`<span class="chat-workspace-rail__file-meta">${size}</span>`
                             : nothing}
