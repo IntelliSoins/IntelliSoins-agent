@@ -80,6 +80,12 @@ models:
     clients: [hammerspoon]
     notes: "REST direct (pas LiteLLM, API non-OpenAI) : GET/POST /translate sur 10.0.1.1:6060 (sparklan) + 10.0.0.5:6060 (mesh). Remplace live-translator Mac :6060 (2026-07-10). Hammerspoon ⌥⌘L (EN→FR) / ⌥⌘K (FR→EN) + tool translate des agents."
 
+  - id: spark-whisper-michael-v3
+    backend: spark-rest:2022
+    hf_model: whisper-large-v3-turbo + LoRA v3 voix Michael (mergé HF, ~/ai-spark/whisper/model)
+    clients: [frontends-distants]
+    notes: "REST /v1/audio/transcriptions (json/text) sur 10.0.1.1:2022 + 10.0.0.5:2022, fp16 CUDA ~0,36 s/clip (2026-07-10). MÊME modèle que le Mac :2022 (version MLX) — le Mac reste primaire Hammerspoon (latence), le Spark sert iPhone/Android/lunettes + agent vocal futur."
+
   # --- Cloud via LiteLLM (Together / Anthropic API) ---
   - id: qwen3-coder-480b-together
     litellm_name: claude-together-qwen3-coder-480b
