@@ -4945,6 +4945,106 @@ td.data-table-key-col {
   gap: 8px;
 }
 
+.agent-config-form {
+  display: grid;
+  gap: 16px;
+}
+
+.agent-config-form--compact {
+  gap: 12px;
+}
+
+.agent-config-form__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.agent-config-form__title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.agent-config-form__subtitle {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.agent-config-form__dirty {
+  color: var(--warning, #d4a72c);
+  font-size: 12px;
+}
+
+.agent-config-form__notice {
+  margin: 0;
+}
+
+.agent-config-form__body {
+  display: grid;
+  gap: 18px;
+}
+
+.agent-config-form__group {
+  display: grid;
+  gap: 14px;
+}
+
+.agent-config-form__group-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.agent-config-form__section-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.agent-config-form__field {
+  gap: 6px;
+}
+
+.agent-config-form__field--raw {
+  min-height: clamp(240px, 48vh, 640px);
+}
+
+.agent-config-form__hint {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.agent-config-form__textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.agent-config-form--compact .agent-config-form__textarea {
+  min-height: 96px;
+}
+
+.agent-config-form__empty {
+  padding: 12px 0;
+}
+
+.agent-file-sidebar__content {
+  overflow: auto;
+}
+
+.agent-file-sidebar .agent-config-form__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding-bottom: 8px;
+  background: linear-gradient(180deg, var(--panel) 80%, transparent);
+}
+
 .md-preview-dialog {
   border: none;
   background: transparent;

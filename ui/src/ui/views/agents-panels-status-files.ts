@@ -20,6 +20,7 @@ import type {
   CronJob,
   CronStatus,
 } from "../types.ts";
+import { renderAgentFileForm } from "./agent-file-form.ts";
 import { formatBytes, type AgentContext } from "./agents-utils.ts";
 import type { AgentsPanel } from "./agents.types.ts";
 import { resolveChannelExtras as resolveChannelExtrasFromConfig } from "./channel-config-extras.ts";
@@ -428,11 +429,13 @@ export function renderAgentFiles(params: {
   agentFileContents: Record<string, string>;
   agentFileDrafts: Record<string, string>;
   agentFileSaving: boolean;
+  agentFileShowRaw: boolean;
   onLoadFiles: (agentId: string) => void;
   onSelectFile: (name: string) => void;
   onFileDraftChange: (name: string, content: string) => void;
   onFileReset: (name: string) => void;
   onFileSave: (name: string) => void;
+  onToggleRawMarkdown: () => void;
 }) {
   const list = params.agentFilesList?.agentId === params.agentId ? params.agentFilesList : null;
   const files = list?.files ?? [];
@@ -542,41 +545,23 @@ export function renderAgentFiles(params: {
                         >
                           ${icons.eye} ${t("agents.files.preview")}
                         </button>
-                        <button
-                          class="btn btn--sm"
-                          ?disabled=${!isDirty}
-                          @click=${() => params.onFileReset(activeEntry.name)}
-                        >
-                          ${t("common.reset")}
-                        </button>
-                        <button
-                          class="btn btn--sm primary"
-                          ?disabled=${params.agentFileSaving || !isDirty}
-                          @click=${() => params.onFileSave(activeEntry.name)}
-                        >
-                          ${params.agentFileSaving ? t("common.saving") : t("common.save")}
-                        </button>
                       </div>
                     </div>
-                    ${activeEntry.missing
-                      ? html`
-                          <div class="callout info" style="margin-top: 10px">
-                            ${t("agents.files.missingHint")}
-                          </div>
-                        `
-                      : nothing}
-                    <label class="field agent-file-field" style="margin-top: 12px;">
-                      <span>${t("agents.files.content")}</span>
-                      <textarea
-                        class="agent-file-textarea"
-                        .value=${draft}
-                        @input=${(e: Event) =>
-                          params.onFileDraftChange(
-                            activeEntry.name,
-                            (e.target as HTMLTextAreaElement).value,
-                          )}
-                      ></textarea>
-                    </label>
+                    <div style="margin-top: 12px;">
+                      ${renderAgentFileForm({
+                        fileName: activeEntry.name,
+                        baseContent,
+                        draft,
+                        saving: params.agentFileSaving,
+                        missing: activeEntry.missing,
+                        showRaw: params.agentFileShowRaw,
+                        onDraftChange: (content) =>
+                          params.onFileDraftChange(activeEntry.name, content),
+                        onSave: () => params.onFileSave(activeEntry.name),
+                        onReset: () => params.onFileReset(activeEntry.name),
+                        onToggleRaw: params.onToggleRawMarkdown,
+                      })}
+                    </div>
                     <dialog
                       class="md-preview-dialog"
                       aria-labelledby=${previewTitleId}

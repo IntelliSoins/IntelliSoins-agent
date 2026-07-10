@@ -54,6 +54,7 @@ export type AgentFilesState = {
   contents: Record<string, string>;
   drafts: Record<string, string>;
   saving: boolean;
+  showRaw: boolean;
 };
 
 export type AgentSkillsState = {
@@ -104,6 +105,7 @@ export type AgentsProps = {
   onFileDraftChange: (name: string, content: string) => void;
   onFileReset: (name: string) => void;
   onFileSave: (name: string) => void;
+  onToggleRawMarkdown: () => void;
   onToolsProfileChange: (agentId: string, profile: string | null, clearAllow: boolean) => void;
   onToolsOverridesChange: (agentId: string, alsoAllow: string[], deny: string[]) => void;
   onConfigReload: () => void;
@@ -257,11 +259,13 @@ export function renderAgents(props: AgentsProps) {
                     agentFileContents: props.agentFiles.contents,
                     agentFileDrafts: props.agentFiles.drafts,
                     agentFileSaving: props.agentFiles.saving,
+                    agentFileShowRaw: props.agentFiles.showRaw,
                     onLoadFiles: props.onLoadFiles,
                     onSelectFile: props.onSelectFile,
                     onFileDraftChange: props.onFileDraftChange,
                     onFileReset: props.onFileReset,
                     onFileSave: props.onFileSave,
+                    onToggleRawMarkdown: props.onToggleRawMarkdown,
                   })
                 : nothing}
               ${props.activePanel === "tools"

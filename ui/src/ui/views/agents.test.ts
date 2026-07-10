@@ -92,6 +92,7 @@ function createProps(overrides: Partial<AgentsProps> = {}): AgentsProps {
       contents: {},
       drafts: {},
       saving: false,
+      showRaw: false,
     },
     agentIdentityLoading: false,
     agentIdentityError: null,
@@ -124,6 +125,7 @@ function createProps(overrides: Partial<AgentsProps> = {}): AgentsProps {
     onFileDraftChange: () => undefined,
     onFileReset: () => undefined,
     onFileSave: () => undefined,
+    onToggleRawMarkdown: () => undefined,
     onToolsProfileChange: () => undefined,
     onToolsOverridesChange: () => undefined,
     onConfigReload: () => undefined,
@@ -421,18 +423,18 @@ describe("renderAgentFiles", () => {
           "USER.md": "# User Profile\n\nHello world",
         },
         agentFileSaving: false,
+        agentFileShowRaw: false,
         onLoadFiles: () => undefined,
         onSelectFile: () => undefined,
         onFileDraftChange: () => undefined,
         onFileReset: () => undefined,
         onFileSave: () => undefined,
+        onToggleRawMarkdown: () => undefined,
       }),
       container,
     );
 
-    expect(container.querySelectorAll(".md-preview-dialog__reader.sidebar-markdown")).toHaveLength(
-      1,
-    );
+    expect(container.querySelector(".agent-config-form")).toBeTruthy();
     expect(container.querySelector(".md-preview-dialog__path")?.textContent?.trim()).toBe(
       "USER.md",
     );
@@ -473,11 +475,13 @@ describe("renderAgentFiles", () => {
           "USER.md": "# User Profile\n\nHello world",
         },
         agentFileSaving: false,
+        agentFileShowRaw: false,
         onLoadFiles: () => undefined,
         onSelectFile: () => undefined,
         onFileDraftChange: () => undefined,
         onFileReset: () => undefined,
         onFileSave: () => undefined,
+        onToggleRawMarkdown: () => undefined,
       }),
       container,
     );
@@ -524,11 +528,13 @@ describe("renderAgentFiles", () => {
           "USER.md": "# User Profile\n\nHello world",
         },
         agentFileSaving: false,
+        agentFileShowRaw: false,
         onLoadFiles: () => undefined,
         onSelectFile: () => undefined,
         onFileDraftChange: () => undefined,
         onFileReset: () => undefined,
         onFileSave: () => undefined,
+        onToggleRawMarkdown: () => undefined,
       }),
       container,
     );

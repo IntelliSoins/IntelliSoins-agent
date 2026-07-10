@@ -882,6 +882,37 @@ export const es: TranslationMap = {
     noContent: "No content available",
     renderPreviewIframe: "Render preview",
   },
+  agentFileForm: {
+    subtitle: "Edit workspace instructions with structured fields.",
+    details: "Details",
+    editRaw: "Edit raw markdown",
+    useForm: "Use form editor",
+    unsavedChanges: "Unsaved changes",
+    emptyStructure: "No structured fields detected. Switch to raw markdown to edit this file.",
+    hints: {
+      identity: {
+        name: "The name your agent uses in conversation.",
+        creature: "What kind of agent this is — AI, robot, familiar, or something else.",
+        vibe: "How the agent comes across — sharp, warm, chaotic, calm, and so on.",
+        emoji: "A signature emoji that fits the agent's personality.",
+        avatar: "Workspace path, https URL, or data URI for the agent avatar.",
+      },
+      user: {
+        name: "Your human's name.",
+        whatToCallThem: "What the agent should call them in conversation.",
+        pronouns: "Optional pronouns for natural replies.",
+        timezone: "Helps the agent reason about schedules and local time.",
+        notes: "Short notes the agent should remember about this person.",
+        context: "Projects, preferences, and background that help the agent assist better.",
+      },
+      soul: {
+        coreTruths: "Foundational principles that shape how the agent behaves.",
+        boundaries: "Limits and guardrails the agent should respect.",
+        vibe: "The personality and tone the agent should maintain.",
+        continuity: "How the agent should treat memory and persistence across sessions.",
+      },
+    },
+  },
   sideResult: {
     ariaLabel: "BTW side result",
     label: "BTW",

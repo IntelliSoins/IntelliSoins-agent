@@ -12,6 +12,9 @@ export function buildRawSidebarContent(
   if (!content) {
     return null;
   }
+  if (content.kind === "agentFile") {
+    return null;
+  }
   if (content.kind === "markdown") {
     const rawText = content.rawText ?? content.content;
     return {

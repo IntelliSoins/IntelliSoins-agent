@@ -120,7 +120,11 @@ import { importCustomThemeFromUrl } from "./custom-theme.ts";
 import type { GatewayBrowserClient, GatewayHelloOk } from "./gateway.ts";
 import type { Tab } from "./navigation.ts";
 import { resolveAgentIdFromSessionKey } from "./session-key.ts";
-import type { SidebarContent } from "./sidebar-content.ts";
+import type {
+  CanvasSidebarContent,
+  MarkdownSidebarContent,
+  SidebarContent,
+} from "./sidebar-content.ts";
 import { loadLocalUserIdentity, loadSettings, type UiSettings } from "./storage.ts";
 import { VALID_THEME_NAMES, type ResolvedTheme, type ThemeMode, type ThemeName } from "./theme.ts";
 import type {
@@ -162,7 +166,9 @@ const bootAssistantIdentity = normalizeAssistantIdentity({});
 const bootLocalUserIdentity = loadLocalUserIdentity();
 const FULL_MESSAGE_SIDEBAR_MAX_CHARS = 500_000;
 
-function isSidebarMarkdownLike(content: SidebarContent | null): content is SidebarContent {
+function isSidebarMarkdownLike(
+  content: SidebarContent | null,
+): content is MarkdownSidebarContent | CanvasSidebarContent {
   return Boolean(content && (content.kind === "markdown" || content.kind === "canvas"));
 }
 
@@ -463,6 +469,7 @@ export class OpenClawApp extends LitElement {
   @state() agentFileDrafts: Record<string, string> = {};
   @state() agentFileActive: string | null = null;
   @state() agentFileSaving = false;
+  @state() agentFileShowRaw = false;
   @state() agentIdentityLoading = false;
   @state() agentIdentityError: string | null = null;
   @state() agentIdentityById: Record<string, AgentIdentityResult> = {};
@@ -1454,7 +1461,7 @@ export class OpenClawApp extends LitElement {
           rawText: nextRawText || content.rawText || content.content,
           unavailableReason: null,
         };
-      } else {
+      } else if (content.kind === "canvas") {
         this.sidebarContent = {
           ...content,
           rawText: nextRawText || content.rawText || null,
