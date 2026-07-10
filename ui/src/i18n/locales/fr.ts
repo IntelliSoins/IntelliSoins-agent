@@ -2397,8 +2397,21 @@ export const fr: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "Tableau de bord Connecteur IntelliSoins",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "facultatif",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "Afficher le jeton",
     hideToken: "Masquer le jeton",
     toggleTokenVisibility: "Basculer la visibilité du jeton",
@@ -2414,22 +2427,30 @@ export const fr: TranslationMap = {
         title: "Authentification requise",
         summary:
           "Le Gateway est joignable, mais il lui faut un jeton ou un mot de passe correspondant avant que ce navigateur puisse se connecter.",
-        stepPaste:
-          "Collez le jeton de intellisoins dashboard --no-open ou saisissez le mot de passe configuré.",
-        stepGenerate:
-          "Si aucun jeton n’est configuré, exécutez intellisoins doctor --generate-gateway-token sur l’hôte Gateway.",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "Cliquez de nouveau sur Connect après avoir mis à jour l’identifiant.",
       },
       authFailed: {
         title: "L’authentification ne correspond pas",
         summary:
           "L’identifiant fourni a été refusé. La cause la plus courante est un jeton obsolète ou copié depuis une autre URL Gateway.",
-        stepDashboard:
-          "Exécutez intellisoins dashboard --no-open et ouvrez la nouvelle URL ou collez son jeton.",
-        stepReplace:
-          "Remplacez les valeurs de jeton/mot de passe obsolètes ; ne réutilisez pas un jeton provenant d’une autre URL Gateway.",
-        stepMode:
-          "Utilisez un seul mode d’authentification correspondant à la fois : jeton gateway pour le mode jeton, mot de passe pour le mode mot de passe.",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "Trop de tentatives échouées",

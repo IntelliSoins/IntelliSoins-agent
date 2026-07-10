@@ -2379,8 +2379,21 @@ export const id: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "Dasbor Gateway",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "opsional",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "Tampilkan token",
     hideToken: "Sembunyikan token",
     toggleTokenVisibility: "Alihkan visibilitas token",
@@ -2396,22 +2409,30 @@ export const id: TranslationMap = {
         title: "Auth diperlukan",
         summary:
           "Gateway dapat dijangkau, tetapi memerlukan token atau kata sandi yang cocok sebelum browser ini dapat terhubung.",
-        stepPaste:
-          "Tempel token dari intellisoins dashboard --no-open atau masukkan kata sandi yang dikonfigurasi.",
-        stepGenerate:
-          "Jika belum ada token yang dikonfigurasi, jalankan intellisoins doctor --generate-gateway-token di host Gateway.",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "Klik Connect lagi setelah memperbarui kredensial.",
       },
       authFailed: {
         title: "Auth tidak cocok",
         summary:
           "Kredensial yang diberikan ditolak. Penyebab paling umum adalah token kedaluwarsa atau token yang disalin dari URL Gateway lain.",
-        stepDashboard:
-          "Jalankan intellisoins dashboard --no-open lalu buka URL baru atau tempel tokennya.",
-        stepReplace:
-          "Ganti nilai token/kata sandi yang lama; jangan gunakan ulang token dari URL Gateway lain.",
-        stepMode:
-          "Gunakan satu mode auth yang cocok pada satu waktu: token gateway untuk mode token, kata sandi untuk mode kata sandi.",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "Terlalu banyak percobaan gagal",

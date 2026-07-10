@@ -9,7 +9,7 @@ import { resolveSecretInputRef } from "../config/types.secrets.js";
 import { resolveGatewayCredentialsFromValues } from "./credentials.js";
 
 /** Authentication modes after config, override, and credential inputs are combined. */
-export type ResolvedGatewayAuthMode = "none" | "token" | "password" | "trusted-proxy";
+export type ResolvedGatewayAuthMode = "none" | "token" | "password" | "trusted-proxy" | "users";
 
 /** Records which input selected the effective Gateway auth mode. */
 export type ResolvedGatewayAuthModeSource =

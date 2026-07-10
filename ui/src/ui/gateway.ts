@@ -129,6 +129,11 @@ export function isNonRecoverableAuthError(error: GatewayErrorInfo | undefined): 
     code === ConnectErrorDetailCodes.AUTH_BOOTSTRAP_TOKEN_INVALID ||
     code === ConnectErrorDetailCodes.AUTH_PASSWORD_MISSING ||
     code === ConnectErrorDetailCodes.AUTH_PASSWORD_MISMATCH ||
+    code === ConnectErrorDetailCodes.AUTH_USER_REQUIRED ||
+    code === ConnectErrorDetailCodes.AUTH_USER_NOT_FOUND ||
+    code === ConnectErrorDetailCodes.AUTH_USER_PASSWORD_MISMATCH ||
+    code === ConnectErrorDetailCodes.AUTH_USER_MFA_REQUIRED ||
+    code === ConnectErrorDetailCodes.AUTH_USER_MFA_INVALID ||
     code === ConnectErrorDetailCodes.AUTH_RATE_LIMITED ||
     code === ConnectErrorDetailCodes.AUTH_DEVICE_TOKEN_MISMATCH ||
     code === ConnectErrorDetailCodes.AUTH_SCOPE_MISMATCH ||
@@ -198,6 +203,8 @@ type SelectedConnectAuth = {
   authToken?: string;
   authDeviceToken?: string;
   authPassword?: string;
+  authUsername?: string;
+  authMfaCode?: string;
   resolvedDeviceToken?: string;
   storedToken?: string;
   storedScopes?: string[];
@@ -218,6 +225,8 @@ export type GatewayConnectAuth = {
   token?: string;
   deviceToken?: string;
   password?: string;
+  username?: string;
+  mfaCode?: string;
 };
 
 export type GatewayConnectDevice = {
@@ -274,6 +283,8 @@ export type GatewayBrowserClientOptions = {
   url: string;
   token?: string;
   password?: string;
+  username?: string;
+  mfaCode?: string;
   clientName?: GatewayClientName;
   clientVersion?: string;
   platform?: string;
@@ -342,6 +353,14 @@ const BROWSER_WEBSOCKET_SECURITY_ERROR_CODE = "BROWSER_WEBSOCKET_SECURITY_ERROR"
 function buildGatewayConnectAuth(
   selectedAuth: SelectedConnectAuth,
 ): GatewayConnectAuth | undefined {
+  if (selectedAuth.authUsername) {
+    return {
+      username: selectedAuth.authUsername,
+      password: selectedAuth.authPassword,
+      mfaCode: selectedAuth.authMfaCode,
+      deviceToken: selectedAuth.authDeviceToken ?? selectedAuth.resolvedDeviceToken,
+    };
+  }
   const authToken = selectedAuth.authToken;
   if (!(authToken || selectedAuth.authPassword)) {
     return undefined;
@@ -724,6 +743,8 @@ export class GatewayBrowserClient {
     const client = this.buildConnectClient();
     const explicitGatewayToken = this.opts.token?.trim() || undefined;
     const explicitPassword = this.opts.password?.trim() || undefined;
+    const explicitUsername = this.opts.username?.trim() || undefined;
+    const explicitMfaCode = this.opts.mfaCode?.trim() || undefined;
 
     // crypto.subtle is only available in secure contexts (HTTPS, localhost).
     // Over plain HTTP, we skip device identity and fall back to token-only auth.
@@ -731,12 +752,14 @@ export class GatewayBrowserClient {
     const isSecureContext = typeof crypto !== "undefined" && Boolean(crypto.subtle);
     let deviceIdentity: Awaited<ReturnType<typeof loadOrCreateDeviceIdentity>> | null = null;
     let selectedAuth: SelectedConnectAuth = {
-      authToken: explicitGatewayToken,
+      authToken: explicitUsername ? undefined : explicitGatewayToken,
       authPassword: explicitPassword,
+      authUsername: explicitUsername,
+      authMfaCode: explicitMfaCode,
       canFallbackToShared: false,
     };
 
-    if (isSecureContext) {
+    if (isSecureContext && !explicitUsername) {
       deviceIdentity = await loadOrCreateDeviceIdentity();
       this.emitConnectTiming(generation, "device-identity-ready", {
         secureContext: true,
@@ -963,6 +986,16 @@ export class GatewayBrowserClient {
   private selectConnectAuth(params: { role: string; deviceId: string }): SelectedConnectAuth {
     const explicitGatewayToken = this.opts.token?.trim() || undefined;
     const authPassword = this.opts.password?.trim() || undefined;
+    const authUsername = this.opts.username?.trim() || undefined;
+    const authMfaCode = this.opts.mfaCode?.trim() || undefined;
+    if (authUsername) {
+      return {
+        authPassword,
+        authUsername,
+        authMfaCode,
+        canFallbackToShared: false,
+      };
+    }
     const storedEntry = loadDeviceAuthToken({
       deviceId: params.deviceId,
       role: params.role,

@@ -2381,8 +2381,21 @@ export const pt_BR: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "Painel do Gateway",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "opcional",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "Mostrar token",
     hideToken: "Ocultar token",
     toggleTokenVisibility: "Alternar visibilidade do token",
@@ -2398,22 +2411,30 @@ export const pt_BR: TranslationMap = {
         title: "Autenticação requerida",
         summary:
           "O Gateway está acessível, mas precisa de um token ou senha correspondente antes que este navegador possa se conectar.",
-        stepPaste:
-          "Cole o token de intellisoins dashboard --no-open ou informe a senha configurada.",
-        stepGenerate:
-          "Se nenhum token estiver configurado, execute intellisoins doctor --generate-gateway-token no host do Gateway.",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "Clique em Connect novamente depois de atualizar a credencial.",
       },
       authFailed: {
         title: "A autenticação não corresponde",
         summary:
           "A credencial fornecida foi rejeitada. A causa mais comum é um token antigo ou copiado de outro URL de Gateway.",
-        stepDashboard:
-          "Execute intellisoins dashboard --no-open e abra o novo URL ou cole seu token.",
-        stepReplace:
-          "Substitua valores antigos de token/senha; não reutilize um token de outro URL de Gateway.",
-        stepMode:
-          "Use um único modo de autenticação correspondente por vez: token de gateway para modo token, senha para modo senha.",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "Muitas tentativas falharam",

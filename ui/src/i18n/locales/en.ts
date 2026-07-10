@@ -2296,47 +2296,68 @@ export const en: TranslationMap = {
     },
   },
   login: {
-    subtitle: "IntelliSoins Connector Dashboard",
-    passwordPlaceholder: "optional",
+    title: "Connexion",
+    subtitle: "Accédez au tableau de bord de votre officine",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
+    passwordPlaceholder: "••••••••",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "Show token",
     hideToken: "Hide token",
     toggleTokenVisibility: "Toggle token visibility",
-    showPassword: "Show password",
-    hidePassword: "Hide password",
-    togglePasswordVisibility: "Toggle password visibility",
+    showPassword: "Afficher le mot de passe",
+    hidePassword: "Masquer le mot de passe",
+    togglePasswordVisibility: "Basculer la visibilité du mot de passe",
     failure: {
-      rawError: "Raw error",
-      docsAuth: "Control UI auth docs",
-      docsPairing: "Device pairing docs",
-      docsInsecure: "Insecure HTTP docs",
+      rawError: "Erreur brute",
+      docsAuth: "Documentation authentification",
+      docsPairing: "Documentation appairage",
+      docsInsecure: "Documentation HTTP non sécurisé",
       authRequired: {
-        title: "Auth required",
+        title: "Authentification requise",
         summary:
-          "The Gateway is reachable, but it needs a matching token or password before this browser can connect.",
-        stepPaste:
-          "Paste the token from intellisoins dashboard --no-open or enter the configured password.",
-        stepGenerate:
-          "If no token is configured, run intellisoins doctor --generate-gateway-token on the gateway host.",
-        stepConnect: "Click Connect again after updating the credential.",
+          "Le connecteur est joignable, mais il faut un identifiant, un mot de passe et le code MFA pour continuer.",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
+        stepConnect: "Cliquez sur Se connecter après avoir vérifié les informations.",
       },
       authFailed: {
-        title: "Auth did not match",
+        title: "Identifiants refusés",
         summary:
-          "The supplied credential was rejected. The most common cause is a stale token or a token copied from another Gateway URL.",
-        stepDashboard:
-          "Run intellisoins dashboard --no-open and open the fresh URL or paste its token.",
-        stepReplace:
-          "Replace stale token/password values; do not reuse a token from another Gateway URL.",
-        stepMode:
-          "Use one matching auth mode at a time: gateway token for token mode, password for password mode.",
+          "Les informations saisies n'ont pas été acceptées. Vérifiez l'identifiant, le mot de passe et le code MFA.",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
-        title: "Too many failed attempts",
-        summary: "The Gateway is temporarily limiting authentication attempts for this client.",
-        stepStop: "Stop retrying from this tab for a moment.",
-        stepWait:
-          "Wait for the auth limiter to cool down, then reconnect with the corrected credential.",
-        stepCheckClients: "If this is a shared host, check other clients for repeated bad retries.",
+        title: "Trop de tentatives",
+        summary: "Le connecteur limite temporairement les tentatives d'authentification.",
+        stepStop: "Arrêtez les nouvelles tentatives depuis cet onglet.",
+        stepWait: "Attendez la fin du délai de sécurité, puis reconnectez-vous.",
+        stepCheckClients:
+          "Sur un poste partagé, vérifiez qu'aucun autre client ne réessaie avec de mauvais identifiants.",
       },
       pairing: {
         title: "Device pairing required",

@@ -2370,8 +2370,21 @@ export const ar: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "لوحة معلومات Gateway",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "اختياري",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "إظهار الرمز",
     hideToken: "إخفاء الرمز",
     toggleTokenVisibility: "تبديل ظهور الرمز",
@@ -2387,22 +2400,30 @@ export const ar: TranslationMap = {
         title: "المصادقة مطلوبة",
         summary:
           "يمكن الوصول إلى Gateway، لكنه يحتاج إلى رمز مميز أو كلمة مرور مطابقة قبل أن يتمكن هذا المتصفح من الاتصال.",
-        stepPaste:
-          "الصق الرمز المميز من intellisoins dashboard --no-open أو أدخل كلمة المرور المكونة.",
-        stepGenerate:
-          "إذا لم يتم تكوين رمز مميز، فشغل intellisoins doctor --generate-gateway-token على مضيف Gateway.",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "انقر على Connect مرة أخرى بعد تحديث بيانات الاعتماد.",
       },
       authFailed: {
         title: "بيانات المصادقة غير مطابقة",
         summary:
           "تم رفض بيانات الاعتماد المقدمة. السبب الأكثر شيوعا هو رمز مميز قديم أو رمز منسوخ من عنوان Gateway آخر.",
-        stepDashboard:
-          "شغل intellisoins dashboard --no-open وافتح عنوان URL الجديد أو الصق رمزه المميز.",
-        stepReplace:
-          "استبدل قيم الرمز المميز/كلمة المرور القديمة؛ لا تعد استخدام رمز من عنوان Gateway آخر.",
-        stepMode:
-          "استخدم وضع مصادقة مطابقا واحدا في كل مرة: رمز gateway لوضع الرمز، أو كلمة المرور لوضع كلمة المرور.",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "محاولات فاشلة كثيرة جدا",

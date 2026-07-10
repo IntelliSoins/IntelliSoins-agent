@@ -7,6 +7,7 @@ export type DoctorOptions = {
   repair?: boolean;
   force?: boolean;
   generateGatewayToken?: boolean;
+  createControlUiUser?: boolean;
   allowExec?: boolean;
   postUpgrade?: boolean;
   json?: boolean;

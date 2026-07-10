@@ -2362,8 +2362,21 @@ export const zh_CN: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "网关仪表盘",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "可选",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "显示令牌",
     hideToken: "隐藏令牌",
     toggleTokenVisibility: "切换令牌可见性",
@@ -2378,17 +2391,29 @@ export const zh_CN: TranslationMap = {
       authRequired: {
         title: "需要认证",
         summary: "Gateway 可以访问，但此浏览器连接前需要匹配的令牌或密码。",
-        stepPaste: "粘贴 intellisoins dashboard --no-open 提供的令牌，或输入已配置的密码。",
-        stepGenerate:
-          "如果未配置令牌，请在 Gateway 主机上运行 intellisoins doctor --generate-gateway-token。",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "更新凭据后再次点击 Connect。",
       },
       authFailed: {
         title: "认证不匹配",
         summary: "提供的凭据被拒绝。最常见原因是令牌已过期，或令牌来自另一个 Gateway URL。",
-        stepDashboard: "运行 intellisoins dashboard --no-open 并打开新的 URL，或粘贴其中的令牌。",
-        stepReplace: "替换过期的令牌/密码；不要复用另一个 Gateway URL 的令牌。",
-        stepMode: "一次只使用一种匹配的认证模式：令牌模式使用 gateway token，密码模式使用密码。",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "失败尝试过多",

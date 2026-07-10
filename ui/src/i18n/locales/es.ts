@@ -2384,8 +2384,21 @@ export const es: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "Panel de Gateway",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "opcional",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "Mostrar token",
     hideToken: "Ocultar token",
     toggleTokenVisibility: "Alternar visibilidad del token",
@@ -2401,22 +2414,30 @@ export const es: TranslationMap = {
         title: "Autenticación requerida",
         summary:
           "Se puede acceder al Gateway, pero necesita un token o una contraseña coincidente antes de que este navegador pueda conectarse.",
-        stepPaste:
-          "Pega el token de intellisoins dashboard --no-open o introduce la contraseña configurada.",
-        stepGenerate:
-          "Si no hay token configurado, ejecuta intellisoins doctor --generate-gateway-token en el host del Gateway.",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "Haz clic en Connect de nuevo después de actualizar la credencial.",
       },
       authFailed: {
         title: "La autenticación no coincide",
         summary:
           "La credencial proporcionada fue rechazada. La causa más común es un token obsoleto o copiado desde otra URL de Gateway.",
-        stepDashboard:
-          "Ejecuta intellisoins dashboard --no-open y abre la URL nueva o pega su token.",
-        stepReplace:
-          "Reemplaza valores obsoletos de token/contraseña; no reutilices un token de otra URL de Gateway.",
-        stepMode:
-          "Usa un solo modo de autenticación coincidente a la vez: token de gateway para modo token, contraseña para modo contraseña.",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "Demasiados intentos fallidos",
