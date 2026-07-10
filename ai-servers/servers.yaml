@@ -113,27 +113,17 @@ servers:
     autostart: true
     keepalive: true
     # 2026-07-08 : PRO-G40 corrompu → retour disque interne (~/services/whisper-finetune,
-    # venv-ft, modèle base large-v3-turbo du cache HF en attendant le retrain LoRA v3).
+    # venv-ft). Modèle actif : LoRA v3 voix Michael (models/whisper-michael-mlx-v3, 380 paires) —
+    # cf. launchers/whisper-stt.sh (rollbacks v2 + base documentés).
     requires_disk: false
     log_stdout: logs/whisper-stt.log
     log_stderr: logs/whisper-stt.error.log
     health_endpoint: /health
     throttle: 30
 
-  translation:
-    name: "NLLB-200 Traduction"
-    category: translation
-    port: 6060
-    host: 127.0.0.1
-    launcher: launchers/translation.sh
-    autostart: true
-    keepalive: true
-    requires_disk: false
-    log_stdout: logs/translation.log
-    log_stderr: logs/translation.error.log
-    health_endpoint: /health
-    throttle: 30
-    working_dir: /Users/michaelahern/master-IA/tools/live-translator
+  # translation (NLLB-200 :6060) — MIGRÉ sur DGX Spark 2026-07-10 (container spark-translation,
+  # 10.0.0.5:6060 + 10.0.1.1:6060, profil core de ~/ai-spark). L'ancien live-translator Mac
+  # (master-IA/tools/live-translator) n'existe plus ; source archivée dans ~/labo-ia/live-translator.
 
   litellm-proxy:
     name: "LiteLLM Proxy (OpenAI gateway)"

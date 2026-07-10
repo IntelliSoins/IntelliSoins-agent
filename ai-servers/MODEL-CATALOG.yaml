@@ -3,7 +3,7 @@
 # Voir : models-catalog, ~/.local/bin/claude-proxy, claude-omlx (fallback direct)
 
 version: 1
-updated: "2026-07-05"
+updated: "2026-07-10"
 
 clients:
   claude:
@@ -30,24 +30,15 @@ clients:
 
 models:
   # --- Local oMLX (via LiteLLM hub) ---
-  - id: qwen3-coder-local
-    litellm_name: Qwen3-Coder-30B-A3B-Instruct-4bit
-    litellm_alias: code-local
-    litellm_alias_legacy: claude-local-qwen3-coder-30b
-    backend: omlx:8211
-    clients: [claude-proxy, cursor-chat]
-    tier: code
-    pinned_omlx: false
-    notes: Agent code local par défaut (claude-local)
-
   - id: qwen36-general-local
-    litellm_name: Qwen3.6-35B-A3B-4bit
+    litellm_name: Qwen3.6-35B-A3B-CP-lmhead8
     litellm_alias: general-local
+    litellm_alias_legacy: [code-local, claude-local-qwen3-coder-30b, claude-sonnet-4-6-local-qwen3-coder-30b]
     backend: omlx:8211
     clients: [claude-proxy, cursor-chat]
     tier: sonnet
     pinned_omlx: true
-    notes: Modèle général multimodal, pinné oMLX (variante MTP non supportée par oMLX 0.3.12 — ValueError qwen3_5_mtp ; alias legacy qwen35-35b retirés 2026-07-05)
+    notes: Modèle général multimodal unique, pinné oMLX (requant chirurgicale v2 lm_head 8bit, validée needle-test 4/4 2026-07-07 ; remplace Custom-Precision v1 ET Qwen3-Coder-30B retirés 2026-07-07 — aliases code repointés ici)
 
   - id: gemma4-12b-local
     litellm_name: gemma4-12b
@@ -58,6 +49,36 @@ models:
     clients: [claude-proxy]
     tier: sonnet
     notes: Agent vocal / multimodal — exclusif RAM avec autres gros modèles
+
+  # --- DGX Spark (vLLM via LiteLLM hub, mesh 10.0.0.5 + sparklan 10.0.1.1) ---
+  - id: spark-gemma4-26b
+    litellm_name: spark-gemma4-26b
+    litellm_alias: spark-translate
+    backend: spark-vllm:8000
+    hf_model: RedHatAI/gemma-4-26B-A4B-it-FP8-Dynamic
+    clients: [claude-proxy, cursor-chat]
+    tier: sonnet
+    notes: MoE 4B actifs, FP8 compressed-tensors, 131k ctx ; 40 tok/s solo / 176 agrégés ×8 (2026-07-09, remplace qwen36-fable5-nvfp4 — rollback en cache HF). Alias openclaw `spark`.
+
+  - id: spark-voyage-4-nano
+    litellm_name: spark-embeddings
+    backend: spark-vllm:8084
+    hf_model: voyageai/voyage-4-nano
+    clients: [claude-proxy]
+    notes: Embeddings 2048 dims, recette pooling obligatoire (dgx-spark.md) — équivalent BHS5/Infinity (cosinus 0.999965)
+
+  - id: spark-bge-reranker
+    litellm_name: spark-bge-reranker-v2-m3
+    backend: spark-vllm:8085
+    hf_model: BAAI/bge-reranker-v2-m3
+    clients: [claude-proxy]
+    notes: Provider hosted_vllm obligatoire (jamais infinity/ — crash Pydantic)
+
+  - id: spark-nllb-translation
+    backend: spark-rest:6060
+    hf_model: facebook/nllb-200-distilled-600M
+    clients: [hammerspoon]
+    notes: "REST direct (pas LiteLLM, API non-OpenAI) : GET/POST /translate sur 10.0.1.1:6060 (sparklan) + 10.0.0.5:6060 (mesh). Remplace live-translator Mac :6060 (2026-07-10). Hammerspoon ⌥⌘L (EN→FR) / ⌥⌘K (FR→EN) + tool translate des agents."
 
   # --- Cloud via LiteLLM (Together / Anthropic API) ---
   - id: qwen3-coder-480b-together

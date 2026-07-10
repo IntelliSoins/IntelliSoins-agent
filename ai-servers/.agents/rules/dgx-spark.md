@@ -26,20 +26,25 @@ NVIDIA DGX Spark **GB10** (aarch64, 121 Go de mémoire unifiée, ~3.7 To libres)
 
 Gérés par **`~/ai-spark/sparkctl`** (équivalent aictl) : `up/down/status/logs {core|llm}` + `sleep/wake` (mode sommeil LLM) + `finetune start/stop`.
 
-| Service          | Port | Profil | Modèle / image                                                                                                                                                 | Note                                                                    |
-| ---------------- | ---- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| spark-vllm-llm   | 8000 | `llm`  | **`/models/qwen36-fable5-nvfp4`** (vLLM) — fine-tune dgx-fable5-mix 2026-07-09, servi sous le nom `nvidia/Qwen3.6-35B-A3B-NVFP4` + alias `qwen36-fable5-nvfp4` | 131k contexte, ~55 Go, thinking mode actif (`reasoning_content` séparé) |
-| spark-embeddings | 8084 | `core` | `voyageai/voyage-4-nano` (vLLM)                                                                                                                                | 2048 dims — voir recette obligatoire ci-dessous                         |
-| spark-reranker   | 8085 | `core` | `BAAI/bge-reranker-v2-m3` (vLLM)                                                                                                                               | `--runner pooling`                                                      |
-| spark-docling    | 5010 | `core` | docling-serve                                                                                                                                                  | API REST directe (pas dans LiteLLM)                                     |
+| Service           | Port | Profil | Modèle / image                                                                                                                                                      | Note                                                                                                                                                                                          |
+| ----------------- | ---- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| spark-vllm-llm    | 8000 | `llm`  | **`RedHatAI/gemma-4-26B-A4B-it-FP8-Dynamic`** (vLLM, alias `gemma4-26b`) — MoE 4B actifs, compressed-tensors FP8 (déployé 2026-07-09, remplace qwen36-fable5-nvfp4) | 131k contexte, ~30 Go poids + KV (util 0.35), reasoning/tool parsers `gemma4` ; **40 tok/s solo, 176 tok/s agrégés ×8** (bench 2026-07-09)                                                    |
+| spark-embeddings  | 8084 | `core` | `voyageai/voyage-4-nano` (vLLM)                                                                                                                                     | 2048 dims — voir recette obligatoire ci-dessous                                                                                                                                               |
+| spark-reranker    | 8085 | `core` | `BAAI/bge-reranker-v2-m3` (vLLM)                                                                                                                                    | `--runner pooling`                                                                                                                                                                            |
+| spark-docling     | 5010 | `core` | docling-serve                                                                                                                                                       | API REST directe (pas dans LiteLLM)                                                                                                                                                           |
+| spark-translation | 6060 | `core` | `facebook/nllb-200-distilled-600M` (FastAPI+CUDA, build `~/ai-spark/translation/`)                                                                                  | API REST directe (`/translate`, pas dans LiteLLM) — remplace le live-translator Mac :6060 (2026-07-10) ; publié aussi sur `10.0.1.1:6060` (sparklan) ; Hammerspoon ⌥⌘L/⌥⌘K + tool `translate` |
 
 `sparkctl finetune start` = protection anti-catastrophe mémoire : arrête le LLM (~100 Go libérés) et ouvre le container NGC PyTorch (workspace persistant) ; `finetune stop` relance le LLM.
 
-## Modèle fine-tuné qwen36-fable5-nvfp4 (déployé 2026-07-09)
+## LLM Gemma 4 26B-A4B FP8 (déployé 2026-07-09) + historique qwen36-fable5
 
-LoRA r=16 (mix dgx-fable5, 7888 ex/30M tok, eval_loss 1.364, token acc 0.701) mergé puis quantizé **NVFP4 miroir de la recette NVIDIA** (FP8 attention ×130, NVFP4 g16 experts ×160, mtp/gates/conv1d bf16). Checkpoint : `~/finetune-workspace/qwen36-fable5-nvfp4` (21 Go + mtp 1.7 Go + vision 0.9 Go), bind-monté ro dans le compose. Scripts (aussi dans `~/openclaw/pipeline/training-data/dgx-fable5-mix/`) : `merge_and_nvfp4.py` (merge CPU + PTQ ; **modelopt ≥0.45 requis** — 0.37 saute les experts fusionnés Qwen3.5-MoE → 66 Go bf16), `inject_mtp.py` (transformers jette `mtp.*` au merge → réinjection des 19 tenseurs bf16 du base), `fixup_to_vl.py` (layout `Qwen3_5MoeForConditionalGeneration` + tour vision NVIDIA — vLLM 0.24 ne supporte PAS le MTP de la classe texte-seule `Qwen3_5MoeForCausalLM`). Rollback : remettre `nvidia/Qwen3.6-35B-A3B-NVFP4` dans le compose (toujours en cache HF).
+**Choix FP8-Dynamic > NVFP4** : GB10 sans compute FP4 natif (NVFP4 MoE = détour Marlin W4A16) ; FP8 = chemin natif (backend MoE TRITON auto-sélectionné), qualité ~bf16, et **LoRA à chaud supporté sur base FP8** (objectif : fine-tuner sans couper le serving). Architecture 100 % standard (sliding+full attention, MoE classique, aucun conv1d) → LoRA-friendly, contrairement au Qwen3.6 hybride. Mémoire après déploiement : 65 Go disponibles avec TOUT up → marge QLoRA ~30B (~25-45 Go) **sans arrêter le LLM** (à bencher : impact tok/s pendant un epoch). ⚠️ Warning au boot « Using default MoE config » (pas de config Triton tunée pour `E=128,N=704,device_name=NVIDIA_GB10,fp8_w8a8`) : perf sous-optimale possible, tuning futur via benchmark_moe.py. Pas de `--quantization` dans le compose (compressed-tensors auto-détecté) ; patch `modelopt.py` retiré (spécifique 31B NVFP4). Rollbacks en cache HF : `nvidia/Gemma-4-31B-IT-NVFP4` (dense, ~6 tok/s solo — rejeté pour ça) via `docker-compose.yml.bak-20260709-gemma31b-dense` ; qwen36-fable5-nvfp4 via `docker-compose.yml.bak-20260709-gemma4`.
 
-**Speculative decoding MTP (validé A/B 2026-07-09)** : `--speculative-config '{"method":"mtp","num_speculative_tokens":3,"moe_backend":"triton"}'` — `moe_backend triton` OBLIGATOIRE (draft MTP bf16 ; marlin global ne supporte pas le MoE non quantizé → crash au boot). Gain réel single-stream : 58→68 tok/s (**+18 %**, PAS 2x — MoE A3B : les tokens vérifiés en batch activent des experts différents, la BP mémoire GB10 ne s'amortit pas comme sur un dense). Acceptance ~70 % (benchmark) / ~39 % (charge agentique réelle). k=2 testé : pas mieux (~65 tok/s).
+### Historique — fine-tune qwen36-fable5-nvfp4 (prod 2026-07-09, remplacé le jour même)
+
+LoRA r=16 (mix dgx-fable5, 7888 ex/30M tok, eval_loss 1.364, token acc 0.701) mergé puis quantizé **NVFP4 miroir de la recette NVIDIA** (FP8 attention ×130, NVFP4 g16 experts ×160, mtp/gates/conv1d bf16). Checkpoint : `~/finetune-workspace/qwen36-fable5-nvfp4` (21 Go + mtp 1.7 Go + vision 0.9 Go). Scripts (aussi dans `~/openclaw/pipeline/training-data/dgx-fable5-mix/`) : `merge_and_nvfp4.py` (merge CPU + PTQ ; **modelopt ≥0.45 requis** — 0.37 saute les experts fusionnés Qwen3.5-MoE → 66 Go bf16), `inject_mtp.py` (transformers jette `mtp.*` au merge → réinjection des 19 tenseurs bf16 du base), `fixup_to_vl.py` (layout `Qwen3_5MoeForConditionalGeneration` + tour vision NVIDIA — vLLM 0.24 ne supporte PAS le MTP de la classe texte-seule `Qwen3_5MoeForCausalLM`). **Cette recette merge+requant est spécifique Qwen3.5-MoE ; pour Gemma, viser le serving LoRA à chaud (`VLLM_ALLOW_RUNTIME_LORA_UPDATING` + `/v1/load_lora_adapter`) au lieu du merge.**
+
+**Speculative decoding MTP (Qwen seulement, validé A/B 2026-07-09)** : `--speculative-config '{"method":"mtp","num_speculative_tokens":3,"moe_backend":"triton"}'` — `moe_backend triton` OBLIGATOIRE (draft MTP bf16 ; marlin global ne supporte pas le MoE non quantizé → crash au boot). Gain réel single-stream : 58→68 tok/s (+18 %). Ne s'applique PAS à Gemma (pas de tête MTP).
 
 ## Mode sommeil vLLM (sleep/wake, validé 2026-07-08)
 
@@ -80,7 +85,7 @@ Bypass du hub VPS pour les ports AI quand le Mac est à la maison : **42 ms → 
 
 - **Activation/réparation Mac** : `sudo /opt/homebrew/etc/wireguard/activate-sparklan.sh` (idempotent : up + LaunchDaemon + vérification).
 - Le compose publie aussi le LLM sur `10.0.1.1:8000` (drop-in systemd étendu : Docker attend `wg-quick@wg1` en plus de `wg0`).
-- **LiteLLM :8092 route seul** : 2 déploiements `spark-qwen3.6-35b` (weight 9 → `10.0.1.1` LAN ; weight 1 → `10.0.0.5` mesh). Hors maison, le LAN échoue → cooldown 60 s → tout passe par le mesh automatiquement. Rien à toucher côté clients.
+- **LiteLLM :8092 route seul** : 2 déploiements `spark-gemma4-26b` (weight 9 → `10.0.1.1` LAN ; weight 1 → `10.0.0.5` mesh). Hors maison, le LAN échoue → cooldown 60 s → tout passe par le mesh automatiquement. Rien à toucher côté clients.
 - ⚠️ Endpoint = IP DHCP du Spark (`192.168.2.149`) : faire une réservation DHCP sur le routeur, sinon re-pointer `sparklan.conf` si l'IP change (le fallback mesh couvre l'intervalle).
 - `AllowedIPs` Mac = `10.0.1.1/32` SEULEMENT — ne jamais y mettre `10.0.0.5` (ça volerait la route mesh et blackholerait le Spark hors maison).
 
@@ -88,12 +93,12 @@ Bypass du hub VPS pour les ports AI quand le Mac est à la maison : **42 ms → 
 
 `litellm-proxy/config.yaml` (commit `a38f501`) :
 
-| model_name                 | provider                                   | api_base                                  |
-| -------------------------- | ------------------------------------------ | ----------------------------------------- |
-| `spark-qwen3.6-35b`        | `hosted_vllm/nvidia/Qwen3.6-35B-A3B-NVFP4` | `http://10.0.0.5:8000/v1`                 |
-| `spark-embeddings`         | `hosted_vllm/voyageai/voyage-4-nano`       | `http://10.0.0.5:8084/v1`                 |
-| `spark-bge-reranker-v2-m3` | `hosted_vllm/BAAI/bge-reranker-v2-m3`      | `http://10.0.0.5:8085/v1`                 |
-| `spark-translate`          | alias → `spark-qwen3.6-35b`                | (remplace live-translator :6060, disparu) |
+| model_name                 | provider                                              | api_base                                                                                      |
+| -------------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `spark-gemma4-26b`         | `hosted_vllm/RedHatAI/gemma-4-26B-A4B-it-FP8-Dynamic` | `http://10.0.0.5:8000/v1`                                                                     |
+| `spark-embeddings`         | `hosted_vllm/voyageai/voyage-4-nano`                  | `http://10.0.0.5:8084/v1`                                                                     |
+| `spark-bge-reranker-v2-m3` | `hosted_vllm/BAAI/bge-reranker-v2-m3`                 | `http://10.0.0.5:8085/v1`                                                                     |
+| `spark-translate`          | alias → `spark-gemma4-26b`                            | traduction LLM via chat ; la traduction NLLB dédiée = REST direct `:6060` (spark-translation) |
 
 **⚠️ Rerank vLLM = provider `hosted_vllm/`, JAMAIS `infinity/`** : vLLM renvoie `document` comme objet `{text, multi_modal}` alors que le provider infinity attend un string → erreur de validation Pydantic `RerankResponse`. (Le `infinity/` local :8085 du Mac reste correct : c'est un vrai serveur Infinity.)
 
