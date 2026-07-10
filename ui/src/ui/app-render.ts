@@ -175,6 +175,7 @@ import {
 import { isPluginEnabledInConfigSnapshot } from "./plugin-activation.ts";
 import { isCronSessionKey, resolveSessionDisplayName } from "./session-display.ts";
 import "./components/dashboard-header.ts";
+import "./components/sidebar-resizer.ts";
 import {
   buildAgentMainSessionKey,
   isSessionKeyTiedToAgent,
@@ -183,7 +184,8 @@ import {
   parseAgentSessionKey,
   resolveAgentIdFromSessionKey,
 } from "./session-key.ts";
-import { loadLocalAssistantIdentity } from "./storage.ts";
+import { isDesktopShellLayout } from "./shell-layout.ts";
+import { loadLocalAssistantIdentity, NAV_WIDTH_MAX, NAV_WIDTH_MIN } from "./storage.ts";
 import { normalizeStringEntries } from "./string-coerce.ts";
 import { normalizeOptionalString } from "./string-coerce.ts";
 import type { AgentsFilesGetResult, AgentsFilesListResult, GatewaySessionRow } from "./types.ts";
@@ -1317,6 +1319,7 @@ export function renderApp(state: AppViewState) {
   const chatHeaderHidden = isChat && (state.onboarding || state.chatHeaderControlsHidden);
   const navDrawerOpen = state.navDrawerOpen && !state.onboarding;
   const navCollapsed = state.settings.navCollapsed && !navDrawerOpen;
+  const showNavResizer = !navCollapsed && isDesktopShellLayout();
   const interfaceProfile = normalizeInterfaceProfile(state.settings.interfaceProfile);
   const visibleTabGroups = tabGroupsForProfile(interfaceProfile);
   const dashboardHeaderContext = resolveDashboardHeaderContext(state);
@@ -2246,9 +2249,12 @@ export function renderApp(state: AppViewState) {
         : ""} ${navDrawerOpen ? "shell--nav-drawer-open" : ""} ${state.onboarding
         ? "shell--onboarding"
         : ""}"
-      style=${styleMap(
-        state.chatMessageMaxWidth ? { "--chat-message-max-width": state.chatMessageMaxWidth } : {},
-      )}
+      style=${styleMap({
+        ...(state.chatMessageMaxWidth
+          ? { "--chat-message-max-width": state.chatMessageMaxWidth }
+          : {}),
+        ...(!navCollapsed ? { "--shell-nav-width": `${state.settings.navWidth}px` } : {}),
+      })}
     >
       <button
         type="button"
@@ -2443,6 +2449,22 @@ export function renderApp(state: AppViewState) {
             </div>
           </div>
         </aside>
+        ${showNavResizer
+          ? html`
+              <sidebar-resizer
+                .navWidth=${state.settings.navWidth}
+                .minWidth=${NAV_WIDTH_MIN}
+                .maxWidth=${NAV_WIDTH_MAX}
+                .label=${t("nav.resize")}
+                @resize=${(event: CustomEvent<{ navWidth: number }>) => {
+                  state.applySettings({
+                    ...state.settings,
+                    navWidth: event.detail.navWidth,
+                  });
+                }}
+              ></sidebar-resizer>
+            `
+          : nothing}
       </div>
       <main
         class="content ${isChat ? "content--chat" : ""} ${state.tab === "logs"

@@ -43,6 +43,21 @@ function createMatchMediaMock(width: number) {
   });
 }
 
+export function setViewportWidth(width: number) {
+  const matchMedia = createMatchMediaMock(width);
+  vi.stubGlobal("matchMedia", matchMedia);
+  Object.defineProperty(window, "matchMedia", {
+    value: matchMedia,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(window, "innerWidth", {
+    value: width,
+    writable: true,
+    configurable: true,
+  });
+}
+
 const mountedApps = new Set<OpenClawApp>();
 
 function collectMountedApps() {
@@ -103,12 +118,15 @@ async function cleanupMountedApps() {
   await drainAppWork(apps);
 }
 
-export function mountApp(pathname: string) {
+export function mountApp(pathname: string, viewportWidth = 390) {
+  setViewportWidth(viewportWidth);
   window.history.replaceState({}, "", pathname);
   const app = document.createElement("intellisoins-app") as OpenClawApp;
   mountedApps.add(app);
   document.body.append(app);
   app.connected = true;
+  // connectedCallback can run while other UI tests reset the shared jsdom viewport.
+  setViewportWidth(viewportWidth);
   app.requestUpdate();
   return app;
 }
@@ -117,11 +135,10 @@ export function registerAppMountHooks() {
   beforeEach(async () => {
     const localStorage = createStorageMock();
     const sessionStorage = createStorageMock();
-    const matchMedia = createMatchMediaMock(390);
+    setViewportWidth(390);
     window["__OPENCLAW_CONTROL_UI_BASE_PATH__"] = undefined;
     vi.stubGlobal("localStorage", localStorage);
     vi.stubGlobal("sessionStorage", sessionStorage);
-    vi.stubGlobal("matchMedia", matchMedia);
     Object.defineProperty(window, "localStorage", {
       value: localStorage,
       writable: true,
@@ -129,16 +146,6 @@ export function registerAppMountHooks() {
     });
     Object.defineProperty(window, "sessionStorage", {
       value: sessionStorage,
-      writable: true,
-      configurable: true,
-    });
-    Object.defineProperty(window, "matchMedia", {
-      value: matchMedia,
-      writable: true,
-      configurable: true,
-    });
-    Object.defineProperty(window, "innerWidth", {
-      value: 390,
       writable: true,
       configurable: true,
     });

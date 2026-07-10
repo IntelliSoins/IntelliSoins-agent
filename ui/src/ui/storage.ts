@@ -49,6 +49,10 @@ export type TextScaleStop = (typeof TEXT_SCALE_STOPS)[number];
 export const CHAT_AUTO_SCROLL_MODES = ["always", "near-bottom", "off"] as const;
 export type ChatAutoScrollMode = (typeof CHAT_AUTO_SCROLL_MODES)[number];
 
+export const NAV_WIDTH_MIN = 200;
+export const NAV_WIDTH_MAX = 400;
+export const NAV_WIDTH_DEFAULT = 220;
+
 export function normalizeChatAutoScrollMode(value: unknown): ChatAutoScrollMode {
   return CHAT_AUTO_SCROLL_MODES.includes(value as ChatAutoScrollMode)
     ? (value as ChatAutoScrollMode)
@@ -96,7 +100,7 @@ export type UiSettings = {
   chatAutoScroll?: ChatAutoScrollMode;
   splitRatio: number; // Sidebar split ratio (0.4 to 0.7, default 0.6)
   navCollapsed: boolean; // Collapsible sidebar state
-  navWidth: number; // Sidebar width when expanded (240–400px)
+  navWidth: number; // Sidebar width when expanded (200–400px)
   navGroupsCollapsed: Record<string, boolean>; // Which nav groups are collapsed
   recentSessionsCollapsed?: boolean; // Collapse recent sessions list in sidebar
   borderRadius: number; // Corner roundness (0–100, default 50)
@@ -241,7 +245,7 @@ export function loadSettings(): UiSettings {
     chatAutoScroll: "near-bottom",
     splitRatio: 0.6,
     navCollapsed: false,
-    navWidth: 220,
+    navWidth: NAV_WIDTH_DEFAULT,
     navGroupsCollapsed: {},
     recentSessionsCollapsed: false,
     borderRadius: 50,
@@ -295,7 +299,9 @@ export function loadSettings(): UiSettings {
       navCollapsed:
         typeof parsed.navCollapsed === "boolean" ? parsed.navCollapsed : defaults.navCollapsed,
       navWidth:
-        typeof parsed.navWidth === "number" && parsed.navWidth >= 200 && parsed.navWidth <= 400
+        typeof parsed.navWidth === "number" &&
+        parsed.navWidth >= NAV_WIDTH_MIN &&
+        parsed.navWidth <= NAV_WIDTH_MAX
           ? parsed.navWidth
           : defaults.navWidth,
       navGroupsCollapsed:
