@@ -66,6 +66,7 @@ import type {
 } from "../types.ts";
 import type { ChatAttachment, ChatQueueItem } from "../ui-types.ts";
 import { resolveLocalUserName } from "../user-identity.ts";
+import { renderAgentFileSidebar } from "./agent-file-form.ts";
 import { renderMarkdownSidebar } from "./markdown-sidebar.ts";
 import "../components/resizable-divider.ts";
 
@@ -182,6 +183,18 @@ export type ChatProps = {
   onOpenSidebar?: (content: SidebarContent) => void;
   onCloseSidebar?: () => void;
   onSplitRatioChange?: (ratio: number) => void;
+  agentFileEditor?: {
+    fileName: string;
+    baseContent: string;
+    draft: string;
+    saving: boolean;
+    missing?: boolean;
+    showRaw: boolean;
+    onDraftChange: (content: string) => void;
+    onSave: () => void;
+    onReset: () => void;
+    onToggleRaw: () => void;
+  };
   onChatScroll?: (event: Event) => void;
   basePath?: string;
   composerControls?: TemplateResult | typeof nothing | ReturnType<typeof guard>;
@@ -2087,23 +2100,38 @@ export function renderChat(props: ChatProps) {
                   @resize=${(e: CustomEvent) => props.onSplitRatioChange?.(e.detail.splitRatio)}
                 ></resizable-divider>
                 <div class="chat-sidebar" @click=${handleCodeBlockCopy}>
-                  ${renderMarkdownSidebar({
-                    content: props.sidebarContent ?? null,
-                    error: props.sidebarError ?? null,
-                    canvasPluginSurfaceUrl: props.canvasPluginSurfaceUrl,
-                    embedSandboxMode: props.embedSandboxMode ?? "scripts",
-                    allowExternalEmbedUrls: props.allowExternalEmbedUrls ?? false,
-                    onClose: props.onCloseSidebar!,
-                    onViewRawText: () => {
-                      if (!props.onOpenSidebar) {
-                        return;
-                      }
-                      const rawContent = buildRawSidebarContent(props.sidebarContent);
-                      if (rawContent) {
-                        props.onOpenSidebar(rawContent);
-                      }
-                    },
-                  })}
+                  ${props.sidebarContent?.kind === "agentFile" && props.agentFileEditor
+                    ? renderAgentFileSidebar({
+                        fileName: props.agentFileEditor.fileName,
+                        baseContent: props.agentFileEditor.baseContent,
+                        draft: props.agentFileEditor.draft,
+                        saving: props.agentFileEditor.saving,
+                        missing: props.agentFileEditor.missing,
+                        error: props.sidebarError ?? null,
+                        showRaw: props.agentFileEditor.showRaw,
+                        onClose: props.onCloseSidebar!,
+                        onDraftChange: props.agentFileEditor.onDraftChange,
+                        onSave: props.agentFileEditor.onSave,
+                        onReset: props.agentFileEditor.onReset,
+                        onToggleRaw: props.agentFileEditor.onToggleRaw,
+                      })
+                    : renderMarkdownSidebar({
+                        content: props.sidebarContent ?? null,
+                        error: props.sidebarError ?? null,
+                        canvasPluginSurfaceUrl: props.canvasPluginSurfaceUrl,
+                        embedSandboxMode: props.embedSandboxMode ?? "scripts",
+                        allowExternalEmbedUrls: props.allowExternalEmbedUrls ?? false,
+                        onClose: props.onCloseSidebar!,
+                        onViewRawText: () => {
+                          if (!props.onOpenSidebar) {
+                            return;
+                          }
+                          const rawContent = buildRawSidebarContent(props.sidebarContent);
+                          if (rawContent) {
+                            props.onOpenSidebar(rawContent);
+                          }
+                        },
+                      })}
                 </div>
               `
             : nothing}

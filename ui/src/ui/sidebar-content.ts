@@ -25,4 +25,14 @@ export type CanvasSidebarContent = {
   unavailableReason?: "not_found" | "oversized" | "not_visible" | null;
 };
 
-export type SidebarContent = MarkdownSidebarContent | CanvasSidebarContent;
+export type AgentFileSidebarContent = {
+  kind: "agentFile";
+  fileName: string;
+  agentId: string;
+  missing?: boolean;
+};
+
+export type SidebarContent =
+  | MarkdownSidebarContent
+  | CanvasSidebarContent
+  | AgentFileSidebarContent;

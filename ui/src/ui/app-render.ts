@@ -4,6 +4,7 @@ import { guard } from "lit/directives/guard.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { i18n, t } from "../i18n/index.ts";
 import { getSafeLocalStorage } from "../local-storage.ts";
+import { isEditableAgentConfigFile } from "./agent-file-markdown.ts";
 import {
   createChatSessionsLoadOverrides,
   hasAbortableSessionRun,
@@ -2200,6 +2201,18 @@ export function renderApp(state: AppViewState) {
         if (!isCurrentOpenRequest()) {
           return;
         }
+        state.agentFileContents = { ...state.agentFileContents, [name]: content };
+        state.agentFileDrafts = { ...state.agentFileDrafts, [name]: content };
+        state.agentFileShowRaw = false;
+        if (isEditableAgentConfigFile(name)) {
+          state.handleOpenSidebar({
+            kind: "agentFile",
+            fileName: name,
+            agentId: chatAgentId,
+            missing: res?.file?.missing,
+          });
+          return;
+        }
         state.handleOpenSidebar({
           kind: "markdown",
           content: buildWorkspaceFileSidebarContent(name, content),
@@ -3015,6 +3028,7 @@ export function renderApp(state: AppViewState) {
                   contents: state.agentFileContents,
                   drafts: state.agentFileDrafts,
                   saving: state.agentFileSaving,
+                  showRaw: state.agentFileShowRaw,
                 },
                 agentIdentityLoading: state.agentIdentityLoading,
                 agentIdentityError: state.agentIdentityError,
@@ -3100,6 +3114,7 @@ export function renderApp(state: AppViewState) {
                 onLoadFiles: (agentId) => void loadAgentFiles(state, agentId),
                 onSelectFile: (name) => {
                   state.agentFileActive = name;
+                  state.agentFileShowRaw = false;
                   if (!resolvedAgentId) {
                     return;
                   }
@@ -3119,6 +3134,9 @@ export function renderApp(state: AppViewState) {
                   const content =
                     state.agentFileDrafts[name] ?? state.agentFileContents[name] ?? "";
                   void saveAgentFile(state, resolvedAgentId, name, content);
+                },
+                onToggleRawMarkdown: () => {
+                  state.agentFileShowRaw = !state.agentFileShowRaw;
                 },
                 onToolsProfileChange: (agentId, profile, clearAllow) => {
                   const basePathItem = resolveAgentToolsPath(
@@ -3692,6 +3710,44 @@ export function renderApp(state: AppViewState) {
                   onOpenSidebar: (content) => state.handleOpenSidebar(content),
                   onCloseSidebar: () => state.handleCloseSidebar(),
                   onSplitRatioChange: (ratio: number) => state.handleSplitRatioChange(ratio),
+                  agentFileEditor:
+                    state.sidebarContent?.kind === "agentFile"
+                      ? (() => {
+                          const fileName = state.sidebarContent.fileName;
+                          const baseContent = state.agentFileContents[fileName] ?? "";
+                          const draft = state.agentFileDrafts[fileName] ?? baseContent;
+                          return {
+                            fileName,
+                            baseContent,
+                            draft,
+                            saving: state.agentFileSaving,
+                            missing: state.sidebarContent.missing,
+                            showRaw: state.agentFileShowRaw,
+                            onDraftChange: (content: string) => {
+                              state.agentFileDrafts = {
+                                ...state.agentFileDrafts,
+                                [fileName]: content,
+                              };
+                            },
+                            onSave: () => {
+                              const nextDraft =
+                                state.agentFileDrafts[fileName] ??
+                                state.agentFileContents[fileName] ??
+                                "";
+                              void saveAgentFile(state, chatAgentId, fileName, nextDraft);
+                            },
+                            onReset: () => {
+                              state.agentFileDrafts = {
+                                ...state.agentFileDrafts,
+                                [fileName]: baseContent,
+                              };
+                            },
+                            onToggleRaw: () => {
+                              state.agentFileShowRaw = !state.agentFileShowRaw;
+                            },
+                          };
+                        })()
+                      : undefined,
                   assistantName: state.assistantName,
                   assistantAvatar: effectiveAssistantAvatar,
                   userName: state.userName ?? null,
