@@ -8,14 +8,14 @@ Cette fois le fichier vit dans ~/ai-servers/scripts/ (sous git).
 
 Conversation mains libres realtime : http://127.0.0.1:8024
   micro WebRTC → VAD Silero (fin de phrase auto) → Whisper FT voix Michael (:2022)
-  → Gemma 4 omni (:8089, SSE) → VoxCPM2 v7 voix Michael (:8025, TTS par phrase
-  pendant la génération) → audio streamé WebRTC. **Barge-in** : parler pendant
-  la réponse l'interrompt (can_interrupt).
+  → Gemma 4 omni (:8089, SSE) → VoxCPM2 v8 voix Michael (:8884 → Spark Nano-vLLM
+  :8026, TTS par phrase pendant la génération) → audio streamé WebRTC.
+  **Barge-in** : parler pendant la réponse l'interrompt (can_interrupt).
 
 Différences vs le POC 2026-06-18 (serveurs dédiés :8023/:8026/:8027 retirés) :
   - branché sur les serveurs CANONIQUES du registre (whisper-stt :2022 LoRA v3,
-    mlx-vlm-omni :8089 APC+MTP, voxcpm-tts :8025 timesteps=6) — pas d'instances
-    dédiées ni de serveur métriques ;
+    mlx-vlm-omni :8089 APC+MTP, VoxCPM2 v8 via bridge :8884 → Spark :8026) —
+    pas d'instances dédiées ni de serveur métriques ;
   - chemin STT→texte (au lieu de gemma audio-native) : historique texte =
     prefix caching APC efficace multi-tours ; :8089 reste audio-capable si
     on veut y revenir ;
@@ -43,8 +43,8 @@ from fastrtc import AdditionalOutputs, ReplyOnPause, Stream
 WHISPER_URL = os.environ.get("VOICE_WHISPER_URL", "http://127.0.0.1:2022/v1/audio/transcriptions")
 LLM_URL = os.environ.get("VOICE_LLM_URL", "http://127.0.0.1:8089/v1/chat/completions")
 LLM_MODEL = os.environ.get("VOICE_LLM_MODEL", "mlx-community/gemma-4-12B-it-8bit")
-TTS_URL = os.environ.get("VOICE_TTS_URL", "http://127.0.0.1:8025/v1/audio/speech")
-TTS_MODEL = os.environ.get("VOICE_TTS_MODEL", "michael-v7-mlx-8bit")
+TTS_URL = os.environ.get("VOICE_TTS_URL", "http://127.0.0.1:8884/v1/audio/speech")
+TTS_MODEL = os.environ.get("VOICE_TTS_MODEL", "michael-v8")
 HOST = os.environ.get("VOICE_WEBRTC_HOST", "127.0.0.1")
 PORT = int(os.environ.get("VOICE_WEBRTC_PORT", "8024"))
 
@@ -52,7 +52,7 @@ MAX_TOKENS = 1024
 TEMPERATURE = 0.3
 MAX_TURNS = 10       # tours user+assistant conservés
 MEMORY_TTL = 600.0   # secondes — même politique que Hammerspoon ⌥⌘ç
-OUTPUT_SR = 48000    # VoxCPM v7 sort du 48 kHz (mesuré 2026-07-08)
+OUTPUT_SR = 48000    # VoxCPM v8 (Spark Nano-vLLM) sort du 48 kHz (mesuré 2026-07-11)
 
 SYSTEM_PROMPT = f"""DATE: {date.today().isoformat()}. Tu es l'assistant VOCAL de Michael Ahern (pharmacien GMF, Abitibi). Conversation orale en temps réel : ta réponse est lue à voix haute par synthèse vocale.
 
