@@ -1524,6 +1524,140 @@ public struct PushTestResult: Codable, Sendable {
     }
 }
 
+public struct RagIngestParams: Codable, Sendable {
+    public let filename: String
+    public let database64: String
+
+    public init(
+        filename: String,
+        database64: String)
+    {
+        self.filename = filename
+        self.database64 = database64
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case filename = "fileName"
+        case database64 = "dataBase64"
+    }
+}
+
+public struct RagIngestResult: Codable, Sendable {
+    public let jobid: String
+
+    public init(
+        jobid: String)
+    {
+        self.jobid = jobid
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case jobid = "jobId"
+    }
+}
+
+public struct RagJob: Codable, Sendable {
+    public let id: String
+    public let filename: String
+    public let status: AnyCodable
+    public let chunks: Int?
+    public let error: String?
+    public let startedat: Double
+    public let finishedat: Double?
+
+    public init(
+        id: String,
+        filename: String,
+        status: AnyCodable,
+        chunks: Int?,
+        error: String?,
+        startedat: Double,
+        finishedat: Double?)
+    {
+        self.id = id
+        self.filename = filename
+        self.status = status
+        self.chunks = chunks
+        self.error = error
+        self.startedat = startedat
+        self.finishedat = finishedat
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case filename = "fileName"
+        case status
+        case chunks
+        case error
+        case startedat = "startedAt"
+        case finishedat = "finishedAt"
+    }
+}
+
+public struct RagJobsParams: Codable, Sendable {}
+
+public struct RagJobsResult: Codable, Sendable {
+    public let jobs: [RagJob]
+
+    public init(
+        jobs: [RagJob])
+    {
+        self.jobs = jobs
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case jobs
+    }
+}
+
+public struct RagSearchParams: Codable, Sendable {
+    public let query: String
+    public let topk: Int?
+
+    public init(
+        query: String,
+        topk: Int?)
+    {
+        self.query = query
+        self.topk = topk
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case query
+        case topk = "topK"
+    }
+}
+
+public struct RagSearchResult: Codable, Sendable {
+    public let results: [[String: AnyCodable]]
+
+    public init(
+        results: [[String: AnyCodable]])
+    {
+        self.results = results
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case results
+    }
+}
+
+public struct RagSourcesParams: Codable, Sendable {}
+
+public struct RagSourcesResult: Codable, Sendable {
+    public let sources: [[String: AnyCodable]]
+
+    public init(
+        sources: [[String: AnyCodable]])
+    {
+        self.sources = sources
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case sources
+    }
+}
+
 public struct SecretsReloadParams: Codable, Sendable {}
 
 public struct SecretsResolveParams: Codable, Sendable {

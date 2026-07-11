@@ -750,6 +750,7 @@ export class GatewayBrowserClient {
     // Gateways may reject this unless gateway.controlUi.allowInsecureAuth is enabled.
     const isSecureContext = typeof crypto !== "undefined" && Boolean(crypto.subtle);
     let deviceIdentity: Awaited<ReturnType<typeof loadOrCreateDeviceIdentity>> | null = null;
+    let selectedAuth: SelectedConnectAuth;
     if (isSecureContext) {
       deviceIdentity = await loadOrCreateDeviceIdentity();
       this.emitConnectTiming(generation, "device-identity-ready", {
