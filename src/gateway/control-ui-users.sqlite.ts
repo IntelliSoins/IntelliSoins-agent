@@ -61,11 +61,8 @@ function mapRow(row: ControlUiUserRow): ControlUiUserRecord {
     username: row.username,
     passwordHash: row.password_hash,
     totpSecretEncrypted: row.totp_secret_encrypted,
-    totpEnabled: row.totp_enabled === 1,
-    totpLastCounter:
-      row.totp_last_counter === null || row.totp_last_counter === undefined
-        ? null
-        : Number(row.totp_last_counter),
+    totpEnabled: row.totp_enabled !== 0,
+    totpLastCounter: row.totp_last_counter ?? null,
     createdAtMs: row.created_at_ms,
     updatedAtMs: row.updated_at_ms,
   };
@@ -83,7 +80,7 @@ export function hasControlUiUsers(options: OpenClawStateDatabaseOptions = {}): b
     db,
     kysely.selectFrom("control_ui_users").select((eb) => eb.fn.countAll<number>().as("count")),
   );
-  return Number(row?.count ?? 0) > 0;
+  return (row?.count ?? 0) > 0;
 }
 
 /** Count Control UI user accounts. */
@@ -94,7 +91,7 @@ export function countControlUiUsers(options: OpenClawStateDatabaseOptions = {}):
     db,
     kysely.selectFrom("control_ui_users").select((eb) => eb.fn.countAll<number>().as("count")),
   );
-  return Number(row?.count ?? 0);
+  return row?.count ?? 0;
 }
 
 /** Look up a user by normalized username. */
@@ -128,7 +125,7 @@ export function hasControlUiUserWithoutMfaEnabled(
       .select((eb) => eb.fn.countAll<number>().as("count"))
       .where("totp_enabled", "=", 0),
   );
-  return Number(row?.count ?? 0) > 0;
+  return (row?.count ?? 0) > 0;
 }
 
 /** Decrypt the stored TOTP secret for a user when MFA is enabled. */
@@ -204,20 +201,15 @@ export function createControlUiUser(
       `Control UI password must be at least ${MIN_CONTROL_UI_PASSWORD_LENGTH} characters.`,
     );
   }
-  if (input.enrollTotp !== true) {
+  if (!input.enrollTotp) {
     throw new Error("Control UI users mode requires MFA enrollment.");
   }
   const now = Date.now();
   const userId = randomUUID();
   const passwordHash = hashPassword(input.password);
-  let totpSecret: string | undefined;
-  let totpSecretEncrypted: string | null = null;
-  let totpEnabled = 0;
-  if (input.enrollTotp === true) {
-    totpSecret = generateTotpSecret();
-    totpSecretEncrypted = encryptTotpSecret(totpSecret, input.env);
-    totpEnabled = 0;
-  }
+  const totpSecret = generateTotpSecret();
+  const totpSecretEncrypted = encryptTotpSecret(totpSecret, input.env);
+  const totpEnabled = 0;
   const values: Insertable<ControlUiUsersTable> = {
     user_id: userId,
     username,
@@ -247,12 +239,8 @@ export function createControlUiUser(
     const user = mapRow(inserted);
     return {
       user,
-      ...(totpSecret
-        ? {
-            totpSecret,
-            totpOtpauthUri: `otpauth://totp/IntelliSoins:${encodeURIComponent(username)}?secret=${encodeURIComponent(totpSecret)}&issuer=IntelliSoins&algorithm=SHA1&digits=6&period=30`,
-          }
-        : {}),
+      totpSecret,
+      totpOtpauthUri: `otpauth://totp/IntelliSoins:${encodeURIComponent(username)}?secret=${encodeURIComponent(totpSecret)}&issuer=IntelliSoins&algorithm=SHA1&digits=6&period=30`,
     };
   }, options);
 }

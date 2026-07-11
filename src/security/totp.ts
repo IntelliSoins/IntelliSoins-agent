@@ -52,12 +52,12 @@ function hotp(secret: Buffer, counter: bigint, digits: number): string {
   const counterBuffer = Buffer.alloc(8);
   counterBuffer.writeBigUInt64BE(counter);
   const digest = createHmac("sha1", secret).update(counterBuffer).digest();
-  const offset = digest[digest.length - 1]! & 0x0f;
+  const offset = digest[digest.length - 1] & 0x0f;
   const code =
-    ((digest[offset]! & 0x7f) << 24) |
-    ((digest[offset + 1]! & 0xff) << 16) |
-    ((digest[offset + 2]! & 0xff) << 8) |
-    (digest[offset + 3]! & 0xff);
+    ((digest[offset] & 0x7f) << 24) |
+    ((digest[offset + 1] & 0xff) << 16) |
+    ((digest[offset + 2] & 0xff) << 8) |
+    (digest[offset + 3] & 0xff);
   return String(code % 10 ** digits).padStart(digits, "0");
 }
 
