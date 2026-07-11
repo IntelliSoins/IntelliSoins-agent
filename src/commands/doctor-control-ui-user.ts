@@ -1,11 +1,16 @@
+import { password as clackPassword, text as clackText } from "@clack/prompts";
+import { note } from "../../packages/terminal-core/src/note.js";
+import { stylePromptMessage } from "../../packages/terminal-core/src/prompt-style.js";
 import type { OpenClawConfig } from "../config/config.js";
 import {
   confirmControlUiUserTotpEnrollment,
   createControlUiUser,
 } from "../gateway/control-ui-users.sqlite.js";
+import type { RuntimeEnv } from "../runtime.js";
 // Doctor flow for bootstrapping the first Control UI operator account with MFA.
 import { buildTotpOtpauthUri } from "../security/totp.js";
 import { verifyTotpCode } from "../security/totp.js";
+import { guardCancel } from "./onboard-helpers.js";
 
 export type DoctorControlUiUserOptions = {
   username?: string;
@@ -15,51 +20,54 @@ export type DoctorControlUiUserOptions = {
   yes?: boolean;
 };
 
-type DoctorPrompter = {
-  note: (message: string, title?: string) => void;
-  text: (params: { message: string; initialValue?: string }) => Promise<string>;
-  password: (params: { message: string }) => Promise<string>;
-  confirm: (params: { message: string; initialValue?: boolean }) => Promise<boolean>;
-};
-
 /** Create the first Control UI user and enroll MFA during doctor. */
 export async function runDoctorCreateControlUiUser(params: {
   cfg: OpenClawConfig;
-  prompter: DoctorPrompter;
+  runtime: RuntimeEnv;
   options: DoctorControlUiUserOptions;
 }): Promise<OpenClawConfig> {
-  const { prompter, options } = params;
+  const { runtime, options } = params;
   let cfg = params.cfg;
   const username =
     options.username?.trim() ||
     (options.nonInteractive
       ? ""
-      : await prompter.text({
-          message: "Nom d'utilisateur (Control UI)",
-          initialValue: "admin",
-        }));
+      : guardCancel(
+          await clackText({
+            message:
+              stylePromptMessage("Nom d'utilisateur (Control UI)") ??
+              "Nom d'utilisateur (Control UI)",
+            initialValue: "admin",
+          }),
+          runtime,
+        ));
   if (!username) {
     throw new Error("Control UI username is required.");
   }
-  const password =
+  const passwordValue =
     options.password ||
     (options.nonInteractive
       ? ""
-      : await prompter.password({
-          message: "Mot de passe (min. 12 caractères)",
-        }));
-  if (!password) {
+      : guardCancel(
+          await clackPassword({
+            message:
+              stylePromptMessage("Mot de passe (min. 12 caractères)") ??
+              "Mot de passe (min. 12 caractères)",
+          }),
+          runtime,
+        ));
+  if (!passwordValue) {
     throw new Error("Control UI password is required.");
   }
   const created = createControlUiUser({
     username,
-    password,
+    password: passwordValue,
     enrollTotp: true,
   });
   if (!created.totpSecret || !created.totpOtpauthUri) {
     throw new Error("Control UI MFA enrollment failed.");
   }
-  prompter.note(
+  note(
     [
       "Scannez ce secret MFA dans votre application d'authentification :",
       created.totpSecret,
@@ -79,9 +87,15 @@ export async function runDoctorCreateControlUiUser(params: {
     options.mfaCode?.trim() ||
     (options.nonInteractive
       ? ""
-      : await prompter.text({
-          message: "Saisissez le code MFA à 6 chiffres pour confirmer l'inscription",
-        }));
+      : guardCancel(
+          await clackText({
+            message:
+              stylePromptMessage(
+                "Saisissez le code MFA à 6 chiffres pour confirmer l'inscription",
+              ) ?? "Saisissez le code MFA à 6 chiffres pour confirmer l'inscription",
+          }),
+          runtime,
+        ));
   if (!confirmCode) {
     throw new Error("MFA confirmation code is required before enabling users mode.");
   }
@@ -90,7 +104,7 @@ export async function runDoctorCreateControlUiUser(params: {
     totpCode: confirmCode,
     verifyTotp: verifyTotpCode,
   });
-  prompter.note("MFA activée pour ce compte.", "Control UI");
+  note("MFA activée pour ce compte.", "Control UI");
   cfg = {
     ...cfg,
     gateway: {
@@ -101,9 +115,6 @@ export async function runDoctorCreateControlUiUser(params: {
       },
     },
   };
-  prompter.note(
-    `Compte Control UI "${username}" créé. gateway.auth.mode défini sur "users".`,
-    "Control UI",
-  );
+  note(`Compte Control UI "${username}" créé. gateway.auth.mode défini sur "users".`, "Control UI");
   return cfg;
 }

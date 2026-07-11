@@ -64,4 +64,4 @@ Le mode `users` conserve la possibilité d'utiliser `gateway.auth.token` pour le
 | Code MFA refusé    | Vérifier l'heure système du téléphone et du serveur |
 | Trop de tentatives | Attendre la fin du verrouillage (rate limit)        |
 
-Documentation publique : https://docs.openclaw.ai/web/control-ui-users
+Documentation publique : <https://docs.openclaw.ai/web/control-ui-users>

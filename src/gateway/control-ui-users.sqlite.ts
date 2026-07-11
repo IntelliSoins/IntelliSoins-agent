@@ -159,16 +159,16 @@ function reencryptControlUiUserTotpSecret(
 ): void {
   const now = Date.now();
   const totpSecretEncrypted = encryptTotpSecret(secret, options.env);
-  runOpenClawStateWriteTransaction(options, (db) => {
-    const kysely = getUsersKysely(db);
+  runOpenClawStateWriteTransaction((database) => {
+    const kysely = getUsersKysely(database.db);
     executeSqliteQuerySync(
-      db,
+      database.db,
       kysely
         .updateTable("control_ui_users")
         .set({ totp_secret_encrypted: totpSecretEncrypted, updated_at_ms: now })
         .where("user_id", "=", userId),
     );
-  });
+  }, options);
 }
 
 /** Record the latest accepted TOTP counter to block replay within the skew window. */
@@ -178,16 +178,16 @@ export function recordControlUiUserTotpSuccess(
   options: OpenClawStateDatabaseOptions = {},
 ): void {
   const now = Date.now();
-  runOpenClawStateWriteTransaction(options, (db) => {
-    const kysely = getUsersKysely(db);
+  runOpenClawStateWriteTransaction((database) => {
+    const kysely = getUsersKysely(database.db);
     executeSqliteQuerySync(
-      db,
+      database.db,
       kysely
         .updateTable("control_ui_users")
         .set({ totp_last_counter: counter, updated_at_ms: now })
         .where("user_id", "=", userId),
     );
-  });
+  }, options);
 }
 
 /** Create a new Control UI user with optional TOTP enrollment material. */
@@ -227,18 +227,18 @@ export function createControlUiUser(
     created_at_ms: now,
     updated_at_ms: now,
   };
-  return runOpenClawStateWriteTransaction(options, (db) => {
-    const kysely = getUsersKysely(db);
+  return runOpenClawStateWriteTransaction((database) => {
+    const kysely = getUsersKysely(database.db);
     const existing = executeSqliteQueryTakeFirstSync(
-      db,
+      database.db,
       kysely.selectFrom("control_ui_users").select("user_id").where("username", "=", username),
     );
     if (existing) {
       throw new Error(`Control UI user "${username}" already exists.`);
     }
-    executeSqliteQuerySync(db, kysely.insertInto("control_ui_users").values(values));
+    executeSqliteQuerySync(database.db, kysely.insertInto("control_ui_users").values(values));
     const inserted = executeSqliteQueryTakeFirstSync(
-      db,
+      database.db,
       kysely.selectFrom("control_ui_users").selectAll().where("user_id", "=", userId),
     );
     if (!inserted) {
@@ -254,7 +254,7 @@ export function createControlUiUser(
           }
         : {}),
     };
-  });
+  }, options);
 }
 
 /** Confirm TOTP enrollment by validating the first code and enabling MFA. */
@@ -282,17 +282,17 @@ export function confirmControlUiUserTotpEnrollment(
     throw new Error("Invalid MFA confirmation code.");
   }
   const now = Date.now();
-  return runOpenClawStateWriteTransaction(options, (db) => {
-    const kysely = getUsersKysely(db);
+  return runOpenClawStateWriteTransaction((database) => {
+    const kysely = getUsersKysely(database.db);
     executeSqliteQuerySync(
-      db,
+      database.db,
       kysely
         .updateTable("control_ui_users")
         .set({ totp_enabled: 1, updated_at_ms: now })
         .where("user_id", "=", user.userId),
     );
     return { ...user, totpEnabled: true, updatedAtMs: now };
-  });
+  }, options);
 }
 
 /** Verify a username/password pair against stored credentials. */

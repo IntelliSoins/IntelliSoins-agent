@@ -210,7 +210,7 @@ async function runGatewayAuthHealth(ctx: DoctorHealthFlowContext): Promise<void>
     const { runDoctorCreateControlUiUser } = await import("../commands/doctor-control-ui-user.js");
     ctx.cfg = await runDoctorCreateControlUiUser({
       cfg: ctx.cfg,
-      prompter: ctx.prompter,
+      runtime: ctx.runtime,
       options: {
         nonInteractive: ctx.options.nonInteractive,
         yes: ctx.options.yes,
