@@ -2379,8 +2379,21 @@ export const fa: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "داشبورد Gateway",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "اختیاری",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "نمایش توکن",
     hideToken: "پنهان کردن توکن",
     toggleTokenVisibility: "تغییر نمایش توکن",
@@ -2396,22 +2409,30 @@ export const fa: TranslationMap = {
         title: "احراز هویت لازم است",
         summary:
           "Gateway در دسترس است، اما قبل از اتصال این مرورگر به یک توکن یا گذرواژه منطبق نیاز دارد.",
-        stepPaste:
-          "توکن intellisoins dashboard --no-open را جای گذاری کنید یا گذرواژه پیکربندی شده را وارد کنید.",
-        stepGenerate:
-          "اگر توکنی پیکربندی نشده است، intellisoins doctor --generate-gateway-token را روی میزبان Gateway اجرا کنید.",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "پس از به روز کردن اعتبارنامه، دوباره روی Connect کلیک کنید.",
       },
       authFailed: {
         title: "احراز هویت مطابقت نداشت",
         summary:
           "اعتبارنامه ارائه شده رد شد. رایج ترین علت، توکن قدیمی یا توکنی است که از URL یک Gateway دیگر کپی شده است.",
-        stepDashboard:
-          "intellisoins dashboard --no-open را اجرا کنید و URL تازه را باز کنید یا توکن آن را جای گذاری کنید.",
-        stepReplace:
-          "مقادیر قدیمی توکن/گذرواژه را جایگزین کنید؛ از توکن URL یک Gateway دیگر دوباره استفاده نکنید.",
-        stepMode:
-          "هر بار فقط یک حالت احراز هویت منطبق استفاده کنید: توکن gateway برای حالت توکن، گذرواژه برای حالت گذرواژه.",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "تلاش های ناموفق بیش از حد",

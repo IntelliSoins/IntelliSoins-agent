@@ -452,7 +452,7 @@ const ENUM_EXPECTATIONS: Record<string, string[]> = {
   "channels.defaults.contextVisibility": ['"all"', '"allowlist"', '"allowlist_quote"'],
   "gateway.mode": ['"local"', '"remote"'],
   "gateway.bind": ['"auto"', '"lan"', '"loopback"', '"custom"', '"tailnet"'],
-  "gateway.auth.mode": ['"none"', '"token"', '"password"', '"trusted-proxy"'],
+  "gateway.auth.mode": ['"none"', '"token"', '"password"', '"trusted-proxy"', '"users"'],
   "gateway.tailscale.mode": ['"off"', '"serve"', '"funnel"'],
   "browser.profiles.*.driver": ['"openclaw"', '"clawd"', '"existing-session"'],
   "discovery.mdns.mode": ['"off"', '"minimal"', '"full"'],

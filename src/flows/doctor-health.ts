@@ -19,7 +19,12 @@ function loadConfigModule(): Promise<ConfigModule> {
 /** Runs the full interactive doctor flow against the provided or default runtime. */
 export async function doctorCommand(runtime?: RuntimeEnv, options: DoctorOptions = {}) {
   const effectiveRuntime = runtime ?? (await import("../runtime.js")).defaultRuntime;
-  if (options.repair === true || options.yes === true || options.generateGatewayToken === true) {
+  if (
+    options.repair === true ||
+    options.yes === true ||
+    options.generateGatewayToken === true ||
+    options.createControlUiUser === true
+  ) {
     const { assertConfigWriteAllowedInCurrentMode } = await loadConfigModule();
     assertConfigWriteAllowedInCurrentMode();
   }

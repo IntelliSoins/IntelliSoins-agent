@@ -106,6 +106,8 @@ function isGenericBrowserFetchFailure(message: string): boolean {
 type GatewayHost = {
   settings: UiSettings;
   password: string;
+  loginUsername: string;
+  loginMfaCode: string;
   clientInstanceId: string;
   client: GatewayBrowserClient | null;
   connected: boolean;
@@ -737,6 +739,8 @@ export function connectGateway(host: GatewayHost, options?: ConnectGatewayOption
     url: host.settings.gatewayUrl,
     token: host.settings.token.trim() ? host.settings.token : undefined,
     password: host.password.trim() ? host.password : undefined,
+    username: host.loginUsername.trim() ? host.loginUsername : undefined,
+    mfaCode: host.loginMfaCode.trim() ? host.loginMfaCode : undefined,
     clientName: "openclaw-control-ui",
     clientVersion,
     mode: "webchat",

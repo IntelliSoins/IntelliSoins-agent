@@ -236,6 +236,17 @@ export interface ConfigHealthEntries {
   updated_at_ms: number;
 }
 
+export interface ControlUiUsers {
+  created_at_ms: number;
+  password_hash: string;
+  totp_enabled: Generated<number>;
+  totp_last_counter: number | null;
+  totp_secret_encrypted: string | null;
+  updated_at_ms: number;
+  user_id: string;
+  username: string;
+}
+
 export interface CronJobs {
   agent_id: string | null;
   anchor_ms: number | null;
@@ -960,6 +971,7 @@ export interface DB {
   command_log_entries: CommandLogEntries;
   commitments: Commitments;
   config_health_entries: ConfigHealthEntries;
+  control_ui_users: ControlUiUsers;
   cron_jobs: CronJobs;
   cron_run_logs: CronRunLogs;
   current_conversation_bindings: CurrentConversationBindings;

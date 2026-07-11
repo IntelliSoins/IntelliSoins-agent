@@ -206,6 +206,18 @@ async function runGatewayAuthHealth(ctx: DoctorHealthFlowContext): Promise<void>
   const { resolveGatewayAuthToken } = await import("../gateway/auth-token-resolution.js");
   const { note } = await loadNoteModule();
   const { randomToken } = await loadOnboardHelpersModule();
+  if (ctx.options.createControlUiUser === true) {
+    const { runDoctorCreateControlUiUser } = await import("../commands/doctor-control-ui-user.js");
+    ctx.cfg = await runDoctorCreateControlUiUser({
+      cfg: ctx.cfg,
+      runtime: ctx.runtime,
+      options: {
+        nonInteractive: ctx.options.nonInteractive,
+        yes: ctx.options.yes,
+      },
+    });
+    return;
+  }
   if (resolveDoctorMode(ctx.cfg) !== "local" || !ctx.sourceConfigValid) {
     return;
   }
@@ -226,6 +238,7 @@ async function runGatewayAuthHealth(ctx: DoctorHealthFlowContext): Promise<void>
     auth.mode !== "password" &&
     auth.mode !== "none" &&
     auth.mode !== "trusted-proxy" &&
+    auth.mode !== "users" &&
     (auth.mode !== "token" || !hasInlineToken || Boolean(gatewayTokenRef));
   if (!needsToken) {
     return;

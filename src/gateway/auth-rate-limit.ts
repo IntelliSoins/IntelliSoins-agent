@@ -51,6 +51,7 @@ export const AUTH_RATE_LIMIT_SCOPE_NODE_PAIRING = "node-pairing";
 // requests, blocking legitimate node onboarding during the attack.
 export const AUTH_RATE_LIMIT_SCOPE_BOOTSTRAP_TOKEN = "bootstrap-token";
 export const AUTH_RATE_LIMIT_SCOPE_HOOK_AUTH = "hook-auth";
+export const AUTH_RATE_LIMIT_SCOPE_USER_ACCOUNT = "user-account";
 const BROWSER_ORIGIN_RATE_LIMIT_KEY_PREFIX = "browser-origin:";
 
 interface RateLimitEntry {

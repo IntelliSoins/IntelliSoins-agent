@@ -1038,6 +1038,7 @@ export const OpenClawSchema = z
                 z.literal("token"),
                 z.literal("password"),
                 z.literal("trusted-proxy"),
+                z.literal("users"),
               ])
               .optional(),
             token: SecretInputSchema.optional().register(sensitive),

@@ -8,7 +8,6 @@ import { icons } from "../icons.ts";
 import { normalizeBasePath } from "../navigation.ts";
 import { normalizeLowercaseStringOrEmpty } from "../string-coerce.ts";
 import { agentLogoUrl } from "./agents-utils.ts";
-import { renderConnectCommand } from "./connect-command.ts";
 import {
   resolveAuthHintKind,
   resolvePairingHint,
@@ -19,6 +18,8 @@ type LoginFailureKind =
   | "auth-required"
   | "auth-failed"
   | "auth-rate-limited"
+  | "mfa-required"
+  | "mfa-invalid"
   | "pairing-required"
   | "insecure-context"
   | "origin-not-allowed"
@@ -41,6 +42,7 @@ type LoginFailureFeedbackParams = {
   lastErrorCode?: string | null;
   hasToken: boolean;
   hasPassword: boolean;
+  hasUsername: boolean;
 };
 
 function resolveDocsLabel(href: string): string {
@@ -56,12 +58,12 @@ function resolveDocsLabel(href: string): string {
 function redactLoginFailureError(value: string): string {
   return value
     .replace(
-      /([?#&])(?:access_token|auth|deviceToken|password|refresh_token|token)=([^&#\s]+)/gi,
+      /([?#&])(?:access_token|auth|deviceToken|password|refresh_token|token|mfaCode|username)=([^&#\s]+)/gi,
       "$1[redacted-credential]",
     )
     .replace(/\bBearer\s+([A-Za-z0-9._~+/-]+=*)/gi, "Bearer [redacted]")
     .replace(
-      /(["']?(?:access|accessToken|deviceToken|password|refresh|refreshToken|token)["']?\s*[:=]\s*)["']?[^"',\s}]+/gi,
+      /(["']?(?:access|accessToken|deviceToken|password|refresh|refreshToken|token|username|mfaCode)["']?\s*[:=]\s*)["']?[^"',\s}]+/gi,
       "$1[redacted]",
     );
 }
@@ -75,7 +77,7 @@ function buildFeedback(params: {
   stepKeys: string[];
   stepParams?: Record<string, string>;
 }): LoginFailureFeedback {
-  const docsHref = params.docsHref ?? "https://docs.openclaw.ai/web/dashboard";
+  const docsHref = params.docsHref ?? "https://docs.openclaw.ai/web/control-ui-users";
   return {
     kind: params.kind,
     title: t(params.titleKey, params.stepParams),
@@ -145,6 +147,26 @@ export function resolveLoginFailureFeedback(
     });
   }
 
+  if (lastErrorCode === ConnectErrorDetailCodes.AUTH_USER_MFA_REQUIRED) {
+    return buildFeedback({
+      kind: "mfa-required",
+      rawError,
+      titleKey: "login.failure.mfaRequired.title",
+      summaryKey: "login.failure.mfaRequired.summary",
+      stepKeys: ["login.failure.mfaRequired.stepCode", "login.failure.mfaRequired.stepRetry"],
+    });
+  }
+
+  if (lastErrorCode === ConnectErrorDetailCodes.AUTH_USER_MFA_INVALID) {
+    return buildFeedback({
+      kind: "mfa-invalid",
+      rawError,
+      titleKey: "login.failure.mfaInvalid.title",
+      summaryKey: "login.failure.mfaInvalid.summary",
+      stepKeys: ["login.failure.mfaInvalid.stepClock", "login.failure.mfaInvalid.stepRetry"],
+    });
+  }
+
   if (shouldShowInsecureContextHint(false, rawError, lastErrorCode)) {
     return buildFeedback({
       kind: "insecure-context",
@@ -201,6 +223,7 @@ export function resolveLoginFailureFeedback(
     lastErrorCode,
     hasToken: params.hasToken,
     hasPassword: params.hasPassword,
+    hasUsername: params.hasUsername,
   });
   if (authHintKind === "required") {
     return buildFeedback({
@@ -209,8 +232,8 @@ export function resolveLoginFailureFeedback(
       titleKey: "login.failure.authRequired.title",
       summaryKey: "login.failure.authRequired.summary",
       stepKeys: [
-        "login.failure.authRequired.stepPaste",
-        "login.failure.authRequired.stepGenerate",
+        "login.failure.authRequired.stepCredentials",
+        "login.failure.authRequired.stepMfa",
         "login.failure.authRequired.stepConnect",
       ],
     });
@@ -222,9 +245,9 @@ export function resolveLoginFailureFeedback(
       titleKey: "login.failure.authFailed.title",
       summaryKey: "login.failure.authFailed.summary",
       stepKeys: [
-        "login.failure.authFailed.stepDashboard",
-        "login.failure.authFailed.stepReplace",
-        "login.failure.authFailed.stepMode",
+        "login.failure.authFailed.stepCheck",
+        "login.failure.authFailed.stepMfa",
+        "login.failure.authFailed.stepAdmin",
       ],
     });
   }
@@ -270,6 +293,61 @@ function renderLoginFailure(feedback: LoginFailureFeedback) {
   `;
 }
 
+function renderAdvancedSettings(state: AppViewState) {
+  return html`
+    <details class="login-gate__advanced" ?open=${state.loginShowAdvanced}>
+      <summary
+        @click=${() => {
+          state.loginShowAdvanced = !state.loginShowAdvanced;
+        }}
+      >
+        ${t("login.advanced.title")}
+      </summary>
+      <div class="login-gate__advanced-body">
+        <label class="field">
+          <span>${t("overview.access.wsUrl")}</span>
+          <input
+            .value=${state.settings.gatewayUrl}
+            @input=${(e: Event) => {
+              const v = (e.target as HTMLInputElement).value;
+              state.applySettings({ ...state.settings, gatewayUrl: v });
+            }}
+            placeholder="ws://127.0.0.1:18789"
+          />
+        </label>
+        <label class="field">
+          <span>${t("overview.access.token")}</span>
+          <div class="login-gate__secret-row">
+            <input
+              type=${state.loginShowGatewayToken ? "text" : "password"}
+              autocomplete="off"
+              spellcheck="false"
+              .value=${state.settings.token}
+              @input=${(e: Event) => {
+                const v = (e.target as HTMLInputElement).value;
+                state.applySettings({ ...state.settings, token: v });
+              }}
+              placeholder=${t("login.advanced.tokenPlaceholder")}
+            />
+            <button
+              type="button"
+              class="btn btn--icon ${state.loginShowGatewayToken ? "active" : ""}"
+              title=${state.loginShowGatewayToken ? t("login.hideToken") : t("login.showToken")}
+              aria-label=${t("login.toggleTokenVisibility")}
+              aria-pressed=${state.loginShowGatewayToken}
+              @click=${() => {
+                state.loginShowGatewayToken = !state.loginShowGatewayToken;
+              }}
+            >
+              ${state.loginShowGatewayToken ? icons.eye : icons.eyeOff}
+            </button>
+          </div>
+        </label>
+      </div>
+    </details>
+  `;
+}
+
 export function renderLoginGate(state: AppViewState) {
   const basePath = normalizeBasePath(state.basePath ?? "");
   const faviconSrc = agentLogoUrl(basePath);
@@ -279,125 +357,101 @@ export function renderLoginGate(state: AppViewState) {
     lastErrorCode: state.lastErrorCode,
     hasToken: Boolean(state.settings.token.trim()),
     hasPassword: Boolean(state.password.trim()),
+    hasUsername: Boolean(state.loginUsername.trim()),
   });
 
   return html`
     <div class="login-gate">
-      <div class="login-gate__card">
-        <div class="login-gate__header">
+      <div class="login-gate__shell">
+        <div class="login-gate__brand-panel">
           <img class="login-gate__logo" src=${faviconSrc} alt=${t("brand.productTitle")} />
-          <div class="login-gate__title">${t("brand.productTitle")}</div>
-          <div class="login-gate__tagline">${t("brand.productTagline")}</div>
-          <div class="login-gate__sub">${t("login.subtitle")}</div>
+          <div class="login-gate__brand-name">IntelliSoins</div>
+          <div class="login-gate__brand-tagline">${t("login.brandTagline")}</div>
         </div>
-        <div class="login-gate__form">
-          <label class="field">
-            <span>${t("overview.access.wsUrl")}</span>
-            <input
-              .value=${state.settings.gatewayUrl}
-              @input=${(e: Event) => {
-                const v = (e.target as HTMLInputElement).value;
-                state.applySettings({ ...state.settings, gatewayUrl: v });
-              }}
-              placeholder="ws://127.0.0.1:18789"
-            />
-          </label>
-          <label class="field">
-            <span>${t("overview.access.token")}</span>
-            <div class="login-gate__secret-row">
-              <input
-                type=${state.loginShowGatewayToken ? "text" : "password"}
-                autocomplete="off"
-                spellcheck="false"
-                .value=${state.settings.token}
-                @input=${(e: Event) => {
-                  const v = (e.target as HTMLInputElement).value;
-                  state.applySettings({ ...state.settings, token: v });
-                }}
-                placeholder="OPENCLAW_GATEWAY_TOKEN (${t("login.passwordPlaceholder")})"
-                @keydown=${(e: KeyboardEvent) => {
-                  if (e.key === "Enter") {
-                    state.connect();
-                  }
-                }}
-              />
-              <button
-                type="button"
-                class="btn btn--icon ${state.loginShowGatewayToken ? "active" : ""}"
-                title=${state.loginShowGatewayToken ? t("login.hideToken") : t("login.showToken")}
-                aria-label=${t("login.toggleTokenVisibility")}
-                aria-pressed=${state.loginShowGatewayToken}
-                @click=${() => {
-                  state.loginShowGatewayToken = !state.loginShowGatewayToken;
-                }}
-              >
-                ${state.loginShowGatewayToken ? icons.eye : icons.eyeOff}
-              </button>
-            </div>
-          </label>
-          <label class="field">
-            <span>${t("overview.access.password")}</span>
-            <div class="login-gate__secret-row">
-              <input
-                type=${state.loginShowGatewayPassword ? "text" : "password"}
-                autocomplete="off"
-                spellcheck="false"
-                .value=${state.password}
-                @input=${(e: Event) => {
-                  const v = (e.target as HTMLInputElement).value;
-                  state.password = v;
-                }}
-                placeholder="${t("login.passwordPlaceholder")}"
-                @keydown=${(e: KeyboardEvent) => {
-                  if (e.key === "Enter") {
-                    state.connect();
-                  }
-                }}
-              />
-              <button
-                type="button"
-                class="btn btn--icon ${state.loginShowGatewayPassword ? "active" : ""}"
-                title=${state.loginShowGatewayPassword
-                  ? t("login.hidePassword")
-                  : t("login.showPassword")}
-                aria-label=${t("login.togglePasswordVisibility")}
-                aria-pressed=${state.loginShowGatewayPassword}
-                @click=${() => {
-                  state.loginShowGatewayPassword = !state.loginShowGatewayPassword;
-                }}
-              >
-                ${state.loginShowGatewayPassword ? icons.eye : icons.eyeOff}
-              </button>
-            </div>
-          </label>
-          <button class="btn primary login-gate__connect" @click=${() => state.connect()}>
-            ${t("common.connect")}
-          </button>
-        </div>
-        ${failure ? renderLoginFailure(failure) : ""}
-        <div class="login-gate__help">
-          <div class="login-gate__help-title">${t("overview.connection.title")}</div>
-          <ol class="login-gate__steps">
-            <li>
-              ${t("overview.connection.step1")}${renderConnectCommand(
-                "openintellisoins gateway run",
-              )}
-            </li>
-            <li>
-              ${t("overview.connection.step2")}
-              ${renderConnectCommand("openintellisoins dashboard")}
-            </li>
-            <li>${t("overview.connection.step3")}</li>
-          </ol>
-          <div class="login-gate__docs">
-            <a
-              class="session-link"
-              href="https://docs.openclaw.ai/web/dashboard"
-              target="_blank"
-              rel="noreferrer"
-              >${t("overview.connection.docsLink")}</a
-            >
+        <div class="login-gate__card">
+          <div class="login-gate__header">
+            <div class="login-gate__title">${t("login.title")}</div>
+            <div class="login-gate__sub">${t("login.subtitle")}</div>
           </div>
+          <div class="login-gate__form">
+            <label class="field">
+              <span>${t("login.username")}</span>
+              <input
+                autocomplete="username"
+                spellcheck="false"
+                .value=${state.loginUsername}
+                @input=${(e: Event) => {
+                  state.loginUsername = (e.target as HTMLInputElement).value;
+                }}
+                placeholder=${t("login.usernamePlaceholder")}
+                @keydown=${(e: KeyboardEvent) => {
+                  if (e.key === "Enter") {
+                    state.connect();
+                  }
+                }}
+              />
+            </label>
+            <label class="field">
+              <span>${t("login.password")}</span>
+              <div class="login-gate__secret-row">
+                <input
+                  type=${state.loginShowGatewayPassword ? "text" : "password"}
+                  autocomplete="current-password"
+                  spellcheck="false"
+                  .value=${state.password}
+                  @input=${(e: Event) => {
+                    state.password = (e.target as HTMLInputElement).value;
+                  }}
+                  placeholder=${t("login.passwordPlaceholder")}
+                  @keydown=${(e: KeyboardEvent) => {
+                    if (e.key === "Enter") {
+                      state.connect();
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  class="btn btn--icon ${state.loginShowGatewayPassword ? "active" : ""}"
+                  title=${state.loginShowGatewayPassword
+                    ? t("login.hidePassword")
+                    : t("login.showPassword")}
+                  aria-label=${t("login.togglePasswordVisibility")}
+                  aria-pressed=${state.loginShowGatewayPassword}
+                  @click=${() => {
+                    state.loginShowGatewayPassword = !state.loginShowGatewayPassword;
+                  }}
+                >
+                  ${state.loginShowGatewayPassword ? icons.eye : icons.eyeOff}
+                </button>
+              </div>
+            </label>
+            <label class="field">
+              <span>${t("login.mfaCode")}</span>
+              <input
+                class="login-gate__mfa-input"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                maxlength="6"
+                pattern="[0-9]*"
+                .value=${state.loginMfaCode}
+                @input=${(e: Event) => {
+                  const raw = (e.target as HTMLInputElement).value.replace(/\D/g, "").slice(0, 6);
+                  state.loginMfaCode = raw;
+                  (e.target as HTMLInputElement).value = raw;
+                }}
+                placeholder=${t("login.mfaPlaceholder")}
+                @keydown=${(e: KeyboardEvent) => {
+                  if (e.key === "Enter") {
+                    state.connect();
+                  }
+                }}
+              />
+            </label>
+            <button class="btn primary login-gate__connect" @click=${() => state.connect()}>
+              ${t("login.connect")}
+            </button>
+          </div>
+          ${failure ? renderLoginFailure(failure) : ""} ${renderAdvancedSettings(state)}
         </div>
       </div>
     </div>

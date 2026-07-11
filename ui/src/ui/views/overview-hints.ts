@@ -11,6 +11,8 @@ const AUTH_REQUIRED_CODES = new Set<string>([
   ConnectErrorDetailCodes.AUTH_PASSWORD_MISSING,
   ConnectErrorDetailCodes.AUTH_TOKEN_NOT_CONFIGURED,
   ConnectErrorDetailCodes.AUTH_PASSWORD_NOT_CONFIGURED,
+  ConnectErrorDetailCodes.AUTH_USER_REQUIRED,
+  ConnectErrorDetailCodes.AUTH_USER_MFA_REQUIRED,
 ]);
 
 const AUTH_FAILURE_CODES = new Set<string>([
@@ -18,6 +20,8 @@ const AUTH_FAILURE_CODES = new Set<string>([
   ConnectErrorDetailCodes.AUTH_UNAUTHORIZED,
   ConnectErrorDetailCodes.AUTH_TOKEN_MISMATCH,
   ConnectErrorDetailCodes.AUTH_PASSWORD_MISMATCH,
+  ConnectErrorDetailCodes.AUTH_USER_CREDENTIALS_INVALID,
+  ConnectErrorDetailCodes.AUTH_USER_MFA_INVALID,
   ConnectErrorDetailCodes.AUTH_DEVICE_TOKEN_MISMATCH,
   ConnectErrorDetailCodes.AUTH_RATE_LIMITED,
   ConnectErrorDetailCodes.AUTH_TAILSCALE_IDENTITY_MISSING,
@@ -95,6 +99,7 @@ export function resolveAuthHintKind(params: {
   lastErrorCode?: string | null;
   hasToken: boolean;
   hasPassword: boolean;
+  hasUsername?: boolean;
 }): AuthHintKind | null {
   if (params.connected || !params.lastError) {
     return null;
@@ -110,7 +115,7 @@ export function resolveAuthHintKind(params: {
   if (!lower.includes("unauthorized")) {
     return null;
   }
-  return !params.hasToken && !params.hasPassword ? "required" : "failed";
+  return !params.hasToken && !params.hasPassword && !params.hasUsername ? "required" : "failed";
 }
 
 export function shouldShowInsecureContextHint(

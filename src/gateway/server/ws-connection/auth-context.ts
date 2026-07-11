@@ -5,6 +5,7 @@ import {
   AUTH_RATE_LIMIT_SCOPE_BOOTSTRAP_TOKEN,
   AUTH_RATE_LIMIT_SCOPE_DEVICE_TOKEN,
   AUTH_RATE_LIMIT_SCOPE_SHARED_SECRET,
+  AUTH_RATE_LIMIT_SCOPE_USER_ACCOUNT,
   type AuthRateLimiter,
 } from "../../auth-rate-limit.js";
 import {
@@ -20,6 +21,8 @@ type HandshakeConnectAuth = {
   bootstrapToken?: string;
   deviceToken?: string;
   password?: string;
+  username?: string;
+  mfaCode?: string;
   approvalRuntimeToken?: string;
 };
 
@@ -98,13 +101,15 @@ function mapDeviceTokenAuthFailureReason(params: {
 
 function resolveSharedConnectAuth(
   connectAuth: HandshakeConnectAuth | null | undefined,
-): { token?: string; password?: string } | undefined {
+): { token?: string; password?: string; username?: string; mfaCode?: string } | undefined {
   const token = normalizeOptionalString(connectAuth?.token);
   const password = normalizeOptionalString(connectAuth?.password);
-  if (!token && !password) {
+  const username = normalizeOptionalString(connectAuth?.username);
+  const mfaCode = normalizeOptionalString(connectAuth?.mfaCode);
+  if (!token && !password && !username) {
     return undefined;
   }
-  return { token, password };
+  return { token, password, username, mfaCode };
 }
 
 function resolveDeviceTokenCandidate(connectAuth: HandshakeConnectAuth | null | undefined): {
@@ -134,6 +139,7 @@ export async function resolveConnectAuthState(params: {
 }): Promise<ConnectAuthState> {
   const sharedConnectAuth = resolveSharedConnectAuth(params.connectAuth);
   const sharedAuthProvided = Boolean(sharedConnectAuth);
+  const usesUserAccountAuth = Boolean(sharedConnectAuth?.username);
   const bootstrapTokenCandidate = params.hasDeviceIdentity
     ? normalizeOptionalString(params.connectAuth?.bootstrapToken)
     : undefined;
@@ -148,7 +154,9 @@ export async function resolveConnectAuthState(params: {
     allowRealIpFallback: params.allowRealIpFallback,
     rateLimiter: sharedAuthProvided ? params.rateLimiter : undefined,
     clientIp: params.clientIp,
-    rateLimitScope: AUTH_RATE_LIMIT_SCOPE_SHARED_SECRET,
+    rateLimitScope: usesUserAccountAuth
+      ? AUTH_RATE_LIMIT_SCOPE_USER_ACCOUNT
+      : AUTH_RATE_LIMIT_SCOPE_SHARED_SECRET,
   });
 
   const sharedAuthResult =

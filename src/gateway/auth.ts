@@ -15,6 +15,11 @@ import {
 } from "./auth-rate-limit.js";
 import type { ResolvedGatewayAuth } from "./auth-resolve.js";
 import {
+  authorizeControlUiUserAccountAuth,
+  hasExplicitUserAccountAuth,
+} from "./control-ui-user-auth.js";
+import { hasControlUiUsers, hasControlUiUserWithoutMfaEnabled } from "./control-ui-users.sqlite.js";
+import {
   isLoopbackAddress,
   resolveLocalInterfaceAddressMatch,
   resolveRequestClientIp,
@@ -45,7 +50,8 @@ export type GatewayAuthResult = {
     | "tailscale"
     | "device-token"
     | "bootstrap-token"
-    | "trusted-proxy";
+    | "trusted-proxy"
+    | "user-account";
   user?: string;
   reason?: string;
   /** Present when the request was blocked by the rate limiter. */
@@ -57,6 +63,8 @@ export type GatewayAuthResult = {
 type ConnectAuth = {
   token?: string;
   password?: string;
+  username?: string;
+  mfaCode?: string;
 };
 
 export type GatewayAuthSurface = "http" | "ws-control-ui";
@@ -126,6 +134,9 @@ function resolveGatewayAuthRequestContext(
 }
 
 function hasExplicitSharedSecretAuth(connectAuth?: ConnectAuth | null): boolean {
+  if (hasExplicitUserAccountAuth(connectAuth)) {
+    return true;
+  }
   return Boolean(
     normalizeOptionalString(connectAuth?.token) || normalizeOptionalString(connectAuth?.password),
   );
@@ -295,6 +306,16 @@ export function assertGatewayAuthConfigured(
         "gateway auth mode is trusted-proxy, but a shared token is also configured; remove gateway.auth.token / OPENCLAW_GATEWAY_TOKEN because trusted-proxy and token auth are mutually exclusive",
       );
     }
+  }
+  if (auth.mode === "users" && !hasControlUiUsers()) {
+    throw new Error(
+      `gateway auth mode is users, but no Control UI user accounts exist. Run intellisoins doctor --create-control-ui-user to create the first operator account.${LEGACY_OPENCLAW_ENV_NOTE}`,
+    );
+  }
+  if (auth.mode === "users" && hasControlUiUserWithoutMfaEnabled()) {
+    throw new Error(
+      `gateway auth mode is users, but at least one Control UI user does not have MFA enabled. Run intellisoins doctor --create-control-ui-user or complete MFA enrollment before starting the gateway.${LEGACY_OPENCLAW_ENV_NOTE}`,
+    );
   }
 }
 
@@ -567,6 +588,27 @@ async function authorizeGatewayConnectCore(
       ip,
       rateLimitScope,
     });
+  }
+
+  if (auth.mode === "users") {
+    const userAccountResult = authorizeControlUiUserAccountAuth({
+      connectAuth,
+      limiter,
+      ip,
+    });
+    if (userAccountResult) {
+      return userAccountResult;
+    }
+    if (authSurface !== "ws-control-ui" && auth.token && connectAuth?.token) {
+      return authorizeTokenAuth({
+        authToken: auth.token,
+        connectToken: connectAuth.token,
+        limiter,
+        ip,
+        rateLimitScope,
+      });
+    }
+    return { ok: false, reason: "user_auth_required" };
   }
 
   if (auth.mode === "password") {

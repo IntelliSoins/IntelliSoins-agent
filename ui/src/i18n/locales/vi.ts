@@ -2376,8 +2376,21 @@ export const vi: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "Bảng điều khiển Gateway",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "tùy chọn",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "Hiển thị token",
     hideToken: "Ẩn token",
     toggleTokenVisibility: "Bật/tắt hiển thị token",
@@ -2393,21 +2406,30 @@ export const vi: TranslationMap = {
         title: "Cần xác thực",
         summary:
           "Gateway có thể truy cập được, nhưng cần token hoặc mật khẩu khớp trước khi trình duyệt này có thể kết nối.",
-        stepPaste: "Dán token từ intellisoins dashboard --no-open hoặc nhập mật khẩu đã cấu hình.",
-        stepGenerate:
-          "Nếu chưa cấu hình token, hãy chạy intellisoins doctor --generate-gateway-token trên máy chủ Gateway.",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "Nhấp Connect lần nữa sau khi cập nhật thông tin xác thực.",
       },
       authFailed: {
         title: "Xác thực không khớp",
         summary:
           "Thông tin xác thực đã cung cấp bị từ chối. Nguyên nhân phổ biến nhất là token cũ hoặc token sao chép từ một Gateway URL khác.",
-        stepDashboard:
-          "Chạy intellisoins dashboard --no-open rồi mở URL mới hoặc dán token của nó.",
-        stepReplace:
-          "Thay các giá trị token/mật khẩu cũ; không dùng lại token từ Gateway URL khác.",
-        stepMode:
-          "Mỗi lần chỉ dùng một chế độ auth khớp: gateway token cho chế độ token, mật khẩu cho chế độ password.",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "Quá nhiều lần thử thất bại",

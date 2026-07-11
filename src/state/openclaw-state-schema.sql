@@ -1162,6 +1162,20 @@ CREATE INDEX IF NOT EXISTS idx_flow_runs_status ON flow_runs(status);
 CREATE INDEX IF NOT EXISTS idx_flow_runs_owner_key ON flow_runs(owner_key);
 CREATE INDEX IF NOT EXISTS idx_flow_runs_updated_at ON flow_runs(updated_at);
 
+CREATE TABLE IF NOT EXISTS control_ui_users (
+  user_id TEXT NOT NULL PRIMARY KEY,
+  username TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  totp_secret_encrypted TEXT,
+  totp_enabled INTEGER NOT NULL DEFAULT 0,
+  totp_last_counter INTEGER,
+  created_at_ms INTEGER NOT NULL,
+  updated_at_ms INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_control_ui_users_username
+  ON control_ui_users(username);
+
 CREATE TABLE IF NOT EXISTS migration_runs (
   id TEXT NOT NULL PRIMARY KEY,
   started_at INTEGER NOT NULL,

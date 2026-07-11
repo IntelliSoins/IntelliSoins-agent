@@ -23,6 +23,11 @@ export function registerMaintenanceCommands(program: Command) {
     .option("--non-interactive", "Run without prompts (safe migrations only)", false)
     .option("--generate-gateway-token", "Generate and configure a gateway token", false)
     .option(
+      "--create-control-ui-user",
+      "Create the first Control UI operator account with optional MFA",
+      false,
+    )
+    .option(
       "--allow-exec",
       "Allow doctor to execute exec SecretRefs while verifying configured secrets",
       false,
@@ -89,6 +94,7 @@ export function registerMaintenanceCommands(program: Command) {
           force: Boolean(opts.force),
           nonInteractive: Boolean(opts.nonInteractive),
           generateGatewayToken: Boolean(opts.generateGatewayToken),
+          createControlUiUser: Boolean(opts.createControlUiUser),
           allowExec: Boolean(opts.allowExec),
           deep: Boolean(opts.deep),
           postUpgrade: Boolean(opts.postUpgrade),

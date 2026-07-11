@@ -2364,8 +2364,21 @@ export const th: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "Gateway Dashboard",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "ไม่บังคับ",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "แสดงโทเค็น",
     hideToken: "ซ่อนโทเค็น",
     toggleTokenVisibility: "สลับการแสดงโทเค็น",
@@ -2380,18 +2393,29 @@ export const th: TranslationMap = {
       authRequired: {
         title: "ต้องยืนยันตัวตน",
         summary: "เข้าถึง Gateway ได้ แต่ต้องมีโทเค็นหรือรหัสผ่านที่ตรงกันก่อนที่เบราว์เซอร์นี้จะเชื่อมต่อได้",
-        stepPaste: "วางโทเค็นจาก intellisoins dashboard --no-open หรือป้อนรหัสผ่านที่ตั้งค่าไว้",
-        stepGenerate:
-          "ถ้ายังไม่ได้ตั้งค่าโทเค็น ให้รัน intellisoins doctor --generate-gateway-token บนโฮสต์ Gateway",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "คลิก Connect อีกครั้งหลังจากอัปเดตข้อมูลรับรอง",
       },
       authFailed: {
         title: "การยืนยันตัวตนไม่ตรงกัน",
         summary: "ข้อมูลรับรองที่ให้มาถูกปฏิเสธ สาเหตุที่พบบ่อยคือโทเค็นเก่าหรือโทเค็นที่คัดลอกจาก Gateway URL อื่น",
-        stepDashboard: "รัน intellisoins dashboard --no-open แล้วเปิด URL ใหม่หรือวางโทเค็นของ URL นั้น",
-        stepReplace: "แทนที่ค่าโทเค็น/รหัสผ่านเก่า อย่าใช้โทเค็นจาก Gateway URL อื่นซ้ำ",
-        stepMode:
-          "ใช้โหมด auth ที่ตรงกันทีละโหมด: gateway token สำหรับโหมด token, รหัสผ่านสำหรับโหมด password",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "พยายามล้มเหลวมากเกินไป",

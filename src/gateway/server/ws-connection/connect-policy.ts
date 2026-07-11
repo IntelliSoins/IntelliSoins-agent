@@ -96,7 +96,8 @@ export function shouldClearUnboundScopesForMissingDeviceIdentity(params: {
       !params.preserveInsecureLocalControlUiScopes &&
       (params.authMethod === "token" ||
         params.authMethod === "password" ||
-        params.authMethod === "trusted-proxy"))
+        params.authMethod === "trusted-proxy" ||
+        params.authMethod === "user-account"))
   );
 }
 

@@ -2373,8 +2373,21 @@ export const ko: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "Gateway 대시보드",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "선택 사항",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "토큰 표시",
     hideToken: "토큰 숨기기",
     toggleTokenVisibility: "토큰 표시 여부 전환",
@@ -2390,22 +2403,30 @@ export const ko: TranslationMap = {
         title: "인증 필요",
         summary:
           "Gateway에 연결할 수 있지만 이 브라우저가 연결되기 전에 일치하는 토큰 또는 비밀번호가 필요합니다.",
-        stepPaste:
-          "intellisoins dashboard --no-open의 토큰을 붙여넣거나 구성된 비밀번호를 입력하세요.",
-        stepGenerate:
-          "토큰이 구성되어 있지 않으면 Gateway 호스트에서 intellisoins doctor --generate-gateway-token을 실행하세요.",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "자격 증명을 업데이트한 뒤 Connect를 다시 클릭하세요.",
       },
       authFailed: {
         title: "인증이 일치하지 않음",
         summary:
           "제공한 자격 증명이 거부되었습니다. 가장 흔한 원인은 오래된 토큰이거나 다른 Gateway URL에서 복사한 토큰입니다.",
-        stepDashboard:
-          "intellisoins dashboard --no-open을 실행하고 새 URL을 열거나 해당 토큰을 붙여넣으세요.",
-        stepReplace:
-          "오래된 토큰/비밀번호 값을 교체하세요. 다른 Gateway URL의 토큰을 재사용하지 마세요.",
-        stepMode:
-          "한 번에 하나의 일치하는 인증 모드만 사용하세요. 토큰 모드에는 gateway token, 비밀번호 모드에는 비밀번호를 사용합니다.",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "실패한 시도가 너무 많음",

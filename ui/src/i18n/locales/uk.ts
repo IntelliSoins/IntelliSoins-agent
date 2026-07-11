@@ -2382,8 +2382,21 @@ export const uk: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "Панель Gateway",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "необов’язково",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "Показати токен",
     hideToken: "Приховати токен",
     toggleTokenVisibility: "Перемкнути видимість токена",
@@ -2399,22 +2412,30 @@ export const uk: TranslationMap = {
         title: "Потрібна автентифікація",
         summary:
           "Gateway доступний, але цьому браузеру потрібен відповідний токен або пароль перед підключенням.",
-        stepPaste:
-          "Вставте токен з intellisoins dashboard --no-open або введіть налаштований пароль.",
-        stepGenerate:
-          "Якщо токен не налаштовано, виконайте intellisoins doctor --generate-gateway-token на хості Gateway.",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "Після оновлення облікових даних знову натисніть Connect.",
       },
       authFailed: {
         title: "Автентифікація не збігається",
         summary:
           "Надані облікові дані відхилено. Найпоширеніша причина — застарілий токен або токен, скопійований з іншого Gateway URL.",
-        stepDashboard:
-          "Виконайте intellisoins dashboard --no-open і відкрийте свіжий URL або вставте його токен.",
-        stepReplace:
-          "Замініть застарілі значення токена/пароля; не використовуйте повторно токен з іншого Gateway URL.",
-        stepMode:
-          "Використовуйте один відповідний режим auth за раз: gateway token для режиму token, пароль для режиму password.",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "Забагато невдалих спроб",

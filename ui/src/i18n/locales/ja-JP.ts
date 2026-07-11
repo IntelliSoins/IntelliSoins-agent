@@ -2381,8 +2381,21 @@ export const ja_JP: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "Gateway ダッシュボード",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "任意",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "トークンを表示",
     hideToken: "トークンを非表示",
     toggleTokenVisibility: "トークンの表示/非表示を切り替え",
@@ -2398,22 +2411,30 @@ export const ja_JP: TranslationMap = {
         title: "認証が必要です",
         summary:
           "Gateway には到達できますが、このブラウザーが接続する前に一致するトークンまたはパスワードが必要です。",
-        stepPaste:
-          "intellisoins dashboard --no-open のトークンを貼り付けるか、構成済みのパスワードを入力します。",
-        stepGenerate:
-          "トークンが構成されていない場合は、Gateway ホストで intellisoins doctor --generate-gateway-token を実行します。",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "認証情報を更新したら、もう一度 Connect をクリックします。",
       },
       authFailed: {
         title: "認証が一致しません",
         summary:
           "指定された認証情報は拒否されました。最も一般的な原因は、古いトークン、または別の Gateway URL からコピーしたトークンです。",
-        stepDashboard:
-          "intellisoins dashboard --no-open を実行し、新しい URL を開くか、そのトークンを貼り付けます。",
-        stepReplace:
-          "古いトークン/パスワード値を置き換えてください。別の Gateway URL のトークンは再利用しないでください。",
-        stepMode:
-          "一致する認証モードを一度に 1 つだけ使用します。トークンモードでは gateway token、パスワードモードではパスワードを使います。",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "失敗した試行が多すぎます",

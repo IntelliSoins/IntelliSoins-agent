@@ -210,6 +210,9 @@ export class OpenClawApp extends LitElement {
     }
   }
   @state() password = "";
+  @state() loginUsername = "";
+  @state() loginMfaCode = "";
+  @state() loginShowAdvanced = false;
   @state() loginShowGatewayToken = false;
   @state() loginShowGatewayPassword = false;
   @state() tab: Tab = "chat";

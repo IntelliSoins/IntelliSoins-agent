@@ -2383,8 +2383,21 @@ export const tr: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "Gateway Kontrol Paneli",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "isteğe bağlı",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "Tokenı göster",
     hideToken: "Token'ı gizle",
     toggleTokenVisibility: "Token görünürlüğünü değiştir",
@@ -2400,22 +2413,30 @@ export const tr: TranslationMap = {
         title: "Kimlik doğrulama gerekli",
         summary:
           "Gateway erişilebilir, ancak bu tarayıcı bağlanmadan önce eşleşen bir token veya parola gerekir.",
-        stepPaste:
-          "intellisoins dashboard --no-open çıktısındaki tokenı yapıştırın veya yapılandırılmış parolayı girin.",
-        stepGenerate:
-          "Token yapılandırılmamışsa Gateway ana makinesinde intellisoins doctor --generate-gateway-token çalıştırın.",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "Kimlik bilgisini güncelledikten sonra Connect düğmesine tekrar tıklayın.",
       },
       authFailed: {
         title: "Kimlik doğrulama eşleşmedi",
         summary:
           "Sağlanan kimlik bilgisi reddedildi. En yaygın neden eski bir token veya başka bir Gateway URL’sinden kopyalanmış tokendır.",
-        stepDashboard:
-          "intellisoins dashboard --no-open çalıştırın ve yeni URL’yi açın veya tokenını yapıştırın.",
-        stepReplace:
-          "Eski token/parola değerlerini değiştirin; başka bir Gateway URL’sinden tokenı yeniden kullanmayın.",
-        stepMode:
-          "Aynı anda tek bir eşleşen auth modu kullanın: token modu için gateway token, parola modu için parola.",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "Çok fazla başarısız deneme",

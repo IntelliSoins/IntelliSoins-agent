@@ -2363,8 +2363,21 @@ export const zh_TW: TranslationMap = {
     },
   },
   login: {
+    title: "Connexion",
     subtitle: "閘道儀表板",
+    brandTagline: "L'assistant IA pensé pour les pharmaciens d'officine.",
+    username: "Nom d'utilisateur",
+    usernamePlaceholder: "votre.identifiant",
+    password: "Mot de passe",
     passwordPlaceholder: "可選",
+    mfaCode: "Code MFA",
+    mfaPlaceholder: "000000",
+    connect: "Se connecter",
+    advanced: {
+      title: "Paramètres avancés",
+      tokenPlaceholder: "Jeton Gateway (automation / CLI)",
+    },
+    passwordPlaceholderLegacy: "optional",
     showToken: "顯示權杖",
     hideToken: "隱藏權杖",
     toggleTokenVisibility: "切換權杖可見性",
@@ -2379,18 +2392,29 @@ export const zh_TW: TranslationMap = {
       authRequired: {
         title: "需要驗證",
         summary: "Gateway 可以連線，但此瀏覽器連接前需要相符的權杖或密碼。",
-        stepPaste: "貼上 intellisoins dashboard --no-open 提供的權杖，或輸入已設定的密碼。",
-        stepGenerate:
-          "如果尚未設定權杖，請在 Gateway 主機上執行 intellisoins doctor --generate-gateway-token。",
+        stepCredentials: "Saisissez votre nom d'utilisateur et votre mot de passe.",
+        stepMfa: "Ajoutez le code MFA à 6 chiffres de votre application d'authentification.",
         stepConnect: "更新憑證後再次按一下 Connect。",
       },
       authFailed: {
         title: "驗證不相符",
         summary: "提供的憑證遭到拒絕。最常見原因是權杖過期，或權杖複製自另一個 Gateway URL。",
-        stepDashboard: "執行 intellisoins dashboard --no-open 並開啟新的 URL，或貼上其中的權杖。",
-        stepReplace: "替換過期的權杖/密碼；不要重複使用另一個 Gateway URL 的權杖。",
-        stepMode:
-          "一次只使用一種相符的驗證模式：token 模式使用 gateway token，password 模式使用密碼。",
+        stepCheck: "Contrôlez l'orthographe de l'identifiant et du mot de passe.",
+        stepMfa: "Générez un nouveau code MFA et réessayez dans la minute.",
+        stepAdmin:
+          "Si le compte n'existe pas encore, demandez à l'administrateur d'exécuter intellisoins doctor --create-control-ui-user.",
+      },
+      mfaRequired: {
+        title: "Code MFA requis",
+        summary: "Ce compte a l'authentification à deux facteurs activée.",
+        stepCode: "Saisissez le code à 6 chiffres de votre application d'authentification.",
+        stepRetry: "Cliquez sur Se connecter une fois le code saisi.",
+      },
+      mfaInvalid: {
+        title: "Code MFA invalide",
+        summary: "Le code MFA fourni n'a pas été accepté.",
+        stepClock: "Vérifiez l'heure de votre téléphone et générez un nouveau code.",
+        stepRetry: "Réessayez avec le code le plus récent.",
       },
       rateLimited: {
         title: "失敗嘗試過多",
