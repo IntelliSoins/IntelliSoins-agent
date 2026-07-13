@@ -1,3 +1,74 @@
 {
-  "tasks": []
+  "tasks": [
+    {
+      "id": "task-102-spark-whisper-llm-outage",
+      "title": "fix(spark): panne whisper :2022 hang + Qwen LLM :8000 down — sshd wedged",
+      "type": "fix",
+      "scope": "infra",
+      "domain": "dgx-spark",
+      "affectedRules": ["dgx-spark"],
+      "status": "in_progress",
+      "lockedBy": "opencode-session",
+      "createdAt": "2026-07-12T20:10:00-04:00",
+      "objectives": [
+        {
+          "id": "obj-0",
+          "description": "Valeur livrée vérifiée en condition réelle, sans régression",
+          "criterion": "Dictée Whisper ⌘ç dans Hammerspoon transcrit correctement un clip audio via Spark :2022",
+          "status": "pending"
+        },
+        {
+          "id": "obj-1",
+          "description": "Diagnostic root cause whisper :2022 hang",
+          "criterion": "Root cause identifiée (CUDA hang / OOM / container stuck) via SSH + docker logs spark-whisper",
+          "status": "in_progress"
+        },
+        {
+          "id": "obj-2",
+          "description": "Container Qwen LLM :8000 relancé",
+          "criterion": "Port :8000 ouvert sur mesh + sparklan, /health répond 200, chat completion OK",
+          "status": "pending"
+        },
+        {
+          "id": "obj-3",
+          "description": "sshd Spark responsive",
+          "criterion": "ssh spark banner exchange < 5s, accès shell récupéré",
+          "status": "pending"
+        },
+        {
+          "id": "obj-4",
+          "description": "Tous services Spark vérifiés healthy",
+          "criterion": "sparkctl status OK + curl /health 200 sur :2022 :8000 :8026 :6060 :8084 :8085",
+          "status": "pending"
+        }
+      ],
+      "phaseTracking": {
+        "phase-1b-audit": {
+          "status": "PASS",
+          "agent": "opencode-session",
+          "ts": "2026-07-12T20:12:00-04:00",
+          "evidence": "servers.yaml 11 autostart:false (Mac décommissionné), rule dgx-spark.md lue, init.lua:46-47/89-99 whisper wiring confirmé"
+        },
+        "phase-2-analyse": {
+          "status": "PASS",
+          "agent": "opencode-session",
+          "ts": "2026-07-12T20:15:00-04:00",
+          "evidence": "ping OK mesh+sparklan+LAN | nc :2022 OPEN mais curl /health hang 30s (HTTP 000) | nc :8000 closed (LLM down) | nc :8026 OPEN + /health {status:ok} | nc :6060 OPEN + HTTP 200 | ssh banner hang 5 tentatives (75s timeout)"
+        },
+        "phase-2b-analyse-revisee": {
+          "status": "PASS",
+          "agent": "opencode-session",
+          "ts": "2026-07-12T20:45:00-04:00",
+          "evidence": "GPU wedge GLOBAL confirmé : NLLB /health=200 mais /translate hang 25s | embeddings :8084 POST hang 20s | reranker :8085 POST hang 20s | voxcpm /info OK (statique, pas de GPU) | TOUTE inférence GPU bloquée, HTTP statique répond | jitter ping 3.2→20.7ms (host sous charge) | Root cause : fine-tuning Qwen3.5-4B démarré (confirmé Michael) → :8000 down EXPECTED (workflow FT) → starvation GPU+mémoire unifiée 121Go → CUDA calls des containers serving bloqués + sshd banner starved"
+        }
+      },
+      "relatedTasks": [],
+      "notes": "Spark partiellement vivant : voxcpm + NLLB OK, whisper hung, Qwen down, sshd wedged. Remediation à distance bloquée (sshd banner exchange timeout × 6 tentatives). Redémarrage physique requis — Michael notifié.",
+      "blocked": {
+        "reason": "sshd Spark wedged (banner exchange timeout) — impossible de relancer les containers à distance",
+        "actionRequired": "Redémarrage physique du DGX Spark par Michael",
+        "postRebootPlan": "SSH → sparkctl status → docker compose restart whisper + qwen LLM si nécessaire → curl /health sur :2022 :8000 :8026 :6060 :8084 :8085 → valider ⌘ç Hammerspoon"
+      }
+    }
+  ]
 }
