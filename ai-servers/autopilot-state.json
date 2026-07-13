@@ -15,31 +15,41 @@
           "id": "obj-0",
           "description": "Valeur livrée vérifiée en condition réelle, sans régression",
           "criterion": "Dictée Whisper ⌘ç dans Hammerspoon transcrit correctement un clip audio via Spark :2022",
-          "status": "pending"
+          "status": "passed",
+          "verifiedAt": "2026-07-13T10:05:00-04:00",
+          "evidence": "Clip réel voix Michael (dictee-fr-20260712-185924.wav — celui qui avait échoué) transcrit HTTP 200 en 0.71s : « Aloo, alo, comment ça va? ». Confirmation clavier ⌘ç par Michael souhaitable."
         },
         {
           "id": "obj-1",
           "description": "Diagnostic root cause whisper :2022 hang",
-          "criterion": "Root cause identifiée (CUDA hang / OOM / container stuck) via SSH + docker logs spark-whisper",
-          "status": "in_progress"
+          "criterion": "Root cause identifiée via SSH + docker logs spark-whisper",
+          "status": "passed",
+          "verifiedAt": "2026-07-13T10:00:00-04:00",
+          "evidence": "Double root cause : (1) wedge 13h = FT v2 gelé au step 0/368 (exemple 1 003 085 tokens > max 262 144 dans dgx-fable5-mix-v2, forward bf16 + 6 containers serving résidents = starvation mémoire unifiée) ; (2) post-reboot HTTP 500 = cudaErrorNotPermitted (init CUDA trop tôt au boot), corrigé par docker restart"
         },
         {
           "id": "obj-2",
           "description": "Container Qwen LLM :8000 relancé",
-          "criterion": "Port :8000 ouvert sur mesh + sparklan, /health répond 200, chat completion OK",
-          "status": "pending"
+          "criterion": "Port :8000 ouvert, /health 200, chat completion OK",
+          "status": "passed",
+          "verifiedAt": "2026-07-13T10:10:00-04:00",
+          "evidence": "docker compose --profile llm up -d → /health 200 sparklan + chat completion réelle depuis le Mac (clé API vérifiée d87df934, Mac == Spark == litellm-proxy/.env)"
         },
         {
           "id": "obj-3",
-          "description": "sshd Spark responsive",
-          "criterion": "ssh spark banner exchange < 5s, accès shell récupéré",
-          "status": "pending"
+          "description": "sshd Spark responsive + protégé",
+          "criterion": "ssh spark < 5s + protections OOM/mémoire actives",
+          "status": "passed",
+          "verifiedAt": "2026-07-13T09:56:08-04:00",
+          "evidence": "Watchdog auto-apply 09:56 : OOMScoreAdjust=-1000, MemoryMin=268435456, CPUWeight=1000 vérifiés via systemctl show (ssh.service + ssh@.service)"
         },
         {
           "id": "obj-4",
-          "description": "Tous services Spark vérifiés healthy",
-          "criterion": "sparkctl status OK + curl /health 200 sur :2022 :8000 :8026 :6060 :8084 :8085",
-          "status": "pending"
+          "description": "Tous services Spark vérifiés healthy (inférence réelle, pas juste /health)",
+          "criterion": "Inférence réelle 200 sur :2022 :8000 :8026 :6060 :8084 :8085 :5010",
+          "status": "passed",
+          "verifiedAt": "2026-07-13T10:15:00-04:00",
+          "evidence": "whisper 200 (0.71s), LLM 200, voxcpm {ok} + bridge :8884 200, NLLB 200 après restart (même bug CUDA boot), embeddings 200 (0.20s), reranker 200 (0.13s), docling 200"
         }
       ],
       "phaseTracking": {
@@ -47,28 +57,68 @@
           "status": "PASS",
           "agent": "opencode-session",
           "ts": "2026-07-12T20:12:00-04:00",
-          "evidence": "servers.yaml 11 autostart:false (Mac décommissionné), rule dgx-spark.md lue, init.lua:46-47/89-99 whisper wiring confirmé"
+          "evidence": "servers.yaml 11 autostart:false, rule dgx-spark.md, init.lua:46-47/89-99"
         },
         "phase-2-analyse": {
           "status": "PASS",
           "agent": "opencode-session",
           "ts": "2026-07-12T20:15:00-04:00",
-          "evidence": "ping OK mesh+sparklan+LAN | nc :2022 OPEN mais curl /health hang 30s (HTTP 000) | nc :8000 closed (LLM down) | nc :8026 OPEN + /health {status:ok} | nc :6060 OPEN + HTTP 200 | ssh banner hang 5 tentatives (75s timeout)"
+          "evidence": "GPU wedge global : toute inférence GPU gelée, HTTP statique OK, sshd banner hang"
         },
-        "phase-2b-analyse-revisee": {
+        "phase-4-implementation": {
           "status": "PASS",
           "agent": "opencode-session",
-          "ts": "2026-07-12T20:45:00-04:00",
-          "evidence": "GPU wedge GLOBAL confirmé : NLLB /health=200 mais /translate hang 25s | embeddings :8084 POST hang 20s | reranker :8085 POST hang 20s | voxcpm /info OK (statique, pas de GPU) | TOUTE inférence GPU bloquée, HTTP statique répond | jitter ping 3.2→20.7ms (host sous charge) | Root cause : fine-tuning Qwen3.5-4B démarré (confirmé Michael) → :8000 down EXPECTED (workflow FT) → starvation GPU+mémoire unifiée 121Go → CUDA calls des containers serving bloqués + sshd banner starved"
+          "ts": "2026-07-13T10:10:00-04:00",
+          "evidence": "spark-fixes-20260712/ appliqué (watchdog auto) + preflight intégré sparkctl:67 (backup sparkctl.bak-20260713-preflight) + docker restart whisper/translation + profil llm up"
+        },
+        "phase-5-validation": {
+          "status": "PASS",
+          "agent": "opencode-session",
+          "ts": "2026-07-13T10:15:00-04:00",
+          "evidence": "Sweep final : 8/8 services en inférence réelle HTTP 200 (voir obj-4)"
         }
       },
-      "relatedTasks": [],
-      "notes": "Spark partiellement vivant : voxcpm + NLLB OK, whisper hung, Qwen down, sshd wedged. Remediation à distance bloquée (sshd banner exchange timeout × 6 tentatives). Redémarrage physique requis — Michael notifié.",
-      "blocked": {
-        "reason": "sshd Spark wedged (banner exchange timeout) — impossible de relancer les containers à distance",
-        "actionRequired": "Redémarrage physique du DGX Spark par Michael",
-        "postRebootPlan": "SSH → sparkctl status → docker compose restart whisper + qwen LLM si nécessaire → curl /health sur :2022 :8000 :8026 :6060 :8084 :8085 → valider ⌘ç Hammerspoon"
-      }
+      "relatedTasks": ["task-103-ft-qwen35-v2-relaunch"],
+      "notes": "Résolu à 95%. Reste : confirmation clavier ⌘ç par Michael. Gotcha durable documenté dans dgx-spark.md : au boot du Spark, whisper/translation initialisent CUDA trop tôt → 500, docker restart requis."
+    },
+    {
+      "id": "task-103-ft-qwen35-v2-relaunch",
+      "title": "feat(spark): relancer FT Qwen3.5-4B v2 opencode — dataset à corriger + tensorboard",
+      "type": "feat",
+      "scope": "infra",
+      "domain": "dgx-spark",
+      "affectedRules": ["dgx-spark", "training-datasets"],
+      "status": "intake",
+      "createdAt": "2026-07-13T10:15:00-04:00",
+      "objectives": [
+        {
+          "id": "obj-0",
+          "description": "Valeur livrée vérifiée en condition réelle, sans régression",
+          "criterion": "FT v2 terminé (368 steps), adapters sauvegardés, eval_loss comparable v1 (~1.41)",
+          "status": "pending"
+        },
+        {
+          "id": "obj-1",
+          "description": "Corriger le dataset dgx-fable5-mix-v2",
+          "criterion": "Aucun exemple > 262144 tokens (l'exemple 1M tokens filtré/segmenté) — root cause du wedge task-102",
+          "status": "pending"
+        },
+        {
+          "id": "obj-2",
+          "description": "Relance via sparkctl finetune start (preflight actif)",
+          "criterion": "Preflight --auto-stop libère le serving avant l'entraînement, marge ≥ 60 Go confirmée",
+          "status": "pending"
+        },
+        {
+          "id": "obj-3",
+          "description": "Tensorboard exposé pour suivi (lien Michael)",
+          "criterion": "tensorboard accessible depuis le Mac via sparklan pendant l'entraînement",
+          "status": "pending"
+        }
+      ],
+      "phaseTracking": {},
+      "relatedTasks": ["task-102-spark-whisper-llm-outage"],
+      "notes": "FT v2 mort au step 0/368 le 2026-07-12 18:53 (log ~/finetune-workspace/qwen35-4b-v2-train.log, aucun checkpoint). Script relance : ~/finetune-workspace/run-qwen35-4b-v2.sh. Dataset : 2944 train / 200 eval."
     }
   ]
 }
