@@ -227,6 +227,10 @@ const config = {
         ...bundledPluginIgnoredRuntimeDependencies,
       ],
     },
+    [`${BUNDLED_PLUGIN_ROOT_DIR}/open-prose`]: {
+      entry: [...bundledPluginEntries, "bin/prose-pg.mjs!", "src/postgres-state/cli.ts!"],
+      project: ["index.ts!", "bin/**/*.mjs!", "src/**/*.{js,mjs,ts}!"],
+    },
     [`${BUNDLED_PLUGIN_ROOT_DIR}/*`]: {
       // Bundled plugins often load their public surface via string specifiers in
       // `index.ts` contracts, so Knip needs these convention-based entry files.

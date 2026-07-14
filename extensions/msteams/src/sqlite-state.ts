@@ -1,5 +1,6 @@
 // Msteams plugin module implements sqlite state behavior.
 import path from "node:path";
+import { resolveScopedStateEnv } from "openclaw/plugin-sdk/scoped-state-env";
 import { getMSTeamsRuntime } from "./runtime.js";
 import { withFileLock } from "./store-fs.js";
 
@@ -35,10 +36,7 @@ export function resolveMSTeamsSqliteStateEnv(
   if (!stateDir) {
     return options?.env;
   }
-  return {
-    ...(options?.env ?? process.env),
-    OPENCLAW_STATE_DIR: stateDir,
-  };
+  return resolveScopedStateEnv({ env: options?.env, stateDir });
 }
 
 export function toPluginJsonValue<T>(value: T): T {

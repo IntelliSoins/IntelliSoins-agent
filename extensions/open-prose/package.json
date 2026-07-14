@@ -4,6 +4,12 @@
   "private": true,
   "description": "OpenProse VM skill pack plugin (slash command + telemetry).",
   "type": "module",
+  "bin": {
+    "prose-pg": "./bin/prose-pg.mjs"
+  },
+  "dependencies": {
+    "postgres": "3.4.7"
+  },
   "devDependencies": {
     "@openclaw/plugin-sdk": "workspace:*"
   },

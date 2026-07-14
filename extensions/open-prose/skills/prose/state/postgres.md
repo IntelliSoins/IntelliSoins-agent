@@ -5,7 +5,7 @@ summary: |
   PostgreSQL-based state management for OpenProse programs. This approach persists
   execution state to a PostgreSQL database, enabling true concurrent writes,
   network access, team collaboration, and high-throughput workloads.
-requires: psql CLI tool in PATH, running PostgreSQL server
+requires: prose-pg CLI (preferred) or psql CLI in PATH, running PostgreSQL server
 see-also:
   - ../prose.md: VM execution semantics
   - filesystem.md: File-based state (default, simpler)
@@ -462,24 +462,90 @@ LIMIT 1;
 
 ## Database Interaction
 
-Both VM and subagents interact via the `psql` CLI.
+Prefer the bundled `prose-pg` CLI from the OpenProse plugin. It reuses one
+connection per command, supports transactional batching for parallel branches,
+and ships the canonical schema at
+`extensions/open-prose/src/postgres-state/schema.sql`.
+
+Install path when working from an OpenClaw checkout:
+
+```bash
+pnpm --dir extensions/open-prose exec prose-pg check
+```
+
+Fallback: both VM and subagents may still use the `psql` CLI when `prose-pg`
+is unavailable.
 
 ### From the VM
 
 ```bash
+# Verify connectivity
+prose-pg check
+
+# Initialize schema (idempotent)
+prose-pg init
+
+# Register a new run
+prose-pg run-register \
+  --run-id 20260116-143052-a7b3c9 \
+  --program-path /path/to/program.prose \
+  --program-source 'program source...'
+
+# Batch parallel writes in one transaction
+prose-pg batch @ops.json
+```
+
+Example `ops.json` for parallel branch completion:
+
+```json
+{
+  "ops": [
+    {
+      "op": "execution-upsert",
+      "runId": "20260116-143052-a7b3c9",
+      "statementIndex": 3,
+      "statementText": "session \"Research AI safety\"",
+      "status": "executing"
+    },
+    {
+      "op": "binding-upsert",
+      "runId": "20260116-143052-a7b3c9",
+      "name": "research",
+      "kind": "let",
+      "value": "AI safety research covers alignment, robustness...",
+      "sourceStatement": "let research = session: researcher"
+    },
+    {
+      "op": "binding-get",
+      "runId": "20260116-143052-a7b3c9",
+      "name": "research"
+    }
+  ]
+}
+```
+
+```bash
+# Read a binding directly
+prose-pg binding-get --run-id 20260116-143052-a7b3c9 --name research
+
+# Update execution position
+prose-pg execution-upsert \
+  --run-id 20260116-143052-a7b3c9 \
+  --statement-index 3 \
+  --status executing \
+  --statement-text 'session "Research AI safety"'
+```
+
+### psql fallback
+
+```bash
 # Initialize schema
-psql "$OPENPROSE_POSTGRES_URL" -f schema.sql
+psql "$OPENPROSE_POSTGRES_URL" -f extensions/open-prose/src/postgres-state/schema.sql
 
 # Register a new run
 psql "$OPENPROSE_POSTGRES_URL" -c "
   INSERT INTO openprose.run (id, program_path, program_source, status)
   VALUES ('20260116-143052-a7b3c9', '/path/to/program.prose', 'program source...', 'running')
-"
-
-# Update execution position
-psql "$OPENPROSE_POSTGRES_URL" -c "
-  INSERT INTO openprose.execution (run_id, statement_index, statement_text, status, started_at)
-  VALUES ('20260116-143052-a7b3c9', 3, 'session \"Research AI safety\"', 'executing', NOW())
 "
 
 # Read a binding
@@ -500,7 +566,7 @@ The VM provides the database path and instructions when spawning:
 
 **Root scope (outside block invocations):**
 
-```
+````
 Your output goes to PostgreSQL state.
 
 | Property | Value |
@@ -511,8 +577,20 @@ Your output goes to PostgreSQL state.
 | Binding | `research` |
 | Execution ID | (root scope) |
 
-When complete, write your output:
+When complete, write your output with `prose-pg` (preferred):
 
+```bash
+prose-pg binding-upsert \
+  --run-id 20260116-143052-a7b3c9 \
+  --name research \
+  --kind let \
+  --value 'AI safety research covers alignment, robustness...' \
+  --source-statement 'let research = session: researcher'
+````
+
+`psql` fallback:
+
+```bash
 psql "$OPENPROSE_POSTGRES_URL" -c "
   INSERT INTO openprose.bindings (name, run_id, execution_id, kind, value, source_statement)
   VALUES (
@@ -528,52 +606,58 @@ psql "$OPENPROSE_POSTGRES_URL" -c "
 "
 ```
 
+```
+
 **Inside block invocation (include execution_id):**
 
 ```
+
 Your output goes to PostgreSQL state.
 
-| Property | Value |
-|----------|-------|
-| Connection | `postgresql://user:***@host:5432/db` |
-| Schema | `openprose` |
-| Run ID | `20260116-143052-a7b3c9` |
-| Binding | `result` |
-| Execution ID | `43` |
-| Block | `process` |
-| Depth | `3` |
+| Property     | Value                                |
+| ------------ | ------------------------------------ |
+| Connection   | `postgresql://user:***@host:5432/db` |
+| Schema       | `openprose`                          |
+| Run ID       | `20260116-143052-a7b3c9`             |
+| Binding      | `result`                             |
+| Execution ID | `43`                                 |
+| Block        | `process`                            |
+| Depth        | `3`                                  |
 
 When complete, write your output:
 
 psql "$OPENPROSE_POSTGRES_URL" -c "
-  INSERT INTO openprose.bindings (name, run_id, execution_id, kind, value, source_statement)
-  VALUES (
-    'result',
-    '20260116-143052-a7b3c9',
-    43,  -- scoped to this execution
-    'let',
-    E'Processed chunk into 3 sub-parts...',
-    'let result = session \"Process chunk\"'
-  )
-  ON CONFLICT (name, run_id, COALESCE(execution_id, -1)) DO UPDATE
-  SET value = EXCLUDED.value, updated_at = NOW()
+INSERT INTO openprose.bindings (name, run_id, execution_id, kind, value, source_statement)
+VALUES (
+'result',
+'20260116-143052-a7b3c9',
+43, -- scoped to this execution
+'let',
+E'Processed chunk into 3 sub-parts...',
+'let result = session \"Process chunk\"'
+)
+ON CONFLICT (name, run_id, COALESCE(execution_id, -1)) DO UPDATE
+SET value = EXCLUDED.value, updated_at = NOW()
 "
+
 ```
 
 For persistent agents (execution-scoped):
 
 ```
+
 Your memory is in the database:
 
 Read your current state:
-  psql "$OPENPROSE_POSTGRES_URL" -t -A -c "SELECT memory FROM openprose.agents WHERE name = 'captain' AND run_id = '20260116-143052-a7b3c9'"
+psql "$OPENPROSE_POSTGRES_URL" -t -A -c "SELECT memory FROM openprose.agents WHERE name = 'captain' AND run_id = '20260116-143052-a7b3c9'"
 
 Update when done:
-  psql "$OPENPROSE_POSTGRES_URL" -c "UPDATE openprose.agents SET memory = '...', updated_at = NOW() WHERE name = 'captain' AND run_id = '20260116-143052-a7b3c9'"
+psql "$OPENPROSE_POSTGRES_URL" -c "UPDATE openprose.agents SET memory = '...', updated_at = NOW() WHERE name = 'captain' AND run_id = '20260116-143052-a7b3c9'"
 
 Record this segment:
-  psql "$OPENPROSE_POSTGRES_URL" -c "INSERT INTO openprose.agent_segments (agent_name, run_id, segment_number, prompt, summary) VALUES ('captain', '20260116-143052-a7b3c9', 3, '...', '...')"
-```
+psql "$OPENPROSE_POSTGRES_URL" -c "INSERT INTO openprose.agent_segments (agent_name, run_id, segment_number, prompt, summary) VALUES ('captain', '20260116-143052-a7b3c9', 3, '...', '...')"
+
+````
 
 For project-scoped agents, use `run_id IS NULL` in queries:
 
@@ -583,7 +667,7 @@ SELECT memory FROM openprose.agents WHERE name = 'advisor' AND run_id IS NULL;
 
 -- Update project-scoped agent memory
 UPDATE openprose.agents SET memory = '...' WHERE name = 'advisor' AND run_id IS NULL;
-```
+````
 
 ---
 
