@@ -222,6 +222,8 @@ struct MacGatewayChatTransport: OpenClawChatTransport {
 
         case .seqGap:
             return .seqGap
+        case .req:
+            return nil
         }
     }
 

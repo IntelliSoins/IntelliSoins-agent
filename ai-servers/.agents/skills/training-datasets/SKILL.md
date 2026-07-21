@@ -7,7 +7,7 @@ description: Catalogue des datasets d'entrainement pour fine-tuning local sur Ap
 
 Catalogue des datasets d'entrainement pour fine-tuning local sur Apple Silicon (M3 Max 128 GB).
 Verifier l'etat reel (wc -l) avant de citer ces chiffres.
-Derniere verification: 2026-04-22.
+Derniere verification: 2026-04-22 (sections vision + mix Fable 5 : 2026-07-09).
 
 > **Deux formats XML coexistent dans la famille Qwen3/3.5** — ne pas confondre.
 > Detail complet: skill `intellisoins-mlx:qwen3-finetuning-tool-calling`.
@@ -38,12 +38,25 @@ Le chat template officiel du modele exige ce format — ne pas convertir vers Fo
 
 Adapters existants sur ce dataset: `qwen35-9b-micro-v1/` (100 iters), `qwen35-9b-full-v1/` (2000 iters @ max-seq 4K, loss final 2-4 oscillant).
 
+## Mix agentic Fable 5 (Qwen3.6-35B-A3B / Gemma 4)
+
+Construits par `~/openclaw/pipeline/build_dgx_dataset.py` (lanes) puis `convert_dgx_to_gemma4.py`.
+Etat 2026-07-09 : 7,944 train / 741 valid, ~31M tokens. Long contexte inclus (612 ex >16K tok, 49 ex >64K tok, max ~350K).
+
+| Dataset               | Chemin                                                     | Format                                                                                             | Contenu                                                                                                                           |
+| --------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| dgx-fable5-mix        | `~/openclaw/pipeline/training-data/dgx-fable5-mix/`        | OpenAI messages (`tool_calls`, role `tool`), `images` pour lanes vision                            | Lanes: fable5-claude 948, pubmed-opus48 431, fable5-opencode 234, chrome-nav 118, computeruse-vision 20, imessage 6295, email 639 |
+| dgx-fable5-mix-gemma4 | `~/openclaw/pipeline/training-data/dgx-fable5-mix-gemma4/` | Gemma house JSON (tool calls = array `[{"name","arguments"}]`, tool = name+content, think strippe) | Conversion 1:1 du mix pour fine-tuning Gemma 4 (multimodal, 128K-256K ctx)                                                        |
+
+Modele deploye sur ce mix : `qwen36-fable5-nvfp4` sur DGX Spark (cf. `training-data/dgx-fable5-mix/HANDOFF.md`).
+
 ## Multimodal / Vision (image + text)
 
-| Dataset            | Chemin                                                    | Train     | Valid | Contenu                                                                                                                                                                                               |
-| ------------------ | --------------------------------------------------------- | --------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| gui-automation     | `~/Finances_Assurances/training-data/gui-automation/`     | 812       | 91    | Sessions Claude Code → screenshot + action (navigate/click/etc.). `messages[].content = [{type:"image", image:"<path>"}, {type:"text", text:"..."}]`. `_meta`: project, url, action_type, session_id. |
-| vision-screenshots | `~/Finances_Assurances/training-data/vision-screenshots/` | 5,263 JPG | —     | Pool d'images referencees par gui-automation (aussi utilisables ailleurs).                                                                                                                            |
+| Dataset            | Chemin                                                    | Train   | Valid | Contenu                                                                                                                                                                                                |
+| ------------------ | --------------------------------------------------------- | ------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| gui-automation     | `~/Finances_Assurances/training-data/gui-automation/`     | 812     | 91    | **INUTILISABLE (verifie 2026-07-09)** : les 903 screenshots references n'existent plus (pool purge). JSONL conserve mais 0 exemple resolvable — `build_dgx_dataset.py` les filtre automatiquement.     |
+| computeruse-vision | `~/openclaw/pipeline/training-data/computeruse-vision/`   | 20      | —     | Paires screenshot→prochaine action (`<tool_call>` Qwen) minees des sessions Claude Code. Shape LLaMA-Factory: content string + `images: [paths]`. Maigre — regenerer via sessions chrome avec capture. |
+| vision-screenshots | `~/Finances_Assurances/training-data/vision-screenshots/` | 145 JPG | —     | Pool residuel (etait 5,263 JPG — purge avant 2026-07-09). Aucun ne correspond aux refs gui-automation.                                                                                                 |
 
 Fusion avec un dataset texte-only (ex. qwen35-9b-complete-v1-32k): mlx-vlm 0.4.4+ gere les deux formats dans le meme run (content=string pour texte pur, content=list pour multimodal).
 

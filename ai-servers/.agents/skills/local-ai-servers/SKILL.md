@@ -5,7 +5,7 @@ description: |
   Use this project skill whenever Michael asks about ai-servers, aictl, local model
   server status, health checks, LaunchAgents, port conflicts, MLX servers,
   LiteLLM proxy, embeddings, reranker, GLiNER, Whisper STT, Kokoro TTS, oMLX,
-  Ollama, or the PRO-G40 model-cache disk.
+  or the PRO-G40 model-cache disk.
 ---
 
 # Local AI Servers
@@ -59,7 +59,7 @@ Use `all` only when Michael explicitly asks for all services.
 - Do not treat logs, caches, `__pycache__`, or local backups as source.
 - Heavy model services can depend on local cache state and memory pressure; verify
   before concluding a config change is bad.
-- For `ollama` and `omlx`, remember lifecycle is Homebrew/launchd-owned even when
+- For `omlx`, remember lifecycle is Homebrew/launchd-owned even when
   `aictl` reports status and health.
 
 ## Expected Output

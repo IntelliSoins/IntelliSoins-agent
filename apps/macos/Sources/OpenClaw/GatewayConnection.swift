@@ -442,7 +442,76 @@ actor GatewayConnection {
     }
 
     private func handle(push: GatewayPush) {
+        if case let .req(req) = push {
+            Task {
+                await self.handleRequest(req)
+            }
+        }
         self.broadcast(push)
+    }
+
+    private func handleRequest(_ req: RequestFrame) async {
+        gatewayConnectionLogger.debug("GatewayConnection received request: \(req.method, privacy: .public)")
+        switch req.method {
+        case "browser.navigate":
+            guard let urlStr = req.params?.dictionaryValue?["url"]?.stringValue else {
+                let err = ErrorShape(code: "INVALID_PARAMS", message: "Missing required param 'url'", details: nil, retryable: false, retryafterms: nil)
+                do {
+                    try await self.client?.sendResponse(id: req.id, ok: false, payload: nil, error: err)
+                } catch {
+                    gatewayConnectionLogger.error("Failed to send response for \(req.id): \(error.localizedDescription)")
+                }
+                return
+            }
+            guard let url = URL(string: urlStr) else {
+                let err = ErrorShape(code: "INVALID_PARAMS", message: "Malformed URL: \(urlStr)", details: nil, retryable: false, retryafterms: nil)
+                do {
+                    try await self.client?.sendResponse(id: req.id, ok: false, payload: nil, error: err)
+                } catch {
+                    gatewayConnectionLogger.error("Failed to send response for \(req.id): \(error.localizedDescription)")
+                }
+                return
+            }
+            
+            do {
+                try await BrowserManager.shared.navigate(url: url)
+                try await self.client?.sendResponse(id: req.id, ok: true, payload: AnyCodable([:]), error: nil)
+            } catch {
+                let err = ErrorShape(code: "NAVIGATION_FAILED", message: error.localizedDescription, details: nil, retryable: false, retryafterms: nil)
+                do {
+                    try await self.client?.sendResponse(id: req.id, ok: false, payload: nil, error: err)
+                } catch {
+                    gatewayConnectionLogger.error("Failed to send response for \(req.id): \(error.localizedDescription)")
+                }
+            }
+            
+        case "browser.evaluate":
+            guard let script = req.params?.dictionaryValue?["script"]?.stringValue else {
+                let err = ErrorShape(code: "INVALID_PARAMS", message: "Missing required param 'script'", details: nil, retryable: false, retryafterms: nil)
+                do {
+                    try await self.client?.sendResponse(id: req.id, ok: false, payload: nil, error: err)
+                } catch {
+                    gatewayConnectionLogger.error("Failed to send response for \(req.id): \(error.localizedDescription)")
+                }
+                return
+            }
+            
+            do {
+                let result = try await BrowserManager.shared.evaluate(javaScript: script)
+                let payload = AnyCodable(["result": AnyCodable(result)])
+                try await self.client?.sendResponse(id: req.id, ok: true, payload: payload, error: nil)
+            } catch {
+                let err = ErrorShape(code: "EVALUATION_FAILED", message: error.localizedDescription, details: nil, retryable: false, retryafterms: nil)
+                do {
+                    try await self.client?.sendResponse(id: req.id, ok: false, payload: nil, error: err)
+                } catch {
+                    gatewayConnectionLogger.error("Failed to send response for \(req.id): \(error.localizedDescription)")
+                }
+            }
+            
+        default:
+            break
+        }
     }
 
     private static func defaultConfigProvider() async throws -> Config {

@@ -18,12 +18,27 @@ type BrowserProfileCapabilities = {
   supportsJsonTabEndpoints: boolean;
   supportsReset: boolean;
   supportsManagedTabLimit: boolean;
+  usesWebKitNative?: boolean;
 };
 
 /** Return feature capabilities for a resolved browser profile. */
 export function getBrowserProfileCapabilities(
   profile: ResolvedBrowserProfile,
 ): BrowserProfileCapabilities {
+  if (profile.driver === "webkit-native") {
+    return {
+      mode: "local-existing-session",
+      isRemote: false,
+      usesChromeMcp: false,
+      usesPersistentPlaywright: false,
+      supportsPerTabWs: false,
+      supportsJsonTabEndpoints: false,
+      supportsReset: false,
+      supportsManagedTabLimit: false,
+      usesWebKitNative: true,
+    };
+  }
+
   if (profile.driver === "existing-session") {
     return {
       mode: "local-existing-session",

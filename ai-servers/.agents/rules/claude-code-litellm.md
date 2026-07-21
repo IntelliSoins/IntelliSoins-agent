@@ -73,11 +73,9 @@ La config expose plusieurs familles:
 
 - OpenAI cloud: `gpt-5.5`, `gpt-4o` et aliases Claude Code `claude-openai-*`.
 - Together cloud: `kimi-k2.6`, `qwen3-coder-480b`, `deepseek-*`, `glm-5.1`.
-- MLX local: `medgemma-*`, `qwen3-*`, `nemotron-30b`, `qwen35-*`.
-- oMLX/vMLX: `omlx-coder`, `vmlx-qwen36`.
-- Ollama: `ollama-default`.
+- Local via oMLX: `general-local`, `code-local`, `gemma4-12b`, `Qwen3.6-35B-A3B-4bit`.
 - Embedding/rerank/audio: `qwen3-embedding`, `bge-reranker-v2-m3`,
-  `whisper-stt`, `kokoro-tts`.
+  `whisper-stt`.
 - Anthropic/OAuth forwarding: `anthropic-claude-*` and picker aliases.
 
 Ne pas supposer qu'un modèle listé est UP. Les backends MLX peuvent être

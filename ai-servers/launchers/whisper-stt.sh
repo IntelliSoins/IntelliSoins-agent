@@ -15,8 +15,13 @@ if [ -n "$HF_TOKEN" ]; then
     export HF_TOKEN
 fi
 
-WHISPER_DIR="$HOME/nlp/whisper-finetune"
-VENV_PYTHON="$WHISPER_DIR/venv/bin/python3"
+# 2026-07-08 : PRO-G40 corrompu (2e fois) — retour sur le disque INTERNE.
+# ~/services/whisper-finetune = workspace local (serveur + fine-tuning, venv-ft py3.14).
+# Modèle: LoRA v2 voix Michael rescué du PRO-G40 (models/whisper-michael-mlx) ;
+# rollback base : WHISPER_MODEL_PATH=mlx-community/whisper-large-v3-turbo.
+# Dataset retrain v3 prêt : datasets/dictee-v3 (cf. tools/export_dictations_dataset.py).
+WHISPER_DIR="$HOME/services/whisper-finetune"
+VENV_PYTHON="$WHISPER_DIR/venv-ft/bin/python3"
 
 if [[ ! -f "$VENV_PYTHON" ]]; then
     echo "ERROR: venv python not found at $VENV_PYTHON"
@@ -24,4 +29,7 @@ if [[ ! -f "$VENV_PYTHON" ]]; then
 fi
 
 cd "$WHISPER_DIR"
+# LoRA v3 (2026-07-08, 380 paires) ; rollback v2 : models/whisper-michael-mlx,
+# rollback base : mlx-community/whisper-large-v3-turbo.
+export WHISPER_MODEL_PATH="$WHISPER_DIR/models/whisper-michael-mlx-v3"
 exec "$VENV_PYTHON" mlx_whisper_server.py

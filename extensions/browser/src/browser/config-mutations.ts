@@ -76,7 +76,7 @@ export async function createBrowserProfileConfig(params: {
   color?: string;
   parsedCdpUrl?: string;
   userDataDir?: string;
-  driver?: "openclaw" | "existing-session";
+  driver?: "openclaw" | "existing-session" | "webkit-native";
 }): Promise<BrowserProfileConfig | undefined> {
   const mutation = await mutateConfigFile<BrowserProfileConfig>({
     afterWrite: { mode: "auto" },
@@ -122,7 +122,7 @@ export async function createBrowserProfileConfig(params: {
           ...(params.driver ? { driver: params.driver } : {}),
           color: profileColor,
         };
-      } else if (params.driver === "existing-session") {
+      } else if (params.driver === "existing-session" || params.driver === "webkit-native") {
         nextProfileConfig = {
           driver: params.driver,
           attachOnly: true,

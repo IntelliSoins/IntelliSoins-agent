@@ -383,20 +383,44 @@ async function processSpeechAndQueryAgent(
   fs.writeFileSync(tmpFilePath, wavBuffer);
 
   try {
-    console.log(`[STT] Transcribing audio file: ${tmpFilePath}`);
-    // 1. Transcription (STT)
-    const sttResult = await transcribeAudioFile({
-      filePath: tmpFilePath,
-      cfg,
-      mime: "audio/wav",
-    });
+    const talkProvider =
+      cfg.talk?.providers?.[session.talk.getProvider() ?? "openai"] ||
+      cfg.talk?.providers?.["local-voice"];
+    const isAudioNative =
+      !talkProvider?.sttModel ||
+      talkProvider.sttModel === "none" ||
+      talkProvider.sttModel === "audio-native";
 
-    const text = sttResult.text?.trim();
-    console.log(`[STT] Transcription result: "${text}"`);
-    if (!text) {
-      console.log("[STT] Empty transcription, ending turn.");
-      session.talk.endTurn({ turnId, payload: {} });
-      return;
+    let text = "";
+    let contentBlocks: Array<Record<string, unknown>> = [];
+
+    if (isAudioNative) {
+      text = "User spoke audio";
+      contentBlocks = [
+        { type: "text", text: "User spoke audio" },
+        {
+          type: "audio",
+          data: wavBuffer.toString("base64"),
+          mimeType: "audio/wav",
+        },
+      ];
+    } else {
+      console.log(`[STT] Transcribing audio file: ${tmpFilePath}`);
+      // 1. Transcription (STT)
+      const sttResult = await transcribeAudioFile({
+        filePath: tmpFilePath,
+        cfg,
+        mime: "audio/wav",
+      });
+
+      text = sttResult.text?.trim() || "";
+      console.log(`[STT] Transcription result: "${text}"`);
+      if (!text) {
+        console.log("[STT] Empty transcription, ending turn.");
+        session.talk.endTurn({ turnId, payload: {} });
+        return;
+      }
+      contentBlocks = [{ type: "text", text }];
     }
 
     // Emit final user transcription
@@ -404,12 +428,12 @@ async function processSpeechAndQueryAgent(
       relaySessionId: session.id,
       type: "transcript",
       role: "user",
-      text,
+      text: isAudioNative ? "[Audio]" : text,
       final: true,
       talkEvent: session.talk.emit({
         type: "transcript.done",
         turnId,
-        payload: { text },
+        payload: { text: isAudioNative ? "[Audio]" : text },
         final: true,
       }),
     });
@@ -422,7 +446,7 @@ async function processSpeechAndQueryAgent(
       transcriptPath: sessionFile,
       message: {
         role: "user",
-        content: [{ type: "text", text }],
+        content: contentBlocks,
         timestamp: Date.now(),
       },
       now: Date.now(),
@@ -445,6 +469,15 @@ async function processSpeechAndQueryAgent(
       Provider: "talk",
       Surface: "talk",
       ChatType: "direct",
+      ...(isAudioNative
+        ? {
+            content: contentBlocks,
+            MediaType: "audio/wav",
+            MediaPath: tmpFilePath,
+            MediaPaths: [tmpFilePath],
+            MediaTypes: ["audio/wav"],
+          }
+        : {}),
     };
 
     let responseText = "";

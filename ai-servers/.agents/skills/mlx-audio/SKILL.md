@@ -2,8 +2,6 @@
 name: mlx-audio
 description: mlx-audio — Text-to-Speech (TTS), Speech-to-Text (STT) et Speech-to-Speech (S2S) optimisé pour Apple Silicon. Supporte le clonage de voix zero-shot (VoxCPM2, F5-TTS, Voxtral) et le fine-tuning (OuteTTS via mlx-lm, F5-TTS).
 paths:
-  - "**/launchers/kokoro-tts.sh"
-  - "**/launchers/vibevoice-tts.sh"
   - "**/nlp/whisper-finetune/**"
 ---
 
@@ -19,9 +17,7 @@ paths:
 Le package `mlx-audio` intègre un serveur FastAPI compatible avec l'API OpenAI (audio speech, transcriptions) et un broker d'inférence asynchrone optimisé.
 
 - **Environnement Virtuel** : `/Users/michaelahern/.venvs/vllm-mlx/` (Python 3.12, `mlx-audio` v0.4.4)
-- **Serveurs actifs / LaunchAgents** :
-  - **Kokoro TTS** (Port 8880) : démarré par [kokoro-tts.sh](file:///Users/michaelahern/ai-servers/launchers/kokoro-tts.sh) via `mlx_audio.server`.
-  - **VibeVoice TTS** (Port 8882) : démarré par [vibevoice-tts.sh](file:///Users/michaelahern/ai-servers/launchers/vibevoice-tts.sh) via `mlx_audio.server`.
+- **Serveurs TTS locaux** : plus gérés via `servers.yaml` ; utiliser VoxCPM2/F5-TTS/OuteTTS directement ou un serveur OpenAI-compatible dédié.
 
 ---
 
@@ -43,6 +39,20 @@ Le package `mlx-audio` intègre un serveur FastAPI compatible avec l'API OpenAI 
       --file_prefix test_voxcpm_fr \
       --play
   ```
+
+#### Performance VoxCPM2 MLX (bench M3 Max 2026-07-07, checkpoint v7 8-bit + ref voix)
+
+| inference_timesteps          | vitesse (× realtime) | usage       |
+| ---------------------------- | -------------------- | ----------- |
+| 10 (défaut mlx-audio)        | ~2.5×                | qualité max |
+| 7 (reco model card)          | ~3.4×                | —           |
+| **6 (défaut serveur local)** | ~3.8×                | équilibre   |
+| 4 (borne basse officielle)   | ~4.9×                | latence min |
+
+- Serveur dédié : `~/apple_all/voxcpm/pipeline/voxcpm2-lora/voxcpm_server_mlx.py` (port 8025, lancé par `~/ai-servers/launchers/voxcpm-tts.sh`) — modèle + ref voix chargés une fois, champs `inference_timesteps`/`cfg_value`/`stream` exposés ; `stream=true` = streaming par phrases, TTFA ~0.5 s.
+- `mlx_audio.server` générique : fige timesteps à 10 et ne passe ni `inference_timesteps` ni `cfg_value` (absents de `SpeechRequest`) — éviter pour la latence.
+- Le port MLX ne fait PAS de vrai streaming intra-phrase (un seul yield en fin de `generate()`) ; l'upstream PyTorch a `generate_streaming()` chunk-par-chunk. <citation>https://github.com/OpenBMB/VoxCPM (§ Streaming API), https://huggingface.co/mlx-community/VoxCPM2-8bit — consulté 2026-07-07</citation>
+- CFG double le calcul DiT à chaque pas (batch 2×, `dit.py solve_euler`) ; `retry_badcase` (PyTorch) peut tripler le temps — off si latence critique.
 
 ### Voxtral-TTS (Mistral-based)
 
@@ -97,11 +107,3 @@ Le dépôt `f5-tts-mlx` intègre un script `train.py` pour entraîner le modèle
    ```bash
    python train.py --dataset_path ./metadata.csv --epochs 50
    ```
-
----
-
-## 4. Limitations de VibeVoice Realtime 0.5B
-
-- **Architecture** : Le fine-tuning du modèle VibeVoice (`finetune_vibevoice.py`) n'ajuste que le décodeur textuel Qwen2-0.5B.
-- **Limitation** : L'encodeur acoustique (qui convertit la voix WAV brute en tenseur de haut-parleur `.safetensors` personnalisé) n'a pas été publié par Microsoft pour des raisons de sécurité.
-- **Conséquence** : Il est impossible de générer un profil de haut-parleur custom pour VibeVoice ; le modèle est limité aux presets fournis d'origine (`fr-Spk0_man`, `fr-Spk1_woman`, etc.).

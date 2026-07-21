@@ -30,7 +30,7 @@ export type CreateProfileParams = {
   color?: string;
   cdpUrl?: string;
   userDataDir?: string;
-  driver?: "openclaw" | "existing-session";
+  driver?: "openclaw" | "existing-session" | "webkit-native";
 };
 
 /** Result returned after creating a browser profile. */
@@ -65,7 +65,12 @@ export function createBrowserProfilesService(ctx: BrowserRouteContext) {
     const rawCdpUrl = normalizeOptionalString(params.cdpUrl);
     const rawUserDataDir = normalizeOptionalString(params.userDataDir);
     const normalizedUserDataDir = rawUserDataDir ? resolveUserPath(rawUserDataDir) : undefined;
-    const driver = params.driver === "existing-session" ? "existing-session" : undefined;
+    const driver =
+      params.driver === "existing-session"
+        ? "existing-session"
+        : params.driver === "webkit-native"
+          ? "webkit-native"
+          : undefined;
 
     if (!isValidProfileName(name)) {
       throw new BrowserValidationError(

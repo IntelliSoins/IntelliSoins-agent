@@ -1995,6 +1995,20 @@ export function attachGatewayWsMessageHandler(params: GatewayWsMessageHandlerPar
       }
 
       // After handshake, accept only req frames
+      const responseFrame = parsed as { type?: unknown; id?: unknown } | null | undefined;
+      if (responseFrame && typeof responseFrame === "object" && responseFrame.type === "res") {
+        const responseId = responseFrame.id;
+        if (typeof responseId === "string" && client && client.pendingRequests) {
+          const pending = client.pendingRequests.get(responseId);
+          if (pending) {
+            clearTimeout(pending.timer);
+            client.pendingRequests.delete(responseId);
+            pending.resolve(parsed);
+            return;
+          }
+        }
+      }
+
       if (!validateRequestFrame(parsed)) {
         send({
           type: "res",

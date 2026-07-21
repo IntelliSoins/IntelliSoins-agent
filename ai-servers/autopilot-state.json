@@ -1,3 +1,124 @@
 {
-  "tasks": []
+  "tasks": [
+    {
+      "id": "task-102-spark-whisper-llm-outage",
+      "title": "fix(spark): panne whisper :2022 hang + Qwen LLM :8000 down — sshd wedged",
+      "type": "fix",
+      "scope": "infra",
+      "domain": "dgx-spark",
+      "affectedRules": ["dgx-spark"],
+      "status": "in_progress",
+      "lockedBy": "opencode-session",
+      "createdAt": "2026-07-12T20:10:00-04:00",
+      "objectives": [
+        {
+          "id": "obj-0",
+          "description": "Valeur livrée vérifiée en condition réelle, sans régression",
+          "criterion": "Dictée Whisper ⌘ç dans Hammerspoon transcrit correctement un clip audio via Spark :2022",
+          "status": "passed",
+          "verifiedAt": "2026-07-13T10:05:00-04:00",
+          "evidence": "Clip réel voix Michael (dictee-fr-20260712-185924.wav — celui qui avait échoué) transcrit HTTP 200 en 0.71s : « Aloo, alo, comment ça va? ». Confirmation clavier ⌘ç par Michael souhaitable."
+        },
+        {
+          "id": "obj-1",
+          "description": "Diagnostic root cause whisper :2022 hang",
+          "criterion": "Root cause identifiée via SSH + docker logs spark-whisper",
+          "status": "passed",
+          "verifiedAt": "2026-07-13T10:00:00-04:00",
+          "evidence": "Double root cause : (1) wedge 13h = FT v2 gelé au step 0/368 (exemple 1 003 085 tokens > max 262 144 dans dgx-fable5-mix-v2, forward bf16 + 6 containers serving résidents = starvation mémoire unifiée) ; (2) post-reboot HTTP 500 = cudaErrorNotPermitted (init CUDA trop tôt au boot), corrigé par docker restart"
+        },
+        {
+          "id": "obj-2",
+          "description": "Container Qwen LLM :8000 relancé",
+          "criterion": "Port :8000 ouvert, /health 200, chat completion OK",
+          "status": "passed",
+          "verifiedAt": "2026-07-13T10:10:00-04:00",
+          "evidence": "docker compose --profile llm up -d → /health 200 sparklan + chat completion réelle depuis le Mac (clé API vérifiée d87df934, Mac == Spark == litellm-proxy/.env)"
+        },
+        {
+          "id": "obj-3",
+          "description": "sshd Spark responsive + protégé",
+          "criterion": "ssh spark < 5s + protections OOM/mémoire actives",
+          "status": "passed",
+          "verifiedAt": "2026-07-13T09:56:08-04:00",
+          "evidence": "Watchdog auto-apply 09:56 : OOMScoreAdjust=-1000, MemoryMin=268435456, CPUWeight=1000 vérifiés via systemctl show (ssh.service + ssh@.service)"
+        },
+        {
+          "id": "obj-4",
+          "description": "Tous services Spark vérifiés healthy (inférence réelle, pas juste /health)",
+          "criterion": "Inférence réelle 200 sur :2022 :8000 :8026 :6060 :8084 :8085 :5010",
+          "status": "passed",
+          "verifiedAt": "2026-07-13T10:15:00-04:00",
+          "evidence": "whisper 200 (0.71s), LLM 200, voxcpm {ok} + bridge :8884 200, NLLB 200 après restart (même bug CUDA boot), embeddings 200 (0.20s), reranker 200 (0.13s), docling 200"
+        }
+      ],
+      "phaseTracking": {
+        "phase-1b-audit": {
+          "status": "PASS",
+          "agent": "opencode-session",
+          "ts": "2026-07-12T20:12:00-04:00",
+          "evidence": "servers.yaml 11 autostart:false, rule dgx-spark.md, init.lua:46-47/89-99"
+        },
+        "phase-2-analyse": {
+          "status": "PASS",
+          "agent": "opencode-session",
+          "ts": "2026-07-12T20:15:00-04:00",
+          "evidence": "GPU wedge global : toute inférence GPU gelée, HTTP statique OK, sshd banner hang"
+        },
+        "phase-4-implementation": {
+          "status": "PASS",
+          "agent": "opencode-session",
+          "ts": "2026-07-13T10:10:00-04:00",
+          "evidence": "spark-fixes-20260712/ appliqué (watchdog auto) + preflight intégré sparkctl:67 (backup sparkctl.bak-20260713-preflight) + docker restart whisper/translation + profil llm up"
+        },
+        "phase-5-validation": {
+          "status": "PASS",
+          "agent": "opencode-session",
+          "ts": "2026-07-13T10:15:00-04:00",
+          "evidence": "Sweep final : 8/8 services en inférence réelle HTTP 200 (voir obj-4)"
+        }
+      },
+      "relatedTasks": ["task-103-ft-qwen35-v2-relaunch"],
+      "notes": "Résolu à 95%. Reste : confirmation clavier ⌘ç par Michael. Gotcha durable documenté dans dgx-spark.md : au boot du Spark, whisper/translation initialisent CUDA trop tôt → 500, docker restart requis."
+    },
+    {
+      "id": "task-103-ft-qwen35-v2-relaunch",
+      "title": "feat(spark): relancer FT Qwen3.5-4B v2 opencode — dataset à corriger + tensorboard",
+      "type": "feat",
+      "scope": "infra",
+      "domain": "dgx-spark",
+      "affectedRules": ["dgx-spark", "training-datasets"],
+      "status": "intake",
+      "createdAt": "2026-07-13T10:15:00-04:00",
+      "objectives": [
+        {
+          "id": "obj-0",
+          "description": "Valeur livrée vérifiée en condition réelle, sans régression",
+          "criterion": "FT v2 terminé (368 steps), adapters sauvegardés, eval_loss comparable v1 (~1.41)",
+          "status": "pending"
+        },
+        {
+          "id": "obj-1",
+          "description": "Corriger le dataset dgx-fable5-mix-v2",
+          "criterion": "Aucun exemple > 262144 tokens (l'exemple 1M tokens filtré/segmenté) — root cause du wedge task-102",
+          "status": "pending"
+        },
+        {
+          "id": "obj-2",
+          "description": "Relance via sparkctl finetune start (preflight actif)",
+          "criterion": "Preflight --auto-stop libère le serving avant l'entraînement, marge ≥ 60 Go confirmée",
+          "status": "pending"
+        },
+        {
+          "id": "obj-3",
+          "description": "Tensorboard exposé pour suivi (lien Michael)",
+          "criterion": "tensorboard accessible depuis le Mac via sparklan pendant l'entraînement",
+          "status": "pending"
+        }
+      ],
+      "phaseTracking": {},
+      "relatedTasks": ["task-102-spark-whisper-llm-outage"],
+      "notes": "FT v2 mort au step 0/368 le 2026-07-12 18:53 (log ~/finetune-workspace/qwen35-4b-v2-train.log, aucun checkpoint). Script relance : ~/finetune-workspace/run-qwen35-4b-v2.sh. Dataset : 2944 train / 200 eval."
+    }
+  ]
 }

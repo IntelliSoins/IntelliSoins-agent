@@ -180,6 +180,11 @@ export function createProfileAvailability({
       await listChromeMcpTabs(profile.name, profile, callOptions);
       return true;
     }
+    if (capabilities.usesWebKitNative) {
+      const { getSharedNodeRegistry } = await import("../browser-control-state.js");
+      const registry = getSharedNodeRegistry();
+      return Boolean(registry?.get("openclaw-macos"));
+    }
     const { httpTimeoutMs, wsTimeoutMs } = resolveTimeouts(timeoutMs);
     return await isChromeCdpReady(
       profile.cdpUrl,
@@ -198,12 +203,18 @@ export function createProfileAvailability({
       });
       return true;
     }
+    if (capabilities.usesWebKitNative) {
+      return await isReachable(timeoutMs);
+    }
     return await isReachable(timeoutMs);
   };
 
   const isHttpReachable = async (timeoutMs?: number) => {
     if (capabilities.usesChromeMcp) {
       return await isTransportAvailable(timeoutMs);
+    }
+    if (capabilities.usesWebKitNative) {
+      return await isReachable(timeoutMs);
     }
     const { httpTimeoutMs } = resolveTimeouts(timeoutMs);
     return await isChromeReachable(profile.cdpUrl, httpTimeoutMs, getCdpReachabilityPolicy());
@@ -347,6 +358,15 @@ export function createProfileAvailability({
       await waitForChromeMcpReadyAfterAttach();
       return;
     }
+    if (capabilities.usesWebKitNative) {
+      const reachable = await isReachable();
+      if (!reachable) {
+        throw new BrowserProfileUnavailableError(
+          `macOS companion application (openclaw-macos) is not connected for profile "${profile.name}"`,
+        );
+      }
+      return;
+    }
     const current = state();
     const remoteCdp = capabilities.isRemote;
     const attachOnly = profile.attachOnly;
@@ -475,6 +495,9 @@ export function createProfileAvailability({
       const { closeChromeMcpSession } = await getChromeMcpModule();
       const stopped = await closeChromeMcpSession(profile.name);
       return { stopped };
+    }
+    if (capabilities.usesWebKitNative) {
+      return { stopped: false };
     }
     const profileState = getProfileState();
     resetManagedLaunchFailure(profileState);

@@ -20,76 +20,6 @@
 #   env             Variables d'environnement supplementaires (cle: valeur)
 
 servers:
-  mlxcel:
-    name: "mlxcel (Rust native MLX)"
-    category: llm
-    port: 8097
-    host: 127.0.0.1
-    launcher: launchers/mlxcel.sh
-    autostart: false
-    keepalive: true
-    requires_disk: false
-    log_stdout: logs/mlxcel.log
-    log_stderr: logs/mlxcel.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
-  medgemma-27b:
-    name: "MedGemma 27B Text"
-    category: llm
-    port: 8080
-    host: 127.0.0.1
-    launcher: launchers/medgemma-27b.sh
-    autostart: false
-    keepalive: false
-    requires_disk: false
-    log_stdout: logs/medgemma-27b.log
-    log_stderr: logs/medgemma-27b.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
-  qwen3-email:
-    name: "Qwen3-8B Email LoRA"
-    category: llm
-    port: 8081
-    host: 127.0.0.1
-    launcher: launchers/qwen3-email.sh
-    autostart: false
-    keepalive: false
-    requires_disk: true
-    log_stdout: logs/qwen3-email.log
-    log_stderr: logs/qwen3-email.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
-  nemotron-30b:
-    name: "Nemotron 30B Tools"
-    category: llm
-    port: 8082
-    host: 127.0.0.1
-    launcher: launchers/nemotron-30b.sh
-    autostart: false
-    keepalive: false
-    requires_disk: true
-    log_stdout: logs/nemotron-30b.log
-    log_stderr: logs/nemotron-30b.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
-  qwen3-merged:
-    name: "Qwen3-8B Merged + Tools"
-    category: llm
-    port: 8083
-    host: 127.0.0.1
-    launcher: launchers/qwen3-merged.sh
-    autostart: false
-    keepalive: false
-    requires_disk: true
-    log_stdout: logs/qwen3-merged.log
-    log_stderr: logs/qwen3-merged.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
   embedding:
     name: "Qwen3-Embedding-0.6B"
     category: embedding
@@ -132,34 +62,6 @@ servers:
     health_endpoint: /health
     throttle: 30
 
-  qwen35-35b:
-    name: "Qwen3.5 35B MoE Agentic"
-    category: llm
-    port: 8087
-    host: 127.0.0.1
-    launcher: launchers/qwen35-35b.sh
-    autostart: false
-    keepalive: true
-    requires_disk: false
-    log_stdout: logs/qwen35-35b.log
-    log_stderr: logs/qwen35-35b.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
-  gemma4-12b:
-    name: "Gemma 4 12B Instruct"
-    category: llm
-    port: 8098
-    host: 127.0.0.1
-    launcher: launchers/gemma4-12b.sh
-    autostart: false
-    keepalive: true
-    requires_disk: true
-    log_stdout: logs/gemma4-12b.log
-    log_stderr: logs/gemma4-12b.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
   docling:
     name: "Docling OCR/Extraction"
     category: ocr
@@ -174,91 +76,58 @@ servers:
     health_endpoint: /health
     throttle: 30
 
-  kokoro-tts:
-    name: "Kokoro TTS"
+  voxcpm-tts:
+    name: "VoxCPM2 Michael v7 (MLX 8bit)"
     category: tts
-    port: 8880
+    port: 8025
     host: 127.0.0.1
-    launcher: launchers/kokoro-tts.sh
-    autostart: false
-    keepalive: false
-    requires_disk: false
-    log_stdout: logs/kokoro-tts.log
-    log_stderr: logs/kokoro-tts.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-    # working_dir configuré dans le launcher
-
-  vibevoice-tts:
-    name: "VibeVoice Realtime 0.5B TTS"
-    category: tts
-    port: 8882
-    host: 127.0.0.1
-    launcher: launchers/vibevoice-tts.sh
+    launcher: launchers/voxcpm-tts.sh
     autostart: true
     keepalive: true
     requires_disk: false
-    log_stdout: logs/vibevoice-tts.log
-    log_stderr: logs/vibevoice-tts.error.log
+    log_stdout: logs/voxcpm-tts.log
+    log_stderr: logs/voxcpm-tts.error.log
     health_endpoint: /v1/models
-    throttle: 30
+    throttle: 60
+    # 2026-07-11 : Hammerspoon (⌥v + agent vocal) migré sur VoxCPM2 v8 Spark via
+    # bridge :8884 (LoRA v8 = dernier fine-tune). Ce serveur Mac MLX v7 :8025 + son
+    # bridge :8883 restent en service comme fallback local (si Spark down) et pour
+    # LiteLLM (michael-v6-mlx-8bit alias). RTF Mac 0.37 < Spark 0.49 mais v8 = meilleure qualité.
+
+  voxcpm-openai-bridge:
+    name: "VoxCPM OpenAI bridge (OpenClaw TTS)"
+    category: tts
+    port: 8883
+    host: 127.0.0.1
+    launcher: launchers/voxcpm-openai-bridge.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/voxcpm-openai-bridge.log
+    log_stderr: logs/voxcpm-openai-bridge.error.log
+    health_endpoint: /health
+    throttle: 15
 
   whisper-stt:
-    name: "Whisper large-v3-turbo STT"
+    name: "Whisper large-v3-turbo STT (fine-tuné voix Michael, LoRA v3 2026-07-08 — 380 paires)"
     category: stt
     port: 2022
     host: 127.0.0.1
     launcher: launchers/whisper-stt.sh
     autostart: true
     keepalive: true
+    # 2026-07-08 : PRO-G40 corrompu → retour disque interne (~/services/whisper-finetune,
+    # venv-ft). Modèle actif : LoRA v3 voix Michael (models/whisper-michael-mlx-v3, 380 paires) —
+    # cf. launchers/whisper-stt.sh (rollbacks v2 + base documentés).
     requires_disk: false
     log_stdout: logs/whisper-stt.log
     log_stderr: logs/whisper-stt.error.log
     health_endpoint: /health
     throttle: 30
 
-  translation:
-    name: "NLLB-200 Traduction"
-    category: translation
-    port: 6060
-    host: 127.0.0.1
-    launcher: launchers/translation.sh
-    autostart: true
-    keepalive: true
-    requires_disk: false
-    log_stdout: logs/translation.log
-    log_stderr: logs/translation.error.log
-    health_endpoint: /health
-    throttle: 30
-    working_dir: /Users/michaelahern/master-IA/tools/live-translator
-
-  gemma4-e4b:
-    name: "Gemma 4 E4B Multimodal"
-    category: vlm
-    port: 8088
-    host: 127.0.0.1
-    launcher: launchers/gemma4-e4b.sh
-    autostart: false
-    keepalive: true
-    requires_disk: false
-    log_stdout: logs/gemma4-e4b.log
-    log_stderr: logs/gemma4-e4b.error.log
-    health_endpoint: /v1/models
-    throttle: 30
-
-  qwen35-9b-vision:
-    name: "Qwen3.5-9B Vision + Tools"
-    category: vlm
-    port: 8089
-    host: 127.0.0.1
-    launcher: launchers/qwen35-9b-vision.sh
-    autostart: true
-    keepalive: true
-    requires_disk: false
-    log_stdout: logs/qwen35-9b-vision.log
-    log_stderr: logs/qwen35-9b-vision.error.log
-    health_endpoint: /v1/models
-    throttle: 30
+  # translation (NLLB-200 :6060) — MIGRÉ sur DGX Spark 2026-07-10 (container spark-translation,
+  # 10.0.0.5:6060 + 10.0.1.1:6060, profil core de ~/ai-spark). L'ancien live-translator Mac
+  # (master-IA/tools/live-translator) n'existe plus ; source archivée dans ~/labo-ia/live-translator.
 
   litellm-proxy:
     name: "LiteLLM Proxy (OpenAI gateway)"
@@ -273,6 +142,20 @@ servers:
     log_stderr: logs/litellm-proxy.error.log
     health_endpoint: /health/liveliness
     throttle: 30
+
+  study-chat-bridge:
+    name: "Pont d'étude concept-interactif"
+    category: app
+    port: 8765
+    host: 127.0.0.1
+    launcher: launchers/study-chat-bridge.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/study-chat-bridge.log
+    log_stderr: logs/study-chat-bridge.error.log
+    health_endpoint: /health
+    throttle: 15
 
   litellm-config-sync:
     name: "LiteLLM Config/UI Sync"
@@ -359,24 +242,79 @@ servers:
     health_endpoint: /healthz
     throttle: 30
 
-  # --- Serveurs externes (affiches en status, pas controles par aictl) ---
-
-  ollama:
-    name: "Ollama"
-    category: llm
-    port: 11434
+  mlx-vlm-omni:
+    name: "gemma-4-12B omni (mlx-vlm 0.6.4, 4 modalites)"
+    category: vlm
+    port: 8089
     host: 127.0.0.1
-    managed_by: brew
-    health_endpoint: /api/tags
+    launcher: launchers/mlx-vlm-omni.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/mlx-vlm-omni.log
+    log_stderr: logs/mlx-vlm-omni.error.log
+    health_endpoint: /health
+    throttle: 60
+    # Autostart depuis 2026-07-07 : backend de l'agent vocal Hammerspoon (⌥⌘ç / ⌥4).
+    # Modele: mlx-community/gemma-4-12B-it-8bit (texte+image+audio+video), ~13.6 Go RAM.
+    # mlx-vlm 0.6.4 = fixes Gemma 4 (tool calls, vision mask, soft-token budgets, audio preproc,
+    # plus de full reload a la 1re requete #1403).
+    # Optimisations 2026-07-07 (agent vocal) : APC_ENABLED=1 (prefix caching exact —
+    # TTFT warm 9.3s → 0.22s a 4k tokens, 42x) + draft MTP gemma-4-12B-it-assistant-4bit
+    # (decodage speculatif : generation 25.7 → ~36 tok/s, +40%). KV fp16 conserve
+    # (pas de kv-bits : protege la compat APC et la precision ; 262k ctx ≈ 17 Go KV max).
+    # Needle-test 35k tokens PASS ; tool calls valides avec drafter. Detail : launchers/mlx-vlm-omni.sh
+
+  voice-agent-webrtc:
+    name: "Agent vocal (front WebRTC FastRTC)"
+    category: app
+    port: 8024
+    host: 127.0.0.1
+    launcher: launchers/voice-agent-webrtc.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/voice-agent-webrtc.log
+    log_stderr: logs/voice-agent-webrtc.error.log
+    health_endpoint: /
+    throttle: 30
+    # Front realtime mains libres de l'agent vocal (UI Gradio via FastRTC) :
+    # micro WebRTC + VAD Silero + barge-in → whisper-stt :2022 → mlx-vlm-omni :8089
+    # (SSE) → spark-voxcpm-bridge :8884 (VoxCPM2 v8 Spark, TTS par phrase pendant
+    # que Gemma genere). Migré du Mac MLX :8025 vers Spark v8 :8884 le 2026-07-11.
+    # Reconstruction 2026-07-08 du POC 2026-06-18 perdu (etait gitignore dans
+    # ~/apple_all/voxcpm, efface 2026-07-05) — desormais sous git (scripts/).
+
+  spark-voxcpm-bridge:
+    name: "Spark VoxCPM v8 bridge (OpenAI-compat, Nano-vLLM CUDA)"
+    category: tts
+    port: 8884
+    host: 127.0.0.1
+    launcher: launchers/spark-voxcpm-bridge.sh
+    autostart: true
+    keepalive: true
+    requires_disk: false
+    log_stdout: logs/spark-voxcpm-bridge.log
+    log_stderr: logs/spark-voxcpm-bridge.error.log
+    health_endpoint: /health
+    throttle: 15
+    # Bridge OpenAI-compat vers spark-voxcpm-tts :8026 (DGX Spark, Nano-vLLM + LoRA v8).
+    # sparklan 10.0.1.1 primaire (~4 ms) + mesh 10.0.0.5 fallback — géré dans
+    # spark-voxcpm-bridge.py. PRIMAIRE Hammerspoon (⌥v + agent vocal) depuis
+    # 2026-07-11, ET LiteLLM :8092 (spark-voxcpm-v8). Coexiste avec
+    # voxcpm-openai-bridge :8883 (Mac MLX local, fallback).
+
+  # --- Serveurs externes (affiches en status, pas controles par aictl) ---
 
   omlx:
     name: "oMLX (multi-model, KV cache RAM+SSD)"
     category: llm
-    port: 8010
+    port: 8211
     host: 127.0.0.1
     managed_by: brew
     health_endpoint: /health
     # Lance par LaunchAgent Homebrew (homebrew.mxcl.omlx)
-    # Config: ~/.omlx/settings.json (hot cache 25GB, SSD cache 92GB)
+    # Config: ~/.omlx/settings.json (hot cache 40GB RAM, SSD cache 92GB, 16 requetes concurrentes)
     # API key requise: cat ~/.omlx/settings.json | jq -r .auth.api_key
-    # Models: ~/.omlx/models/ (charge a la demande, multi-modele)
+    # Models: ~/.omlx/models/ (Qwen3.6-35B-A3B-CP-lmhead8 seul epingle/preloade au boot pour claude-local
+    #   — pas de cold start, prefix KV cache survit aux restarts ; v1 Custom-Precision + Coder-30B retires 2026-07-07)
