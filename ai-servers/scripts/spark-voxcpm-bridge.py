@@ -135,6 +135,7 @@ class SpeechRequest(BaseModel):
     pitch: float = Field(default=0.0, ge=-12.0, le=12.0)
     cfg_value: float | None = Field(default=None, ge=0.0, le=10.0)
     temperature: float = Field(default=1.0, gt=0.0, le=2.0)
+    max_generate_length: int = Field(default=800, ge=100, le=2000)
     inference_timesteps: int | None = None
     clone_mode: str | None = None
     style: str | None = None
@@ -216,6 +217,7 @@ def _nanovllm_payload(req: SpeechRequest, text: str) -> dict:
         "cfg_value": DEFAULT_CFG if req.cfg_value is None else req.cfg_value,
         "inference_timesteps": DEFAULT_TIMESTEPS if req.inference_timesteps is None else req.inference_timesteps,
         "temperature": req.temperature,
+        "max_generate_length": req.max_generate_length,
         "speed": req.speed,
         "pitch": req.pitch,
         "response_format": req.response_format or "wav",
