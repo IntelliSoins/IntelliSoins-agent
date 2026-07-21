@@ -135,12 +135,13 @@ class SpeechRequest(BaseModel):
     pitch: float = Field(default=0.0, ge=-12.0, le=12.0)
     cfg_value: float | None = Field(default=None, ge=0.0, le=10.0)
     temperature: float = Field(default=1.0, gt=0.0, le=2.0)
-    max_generate_length: int = Field(default=800, ge=100, le=2000)
+    max_generate_length: int = Field(default=200, ge=100, le=2000)
     inference_timesteps: int | None = None
     clone_mode: str | None = None
     style: str | None = None
     emotion: str | None = None
     tone: str | None = None
+    force_lora: bool = False
     stream: bool = False
     # Optional overrides; Spark server applies /models/ref defaults when omitted
     # (Mac paths must NOT be injected — they are not visible inside the container).
@@ -188,6 +189,8 @@ async def health() -> dict[str, object]:
             "pitch_semitones": [-12.0, 12.0],
             "temperature": [0.0, 2.0],
             "cfg_value": [0.0, 10.0],
+            "controllable_default_lora": "base",
+            "force_lora": True,
         },
     }
 
@@ -220,6 +223,7 @@ def _nanovllm_payload(req: SpeechRequest, text: str) -> dict:
         "max_generate_length": req.max_generate_length,
         "speed": req.speed,
         "pitch": req.pitch,
+        "force_lora": req.force_lora,
         "response_format": req.response_format or "wav",
     }
     for name in ("clone_mode", "style", "emotion", "tone"):
