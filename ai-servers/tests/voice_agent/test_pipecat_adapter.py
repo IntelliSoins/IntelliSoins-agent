@@ -119,7 +119,7 @@ class TestPipecatAdapter(unittest.TestCase):
             llm._settings.extra,
             {"extra_body": {"repetition_penalty": 1.15}},
         )
-        self.assertEqual(llm._client.timeout.read, 7)
+        self.assertEqual(llm._client.timeout, 7)
         asyncio.run(llm._client.close())
 
 
