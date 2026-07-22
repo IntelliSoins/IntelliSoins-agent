@@ -280,10 +280,7 @@ class EventStore:
                 session_tokens = COALESCE(%(session_tokens)s, session_tokens),
                 cached_tokens = COALESCE(%(cached_tokens)s, cached_tokens),
                 gemma_gen_seconds = COALESCE(%(gemma_gen_seconds)s, gemma_gen_seconds),
-                raw = CASE
-                    WHEN %(raw)s IS NULL THEN raw
-                    ELSE %(raw)s::jsonb
-                END
+                raw = COALESCE(%(raw)s::jsonb, raw)
             WHERE id = %(turn_pk)s
             """,
             {
