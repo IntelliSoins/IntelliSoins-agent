@@ -285,6 +285,25 @@ servers:
     # Reconstruction 2026-07-08 du POC 2026-06-18 perdu (etait gitignore dans
     # ~/apple_all/voxcpm, efface 2026-07-05) — desormais sous git (scripts/).
 
+  voice-agent-pipecat:
+    name: "Agent vocal Pipecat Spark (P0/P1 canary)"
+    category: app
+    port: 8027
+    host: 10.0.0.2
+    launcher: launchers/voice-agent-pipecat.sh
+    autostart: false
+    keepalive: false
+    requires_disk: false
+    log_stdout: logs/voice-agent-pipecat.log
+    log_stderr: logs/voice-agent-pipecat.error.log
+    health_endpoint: /health
+    health_https: true
+    throttle: 30
+    # Pipecat SmallWebRTC + Silero + Smart Turn v3 → Whisper Spark :2022
+    # → Qwen FT v2 :8000 → VoxCPM bridge :8884. PostgreSQL voice_agent =
+    # journal exact; durable_facts = mémoire confirmée par subject_id.
+    # Canary parallèle : ne remplace pas le legacy :8024 avant validation audio.
+
   spark-voxcpm-bridge:
     name: "Spark VoxCPM v8 bridge (OpenAI-compat, Nano-vLLM CUDA)"
     category: tts

@@ -1,0 +1,4 @@
+# Installed and verified on macOS arm64 / Python 3.12 on 2026-07-22.
+pipecat-ai[runner,webrtc]==1.6.0
+httpx==0.28.1
+psycopg[binary]==3.3.4
