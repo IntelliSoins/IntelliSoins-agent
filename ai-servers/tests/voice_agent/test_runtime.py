@@ -2,9 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from _path import ensure_voice_agent_on_path
-
-ensure_voice_agent_on_path()
+import _path  # noqa: F401  # test path bootstrap
 
 from voice_agent.config import VoiceConfig
 from voice_agent.runtime import VoiceRuntime

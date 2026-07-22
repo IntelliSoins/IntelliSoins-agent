@@ -26,17 +26,13 @@ servers:
     port: 8084
     host: 127.0.0.1
     launcher: launchers/embedding.sh
-    autostart: false
-    keepalive: false
+    autostart: true
+    keepalive: true
     requires_disk: false
     log_stdout: logs/embedding.log
     log_stderr: logs/embedding.error.log
     health_endpoint: /health
     throttle: 30
-    # DESACTIVE 2026-07-12 (choix Michael : modeles 100% DGX Spark) : embeddings actifs via
-    # spark-embeddings :8084 (voyage-4-nano 2048D, 10.0.0.5). claude_usage migre vers voyage-4-nano.
-    # Rechargeable manuellement (./aictl start embedding) pour les scripts on-demand 1024D
-    # (continuous_indexer, index_*_contacts, omnimed — bases medical/emails/finances halfvec 1024).
 
   reranker:
     name: "BGE-reranker-v2-m3"
@@ -44,16 +40,13 @@ servers:
     port: 8085
     host: 127.0.0.1
     launcher: launchers/reranker.sh
-    autostart: false
-    keepalive: false
+    autostart: true
+    keepalive: true
     requires_disk: false
     log_stdout: logs/reranker.log
     log_stderr: logs/reranker.error.log
     health_endpoint: /health
     throttle: 30
-    # DESACTIVE 2026-07-12 : meme modele servi par spark-reranker :8085 (10.0.0.5, vLLM).
-    # LiteLLM bge-reranker-v2-m3 repointe vers le Spark (provider hosted_vllm).
-    # Rechargeable manuellement pour recherche_ml() in-database (http localhost).
 
   gliner:
     name: "GLiNER Biomed NER"
@@ -61,15 +54,13 @@ servers:
     port: 8091
     host: 127.0.0.1
     launcher: launchers/gliner.sh
-    autostart: false
-    keepalive: false
+    autostart: true
+    keepalive: true
     requires_disk: false
     log_stdout: logs/gliner.log
     log_stderr: logs/gliner.error.log
     health_endpoint: /health
     throttle: 30
-    # DESACTIVE 2026-07-12 : pas d'equivalent Spark (NER medical on-demand seulement).
-    # Demarrer manuellement avant d'utiliser kg_pipeline / NER-RAG-KG.
 
   docling:
     name: "Docling OCR/Extraction"
@@ -77,14 +68,13 @@ servers:
     port: 5010
     host: 127.0.0.1
     launcher: launchers/docling.sh
-    autostart: false
-    keepalive: false
+    autostart: true
+    keepalive: true
     requires_disk: false
     log_stdout: logs/docling.log
     log_stderr: logs/docling.error.log
     health_endpoint: /health
     throttle: 30
-    # DESACTIVE 2026-07-12 : remplace par spark-docling :5010 (10.0.0.5, REST direct).
 
   voxcpm-tts:
     name: "VoxCPM2 Michael v7 (MLX 8bit)"
@@ -92,16 +82,17 @@ servers:
     port: 8025
     host: 127.0.0.1
     launcher: launchers/voxcpm-tts.sh
-    autostart: false
-    keepalive: false
+    autostart: true
+    keepalive: true
     requires_disk: false
     log_stdout: logs/voxcpm-tts.log
     log_stderr: logs/voxcpm-tts.error.log
     health_endpoint: /v1/models
     throttle: 60
-    # DESACTIVE 2026-07-11 : Hammerspoon (⌥v + agent vocal) 100% sur VoxCPM2 v8 Spark
-    # via bridge :8884. Fallback Mac retire par choix Michael (pas de bascule silencieuse —
-    # si Spark down, alerte explicite). Rechargeable manuellement (./aictl start voxcpm-tts).
+    # 2026-07-11 : Hammerspoon (⌥v + agent vocal) migré sur VoxCPM2 v8 Spark via
+    # bridge :8884 (LoRA v8 = dernier fine-tune). Ce serveur Mac MLX v7 :8025 + son
+    # bridge :8883 restent en service comme fallback local (si Spark down) et pour
+    # LiteLLM (michael-v6-mlx-8bit alias). RTF Mac 0.37 < Spark 0.49 mais v8 = meilleure qualité.
 
   voxcpm-openai-bridge:
     name: "VoxCPM OpenAI bridge (OpenClaw TTS)"
@@ -109,15 +100,13 @@ servers:
     port: 8883
     host: 127.0.0.1
     launcher: launchers/voxcpm-openai-bridge.sh
-    autostart: false
-    keepalive: false
+    autostart: true
+    keepalive: true
     requires_disk: false
     log_stdout: logs/voxcpm-openai-bridge.log
     log_stderr: logs/voxcpm-openai-bridge.error.log
     health_endpoint: /health
     throttle: 15
-    # DESACTIVE 2026-07-11 : bridge vers voxcpm-tts Mac :8025 (desactive). Alias LiteLLM
-    # michael-v6-mlx-8bit retire (cf. litellm-proxy/config.yaml).
 
   whisper-stt:
     name: "Whisper large-v3-turbo STT (fine-tuné voix Michael, LoRA v3 2026-07-08 — 380 paires)"
@@ -125,13 +114,11 @@ servers:
     port: 2022
     host: 127.0.0.1
     launcher: launchers/whisper-stt.sh
-    autostart: false
-    keepalive: false
+    autostart: true
+    keepalive: true
     # 2026-07-08 : PRO-G40 corrompu → retour disque interne (~/services/whisper-finetune,
     # venv-ft). Modèle actif : LoRA v3 voix Michael (models/whisper-michael-mlx-v3, 380 paires) —
     # cf. launchers/whisper-stt.sh (rollbacks v2 + base documentés).
-    # DESACTIVE 2026-07-11 : Hammerspoon 100% Whisper FT Spark :2022. Fallback Mac retire
-    # (alerte si Spark down). Rechargeable manuellement.
     requires_disk: false
     log_stdout: logs/whisper-stt.log
     log_stderr: logs/whisper-stt.error.log
@@ -261,15 +248,14 @@ servers:
     port: 8089
     host: 127.0.0.1
     launcher: launchers/mlx-vlm-omni.sh
-    autostart: false
-    keepalive: false
+    autostart: true
+    keepalive: true
     requires_disk: false
     log_stdout: logs/mlx-vlm-omni.log
     log_stderr: logs/mlx-vlm-omni.error.log
     health_endpoint: /health
     throttle: 60
-    # DESACTIVE 2026-07-11 : l'agent vocal (⌥⌘ç) et ⌥4 sont passes sur Qwen3.5-4B FT v1
-    # (DGX Spark :8000). Plus aucun raccourci Hammerspoon n'utilise ce serveur local.
+    # Autostart depuis 2026-07-07 : backend de l'agent vocal Hammerspoon (⌥⌘ç / ⌥4).
     # Modele: mlx-community/gemma-4-12B-it-8bit (texte+image+audio+video), ~13.6 Go RAM.
     # mlx-vlm 0.6.4 = fixes Gemma 4 (tool calls, vision mask, soft-token budgets, audio preproc,
     # plus de full reload a la 1re requete #1403).
@@ -278,27 +264,26 @@ servers:
     # (decodage speculatif : generation 25.7 → ~36 tok/s, +40%). KV fp16 conserve
     # (pas de kv-bits : protege la compat APC et la precision ; 262k ctx ≈ 17 Go KV max).
     # Needle-test 35k tokens PASS ; tool calls valides avec drafter. Detail : launchers/mlx-vlm-omni.sh
-    # Rechargable manuellement (./aictl start mlx-vlm-omni) si besoin local ponctuel.
 
   voice-agent-webrtc:
-    name: "Tuteur vocal MIA5100Z (WebRTC one-click)"
+    name: "Agent vocal (front WebRTC FastRTC)"
     category: app
     port: 8024
-    host: 10.0.0.2
+    host: 127.0.0.1
     launcher: launchers/voice-agent-webrtc.sh
     autostart: true
     keepalive: true
     requires_disk: false
     log_stdout: logs/voice-agent-webrtc.log
     log_stderr: logs/voice-agent-webrtc.error.log
-    health_endpoint: /health
-    health_https: true
+    health_endpoint: /
     throttle: 30
-    # Tuteur oral MIA5100Z — frontend custom one-click (plus Gradio) :
-    # micro WebRTC + VAD Silero → Whisper Spark :2022 (16 kHz, no prompt) → RAG
-    # openclaw-docs :8100 → Qwen3.5-4B FT v2 :8000 → spark-voxcpm-bridge :8884.
-    # HTTPS bind mesh WG 10.0.0.2. Mic OFF pendant TTS (can_interrupt=False).
-    # Docs: .agents/skills/local-ai-servers/references/voice-tutor-webrtc.md
+    # Front realtime mains libres de l'agent vocal (UI Gradio via FastRTC) :
+    # micro WebRTC + VAD Silero + barge-in → whisper-stt :2022 → mlx-vlm-omni :8089
+    # (SSE) → spark-voxcpm-bridge :8884 (VoxCPM2 v8 Spark, TTS par phrase pendant
+    # que Gemma genere). Migré du Mac MLX :8025 vers Spark v8 :8884 le 2026-07-11.
+    # Reconstruction 2026-07-08 du POC 2026-06-18 perdu (etait gitignore dans
+    # ~/apple_all/voxcpm, efface 2026-07-05) — desormais sous git (scripts/).
 
   voice-agent-pipecat:
     name: "Agent vocal Pipecat Spark (P0/P1 canary)"
