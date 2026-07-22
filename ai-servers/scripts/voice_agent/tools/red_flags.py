@@ -77,7 +77,7 @@ _PATTERNS: tuple[tuple[str, str, str, re.Pattern[str]], ...] = (
         "acute chest pain language",
         "critical",
         re.compile(
-            r"\b(douleur\s+(dans\s+la\s+|au\s+)?poitrine|chest\s+pain|"
+            r"\b(douleur\s+(dans\s+la\s+|[àa]\s+la\s+|au\s+)?poitrine|chest\s+pain|"
             r"serrage\s+(dans\s+la\s+)?poitrine|heart\s+attack|"
             r"crise\s+cardiaque|infarctus)\b",
             re.IGNORECASE,
