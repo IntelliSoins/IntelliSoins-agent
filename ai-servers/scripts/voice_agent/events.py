@@ -66,6 +66,7 @@ class EventStore:
     _mem_turns: dict[int, dict[str, Any]] = field(default_factory=dict, repr=False)
     _mem_tool_calls: list[dict[str, Any]] = field(default_factory=list, repr=False)
     _mem_tts: list[dict[str, Any]] = field(default_factory=list, repr=False)
+    _mem_outbox: list[dict[str, Any]] = field(default_factory=list, repr=False)
 
     @classmethod
     def from_config(cls, config: Any) -> "EventStore":
@@ -311,15 +312,21 @@ class EventStore:
         args_s = _as_text(arguments)
         result_s = _as_text(result)
         if not self.enabled:
-            self._mem_tool_calls.append(
-                {
-                    "turn_pk": turn.turn_pk,
-                    "ordinal": ordinal,
-                    "tool_name": tool_name,
-                    "arguments": args_s,
-                    "result": result_s,
-                }
-            )
+            record = {
+                "turn_pk": turn.turn_pk,
+                "ordinal": ordinal,
+                "tool_name": tool_name,
+                "arguments": args_s,
+                "result": result_s,
+            }
+            for index, existing in enumerate(self._mem_tool_calls):
+                if (existing["turn_pk"], existing["ordinal"]) == (
+                    turn.turn_pk,
+                    ordinal,
+                ):
+                    self._mem_tool_calls[index] = record
+                    return
+            self._mem_tool_calls.append(record)
             return
 
         self._ensure_conn()
@@ -405,6 +412,60 @@ class EventStore:
         )
         self._conn.commit()
 
+    def enqueue_action(
+        self,
+        *,
+        event_type: str,
+        subject_id: str,
+        session_id: str,
+        turn_pk: Optional[int],
+        idempotency_key: str,
+        payload: Mapping[str, Any],
+    ) -> Optional[int]:
+        """Queue an idempotent non-LLM action for a trusted consumer."""
+        record = {
+            "event_type": event_type,
+            "subject_id": subject_id,
+            "session_id": session_id,
+            "turn_pk": turn_pk,
+            "idempotency_key": idempotency_key,
+            "payload": dict(payload),
+            "status": "pending",
+        }
+        if not self.enabled:
+            for existing in self._mem_outbox:
+                if (
+                    existing["subject_id"],
+                    existing["event_type"],
+                    existing["idempotency_key"],
+                ) == (subject_id, event_type, idempotency_key):
+                    return existing["id"]
+            record["id"] = len(self._mem_outbox) + 1
+            self._mem_outbox.append(record)
+            return record["id"]
+
+        self._ensure_conn()
+        row = self._conn.execute(
+            """
+            INSERT INTO public.action_outbox (
+                event_type, subject_id, session_id, turn_pk,
+                idempotency_key, payload
+            ) VALUES (
+                %(event_type)s, %(subject_id)s, %(session_id)s, %(turn_pk)s,
+                %(idempotency_key)s, %(payload)s::jsonb
+            )
+            ON CONFLICT (subject_id, event_type, idempotency_key)
+            DO UPDATE SET payload = EXCLUDED.payload
+            RETURNING id
+            """,
+            {
+                **record,
+                "payload": json.dumps(record["payload"], ensure_ascii=False),
+            },
+        ).fetchone()
+        self._conn.commit()
+        return int(row["id"]) if row else None
+
     # --- memory-mode inspection (tests / dry-run) -------------------------
 
     def memory_tool_calls(self) -> Sequence[Mapping[str, Any]]:
@@ -412,6 +473,9 @@ class EventStore:
 
     def memory_tts_segments(self) -> Sequence[Mapping[str, Any]]:
         return list(self._mem_tts)
+
+    def memory_outbox(self) -> Sequence[Mapping[str, Any]]:
+        return list(self._mem_outbox)
 
     def _ensure_conn(self) -> None:
         if self._conn is None:

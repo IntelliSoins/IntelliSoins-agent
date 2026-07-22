@@ -66,6 +66,15 @@ class TestToolRegistry(unittest.TestCase):
         self.assertEqual(result.data["error"], "explicit_consent_required")
         self.assertIsNone(self.memory.get_active("contact-tools", "consent:voice_session"))
 
+    def test_record_consent_rejects_string_boolean(self) -> None:
+        result = self.registry.invoke(
+            "record_consent",
+            {"granted": "false"},
+            self.ctx,
+        )
+        self.assertFalse(result.ok)
+        self.assertEqual(result.data["error"], "granted_must_be_boolean")
+
     def test_record_consent_idempotent(self) -> None:
         a = self.registry.invoke(
             "record_consent",

@@ -56,13 +56,17 @@ def _idem(arguments: Mapping[str, Any], name: str) -> str:
     """
     key = arguments.get("idempotency_key") or arguments.get("id")
     if key:
-        return str(key)
-    payload = {
-        k: arguments[k]
-        for k in sorted(arguments)
-        if k not in ("raw", "idempotency_key", "id")
-    }
-    material = f"{name}:{json.dumps(payload, sort_keys=True, ensure_ascii=False, default=str)}"
+        material = f"{name}:explicit:{key}"
+    else:
+        payload = {
+            k: arguments[k]
+            for k in sorted(arguments)
+            if k not in ("raw", "idempotency_key", "id")
+        }
+        material = (
+            f"{name}:payload:"
+            f"{json.dumps(payload, sort_keys=True, ensure_ascii=False, default=str)}"
+        )
     digest = hashlib.sha256(material.encode("utf-8")).hexdigest()
     return f"{name}:{digest}"
 
@@ -105,13 +109,20 @@ def _confirm(
 
 
 def record_consent(ctx: ToolContext, arguments: Mapping[str, Any]) -> ToolResult:
-    if not ctx.explicit_consent_verified:
+    granted_value = arguments.get("granted")
+    if not isinstance(granted_value, bool):
+        return ToolResult(
+            ok=False,
+            name="record_consent",
+            data={"error": "granted_must_be_boolean"},
+        )
+    granted = granted_value
+    if granted and not ctx.explicit_consent_verified:
         return ToolResult(
             ok=False,
             name="record_consent",
             data={"error": "explicit_consent_required"},
         )
-    granted = bool(arguments.get("granted", False))
     scope = str(arguments.get("scope") or "voice_session")
     idem = _idem(arguments, "record_consent")
     data, replay = _confirm(
@@ -300,6 +311,7 @@ def opt_out(ctx: ToolContext, arguments: Mapping[str, Any]) -> ToolResult:
         tool_name="opt_out",
         idempotency_key=idem,
     )
+    data["should_end"] = True
     return ToolResult(ok=True, name="opt_out", data=data, idempotent_replay=replay)
 
 

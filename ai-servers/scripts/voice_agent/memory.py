@@ -162,6 +162,24 @@ class DurableMemoryRepository:
             )
 
         self._ensure_conn()
+        # Serialize writes for the same subject/key. The second idempotency
+        # check runs after the transaction-scoped lock, closing the race where
+        # two call sessions both observe no row before the partial unique index.
+        self._conn.execute(
+            """
+            SELECT pg_advisory_xact_lock(
+                hashtextextended(%(lock_key)s, 0)
+            )
+            """,
+            {
+                "lock_key": f"voice-memory:{sid}:{fact_key}"
+            },
+        )
+        if idempotency_key:
+            existing = self.get_by_idempotency(sid, idempotency_key)
+            if existing is not None:
+                self._conn.commit()
+                return existing
         self._conn.execute(
             """
             UPDATE public.durable_facts

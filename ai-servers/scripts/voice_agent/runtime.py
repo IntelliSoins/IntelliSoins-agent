@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import threading
 import time
 from dataclasses import dataclass, field
@@ -34,8 +35,11 @@ class VoiceRuntime:
     subject_id: str
     session_id: str
     explicit_consent_verified: bool = False
+    require_consent: bool = False
+    consent_scope: str = "voice_session"
     channel: str = "webrtc"
     barge_in: bool = False
+    end_requested: bool = field(default=False, init=False)
     store: EventStore = field(default_factory=EventStore)
     memory: DurableMemoryRepository = field(default_factory=DurableMemoryRepository)
     registry: ToolRegistry = field(default_factory=build_default_registry)
@@ -57,6 +61,8 @@ class VoiceRuntime:
         subject_id: str,
         session_id: str,
         explicit_consent_verified: bool = False,
+        require_consent: bool = False,
+        consent_scope: str = "voice_session",
         channel: str = "webrtc",
         barge_in: bool = False,
     ) -> "VoiceRuntime":
@@ -74,6 +80,8 @@ class VoiceRuntime:
             subject_id=trusted_subject,
             session_id=trusted_session,
             explicit_consent_verified=explicit_consent_verified,
+            require_consent=require_consent,
+            consent_scope=consent_scope,
             channel=channel,
             barge_in=barge_in,
             store=store,
@@ -93,6 +101,12 @@ class VoiceRuntime:
         with self._lock:
             self.store.connect()
             self.memory.connect()
+            if self.channel.startswith("telephony"):
+                opt_out = self.memory.get_active(self.subject_id, "opt_out")
+                if opt_out and opt_out.fact_value.get("active"):
+                    raise PermissionError(
+                        f"outbound contact blocked by active opt-out for {self.subject_id}"
+                    )
             self._session = self.store.start_session(
                 self.session_id,
                 host=os.uname().nodename,
@@ -104,6 +118,7 @@ class VoiceRuntime:
                     "db_enabled": self.store.is_enabled,
                     "llm_model": self.config.llm_model,
                     "tts_model": self.config.tts_model,
+                    "require_consent": self.require_consent,
                 },
                 agent_route=True,
                 allow_send=False,
@@ -141,15 +156,33 @@ class VoiceRuntime:
             self._user_text = text
             self._turn_started_monotonic = time.monotonic()
             assert self._session is not None
+            consent_decision = self._observe_consent(text)
+            stored_transcript = text
+            if self.require_consent and not self.explicit_consent_verified:
+                stored_transcript = "[consent response withheld]"
             self._turn = self.store.start_turn(
                 self._session,
                 self._turn_index,
-                user_transcript=text,
+                user_transcript=stored_transcript,
                 route=self.channel,
                 input_format="pcm_s16le",
                 input_sample_rate=16000,
                 raw=raw,
             )
+
+            if consent_decision is not None:
+                self.invoke_tool(
+                    "record_consent",
+                    {
+                        "granted": consent_decision,
+                        "scope": self.consent_scope,
+                        "idempotency_key": (
+                            f"consent:{self.session_id}:{self._turn_index}"
+                        ),
+                    },
+                )
+                if not consent_decision:
+                    self.end_requested = True
 
             safety = self.registry.scan_red_flags_independent(text)
             if safety.triggered:
@@ -171,6 +204,15 @@ class VoiceRuntime:
         with self._lock:
             if self._turn is None:
                 raise RuntimeError("tool call requires an active turn")
+            ordinal = self._tool_count
+            self._tool_count += 1
+            self.store.record_tool_call(
+                self._turn,
+                ordinal,
+                name,
+                arguments,
+                {"status": "started"},
+            )
             ctx = ToolContext(
                 session_id=self.session_id,
                 subject_id=self.subject_id,
@@ -179,8 +221,34 @@ class VoiceRuntime:
                 user_text=self._user_text,
                 explicit_consent_verified=self.explicit_consent_verified,
             )
-            result = self.registry.invoke(name, arguments, ctx)
-            ordinal = self._tool_count
+            try:
+                result = self.registry.invoke(name, arguments, ctx)
+            except Exception as exc:
+                self.store.record_tool_call(
+                    self._turn,
+                    ordinal,
+                    name,
+                    arguments,
+                    {"status": "failed", "error": str(exc)},
+                )
+                raise
+
+            action_type = self._action_type(name, result)
+            if action_type:
+                outbox_id = self.store.enqueue_action(
+                    event_type=action_type,
+                    subject_id=self.subject_id,
+                    session_id=self.session_id,
+                    turn_pk=self._turn.turn_pk,
+                    idempotency_key=(
+                        f"{self.session_id}:{self._turn.turn_index}:{ordinal}"
+                    ),
+                    payload=result.as_dict(),
+                )
+                result.data["outbox_id"] = outbox_id
+            if result.data.get("should_end") or action_type == "urgent_human_review":
+                self.end_requested = True
+
             self.store.record_tool_call(
                 self._turn,
                 ordinal,
@@ -188,7 +256,6 @@ class VoiceRuntime:
                 arguments,
                 result.as_dict(),
             )
-            self._tool_count += 1
             return result
 
     def record_tts(
@@ -212,7 +279,7 @@ class VoiceRuntime:
                 self._turn,
                 self._tts_count,
                 spoken,
-                audio_bytes=audio_bytes,
+                audio_bytes=audio_bytes if self.config.store_tts_audio else None,
                 sample_rate=sample_rate,
                 char_count=len(spoken),
                 synth_seconds=synth_seconds,
@@ -268,10 +335,11 @@ class VoiceRuntime:
         return [fact for fact in facts if fact.category in allowed]
 
     def memory_context(self, *, max_chars: int = 3000) -> str:
-        """Render confirmed memory as bounded JSON for an LLM developer message."""
+        """Render confirmed memory as bounded, always-valid JSON."""
         facts = self.active_facts()
-        payload = [
-            {
+        payload: list[dict[str, Any]] = []
+        for fact in facts:
+            candidate = {
                 "key": fact.fact_key,
                 "category": fact.category,
                 "value": fact.fact_value,
@@ -279,9 +347,42 @@ class VoiceRuntime:
                     fact.confirmed_at.isoformat() if fact.confirmed_at else None
                 ),
             }
-            for fact in facts
-        ]
-        encoded = json.dumps(payload, ensure_ascii=False, default=str)
-        if len(encoded) <= max_chars:
-            return encoded
-        return encoded[:max_chars].rsplit(",", 1)[0] + "]"
+            encoded = json.dumps(
+                [*payload, candidate], ensure_ascii=False, default=str
+            )
+            if len(encoded) > max_chars:
+                break
+            payload.append(candidate)
+        return json.dumps(payload, ensure_ascii=False, default=str)
+
+    def _observe_consent(self, text: str) -> Optional[bool]:
+        """Recognize only a narrow explicit response when consent is required."""
+        if not self.require_consent or self.explicit_consent_verified:
+            return None
+        normalized = re.sub(r"[^\wàâçéèêëîïôûùüÿœ'’ -]", "", text.lower()).strip()
+        affirmative = (
+            r"^(oui|oui j['’]accepte|j['’]accepte|"
+            r"oui je consens|je consens|vous avez mon consentement)$"
+        )
+        negative = (
+            r"^(non|non merci|je refuse|je ne consens pas|"
+            r"je n['’]accepte pas|arrêtez l['’]appel|arretez l['’]appel)$"
+        )
+        if re.fullmatch(affirmative, normalized):
+            self.explicit_consent_verified = True
+            return True
+        if re.fullmatch(negative, normalized):
+            return False
+        return None
+
+    @staticmethod
+    def _action_type(name: str, result: ToolResult) -> Optional[str]:
+        if not result.ok:
+            return None
+        if name == "detect_red_flags" and result.data.get("triggered"):
+            return "urgent_human_review"
+        return {
+            "schedule_callback": "callback_requested",
+            "opt_out": "contact_opt_out",
+            "end_call": "call_end_requested",
+        }.get(name)

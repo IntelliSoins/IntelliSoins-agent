@@ -52,6 +52,19 @@ export VOICE_TTS_MODEL="michael-v8"
 # this with a contact id resolved server-side; the LLM cannot override it.
 export VOICE_SUBJECT_ID="${VOICE_SUBJECT_ID:-michael-local}"
 export VOICE_EXPLICIT_CONSENT_VERIFIED="${VOICE_EXPLICIT_CONSENT_VERIFIED:-0}"
+export VOICE_REQUIRE_CONSENT="${VOICE_REQUIRE_CONSENT:-0}"
+
+# Public mesh endpoint: one local secret authenticates Michael and therefore
+# selects the trusted subject above. The browser receives an HttpOnly cookie
+# after POST /auth; tool arguments can never change this identity.
+if [[ -z "${VOICE_WEBRTC_TOKEN:-}" ]]; then
+    VOICE_WEBRTC_TOKEN="$(security find-generic-password -s voice-agent-webrtc-token -w 2>/dev/null || true)"
+fi
+if [[ -z "${VOICE_WEBRTC_TOKEN:-}" ]]; then
+    VOICE_WEBRTC_TOKEN="$(openssl rand -hex 32)"
+    security add-generic-password -U -s voice-agent-webrtc-token -a "$USER" -w "$VOICE_WEBRTC_TOKEN" >/dev/null
+fi
+export VOICE_WEBRTC_TOKEN
 
 # Existing speaker-echo evidence makes non-interruptible the safe default.
 # Enable only after an AEC/headset canary validates barge-in.
@@ -61,6 +74,7 @@ export PIPECAT_SCTP_MAX_CHUNK_SIZE="${PIPECAT_SCTP_MAX_CHUNK_SIZE:-1100}"
 # PostgreSQL exact log + confirmed memory are required in the production launcher.
 export VOICE_DB_DSN="${VOICE_DB_DSN:-postgresql:///voice_agent}"
 export VOICE_DB_ENABLED=1
+export VOICE_STORE_TTS_AUDIO="${VOICE_STORE_TTS_AUDIO:-0}"
 "$VENV_PYTHON" "$MIGRATE"
 
 # HTTPS is mandatory for browser microphone access on the WireGuard address.

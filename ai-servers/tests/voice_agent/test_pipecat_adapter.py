@@ -74,13 +74,53 @@ class TestPipecatAdapter(unittest.TestCase):
         self.assertEqual(fact.subject_id, "trusted-contact")
         runtime.close()
 
+    def test_services_use_segmented_stt_and_tts_lifecycle(self):
+        from pipecat.services.stt_service import SegmentedSTTService
+
+        from voice_agent.config import VoiceConfig
+        from voice_agent.pipecat_adapter import (
+            SparkVoxCPMTTSService,
+            SparkWhisperSTTService,
+        )
+        from voice_agent.runtime import VoiceRuntime
+
+        config = VoiceConfig(db_enabled=False)
+        runtime = VoiceRuntime.create(
+            config,
+            subject_id="trusted-contact",
+            session_id="webrtc-2",
+        )
+        stt = SparkWhisperSTTService(config)
+        tts = SparkVoxCPMTTSService(config, runtime)
+        self.assertIsInstance(stt, SegmentedSTTService)
+        self.assertTrue(stt._audio_passthrough)
+        self.assertTrue(tts._push_start_frame)
+        self.assertTrue(tts._push_stop_frames)
+        asyncio.run(stt.cleanup())
+        asyncio.run(tts.cleanup())
+
     def test_openai_base_url(self):
-        from voice_agent_pipecat import _openai_base_url
+        from voice_agent_pipecat import SparkOpenAILLMService, _openai_base_url
 
         self.assertEqual(
             _openai_base_url("http://10.0.0.5:8000/v1/chat/completions"),
             "http://10.0.0.5:8000/v1",
         )
+        llm = SparkOpenAILLMService(
+            request_timeout_s=7,
+            api_key="test",
+            base_url="http://127.0.0.1:1/v1",
+            settings=SparkOpenAILLMService.Settings(
+                model="test",
+                extra={"extra_body": {"repetition_penalty": 1.15}},
+            ),
+        )
+        self.assertEqual(
+            llm._settings.extra,
+            {"extra_body": {"repetition_penalty": 1.15}},
+        )
+        self.assertEqual(llm._client.timeout.read, 7)
+        asyncio.run(llm._client.close())
 
 
 if __name__ == "__main__":

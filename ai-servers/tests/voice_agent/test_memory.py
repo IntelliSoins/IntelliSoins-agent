@@ -29,6 +29,19 @@ class TestDurableMemory(unittest.TestCase):
         self.assertIn("(subject_id, idempotency_key)", sql)
         self.assertNotIn("(session_id, fact_key)", sql)
 
+    def test_action_outbox_migration_exists(self) -> None:
+        path = (
+            Path(__file__).resolve().parents[2]
+            / "scripts"
+            / "voice_agent"
+            / "migrations"
+            / "002_action_outbox.sql"
+        )
+        sql = path.read_text(encoding="utf-8")
+        self.assertIn("action_outbox", sql)
+        self.assertIn("status = 'pending'", sql)
+        self.assertIn("UNIQUE (subject_id, event_type, idempotency_key)", sql)
+
     def test_confirm_and_idempotent_replay(self) -> None:
         store = EventStore(dsn="", enabled=False)
         mem = DurableMemoryRepository.from_event_store(store)

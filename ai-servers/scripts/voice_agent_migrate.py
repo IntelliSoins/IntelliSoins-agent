@@ -17,16 +17,18 @@ def main() -> None:
             "VOICE_DB_DSN is required; production voice persistence cannot be disabled"
         )
 
-    migration = (
+    migration_dir = (
         Path(__file__).resolve().parent
         / "voice_agent"
         / "migrations"
-        / "001_durable_memory.sql"
     )
-    sql = migration.read_text(encoding="utf-8")
+    migrations = sorted(migration_dir.glob("*.sql"))
+    if not migrations:
+        raise RuntimeError(f"no migrations found in {migration_dir}")
     with psycopg.connect(config.db_dsn) as conn:
-        conn.execute(sql)
-    print(f"Applied voice-agent migration: {migration.name}")
+        for migration in migrations:
+            conn.execute(migration.read_text(encoding="utf-8"))
+            print(f"Applied voice-agent migration: {migration.name}")
 
 
 if __name__ == "__main__":

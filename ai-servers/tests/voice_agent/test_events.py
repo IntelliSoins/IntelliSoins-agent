@@ -52,6 +52,24 @@ class TestEventStoreDisabled(unittest.TestCase):
         tts = store.memory_tts_segments()
         self.assertEqual(tts[0]["text"], "Bonjour.")
         self.assertEqual(tts[0]["audio_bytes"], b"wav")
+        first = store.enqueue_action(
+            event_type="callback_requested",
+            subject_id="contact-1",
+            session_id=session.session_id,
+            turn_pk=turn.turn_pk,
+            idempotency_key="callback-1",
+            payload={"when": "tomorrow"},
+        )
+        replay = store.enqueue_action(
+            event_type="callback_requested",
+            subject_id="contact-1",
+            session_id=session.session_id,
+            turn_pk=turn.turn_pk,
+            idempotency_key="callback-1",
+            payload={"when": "tomorrow"},
+        )
+        self.assertEqual(first, replay)
+        self.assertEqual(len(store.memory_outbox()), 1)
 
     def test_psycopg_available_is_bool(self) -> None:
         self.assertIsInstance(psycopg_available(), bool)

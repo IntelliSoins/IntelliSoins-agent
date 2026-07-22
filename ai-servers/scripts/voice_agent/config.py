@@ -63,6 +63,7 @@ class VoiceConfig:
     # DSN for event store + durable memory. Empty → store disabled.
     db_dsn: str = ""
     db_enabled: bool = True
+    store_tts_audio: bool = False
 
     extra: dict[str, Any] = field(default_factory=dict)
 
@@ -114,4 +115,5 @@ def load_config(environ: Optional[Mapping[str, str]] = None) -> VoiceConfig:
         tts_gap_ms=_env_int("VOICE_TTS_GAP_MS", 120, env),
         db_dsn=dsn,
         db_enabled=_env_bool("VOICE_DB_ENABLED", True, env) and bool(dsn),
+        store_tts_audio=_env_bool("VOICE_STORE_TTS_AUDIO", False, env),
     )

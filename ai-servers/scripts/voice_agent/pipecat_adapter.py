@@ -12,11 +12,13 @@ import io
 import time
 import wave
 from collections.abc import AsyncGenerator
-from typing import Any, Mapping, Optional
+from typing import Any, Awaitable, Callable, Mapping, Optional
 
+from loguru import logger
 from pipecat.adapters.schemas.function_schema import FunctionSchema
 from pipecat.frames.frames import (
     BotStoppedSpeakingFrame,
+    CancelFrame,
     ErrorFrame,
     Frame,
     LLMContextFrame,
@@ -26,7 +28,7 @@ from pipecat.frames.frames import (
 )
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
 from pipecat.services.settings import STTSettings, TTSSettings
-from pipecat.services.stt_service import STTService
+from pipecat.services.stt_service import SegmentedSTTService
 from pipecat.services.tts_service import TTSService, TextAggregationMode
 from pipecat.utils.time import time_now_iso8601
 
@@ -39,7 +41,11 @@ SAFETY_ESCALATION_TEXT = (
     "Ce que vous décrivez peut nécessiter une aide urgente. "
     "Je ne peux pas établir de diagnostic. Si le danger est immédiat, "
     "appelez le 911 ou rendez-vous à l'urgence. "
-    "Je signale maintenant cet appel pour une prise en charge humaine."
+    "Je dois interrompre le triage automatisé maintenant."
+)
+CONSENT_DECLINED_TEXT = (
+    "Je respecte votre refus. Aucune information additionnelle ne sera recueillie "
+    "et l'échange automatisé se termine maintenant."
 )
 
 
@@ -67,7 +73,7 @@ def decode_wav(audio: bytes) -> tuple[int, int, bytes, float]:
     return sample_rate, channels, pcm, duration
 
 
-class SparkWhisperSTTService(STTService):
+class SparkWhisperSTTService(SegmentedSTTService):
     """Pipecat STT service using the existing batch Whisper endpoint."""
 
     def __init__(
@@ -80,7 +86,7 @@ class SparkWhisperSTTService(STTService):
     ) -> None:
         super().__init__(
             sample_rate=sample_rate,
-            audio_passthrough=False,
+            audio_passthrough=True,
             ttfs_p99_latency=config.whisper_timeout_s,
             settings=STTSettings(
                 model="whisper-michael-ft",
@@ -91,6 +97,7 @@ class SparkWhisperSTTService(STTService):
         self._config = config
         self._client = client or WhisperClient(config)
         self._owns_client = client is None
+        self._closed = False
 
     async def run_stt(self, audio: bytes) -> AsyncGenerator[Frame | None, None]:
         try:
@@ -111,7 +118,19 @@ class SparkWhisperSTTService(STTService):
 
     async def stop(self, frame: Frame) -> None:
         await super().stop(frame)
-        if self._owns_client:
+        await self._close_client()
+
+    async def cancel(self, frame: CancelFrame) -> None:
+        await super().cancel(frame)
+        await self._close_client()
+
+    async def cleanup(self) -> None:
+        await self._close_client()
+        await super().cleanup()
+
+    async def _close_client(self) -> None:
+        if self._owns_client and not self._closed:
+            self._closed = True
             await self._client.aclose()
 
 
@@ -131,6 +150,9 @@ class SparkVoxCPMTTSService(TTSService):
             sample_rate=sample_rate,
             text_aggregation_mode=TextAggregationMode.SENTENCE,
             push_text_frames=True,
+            push_start_frame=True,
+            push_stop_frames=True,
+            stop_frame_timeout_s=0.2,
             settings=TTSSettings(
                 model=config.tts_model,
                 voice=config.tts_model,
@@ -142,6 +164,7 @@ class SparkVoxCPMTTSService(TTSService):
         self._runtime = runtime
         self._client = client or TtsClient(config)
         self._owns_client = client is None
+        self._closed = False
 
     async def run_tts(
         self, text: str, context_id: str
@@ -157,16 +180,6 @@ class SparkVoxCPMTTSService(TTSService):
             sample_rate, channels, pcm, duration = decode_wav(wav_bytes)
             synth_seconds = first_audio - started
             await self.start_tts_usage_metrics(text)
-            await asyncio.to_thread(
-                self._runtime.record_tts,
-                text,
-                wav_bytes,
-                sample_rate=sample_rate,
-                synth_seconds=synth_seconds,
-                audio_seconds=duration,
-                ttfa_seconds=synth_seconds,
-            )
-
             bytes_per_20ms = max(2 * channels, int(sample_rate * channels * 2 * 0.02))
             for offset in range(0, len(pcm), bytes_per_20ms):
                 chunk = pcm[offset : offset + bytes_per_20ms]
@@ -177,6 +190,18 @@ class SparkVoxCPMTTSService(TTSService):
                         channels,
                         context_id=context_id,
                     )
+            try:
+                await asyncio.to_thread(
+                    self._runtime.record_tts,
+                    text,
+                    wav_bytes,
+                    sample_rate=sample_rate,
+                    synth_seconds=synth_seconds,
+                    audio_seconds=duration,
+                    ttfa_seconds=synth_seconds,
+                )
+            except Exception:
+                logger.exception("Failed to persist TTS segment after audio delivery")
         except asyncio.CancelledError:
             raise
         except Exception as exc:
@@ -184,7 +209,19 @@ class SparkVoxCPMTTSService(TTSService):
 
     async def stop(self, frame: Frame) -> None:
         await super().stop(frame)
-        if self._owns_client:
+        await self._close_client()
+
+    async def cancel(self, frame: CancelFrame) -> None:
+        await super().cancel(frame)
+        await self._close_client()
+
+    async def cleanup(self) -> None:
+        await self._close_client()
+        await super().cleanup()
+
+    async def _close_client(self) -> None:
+        if self._owns_client and not self._closed:
+            self._closed = True
             await self._client.aclose()
 
 
@@ -215,21 +252,35 @@ class SafetyGateProcessor(FrameProcessor):
                             TTSSpeakFrame(SAFETY_ESCALATION_TEXT), direction
                         )
                         return
+                    if self._runtime.end_requested:
+                        await self.push_frame(
+                            TTSSpeakFrame(CONSENT_DECLINED_TEXT), direction
+                        )
+                        return
         await self.push_frame(frame, direction)
 
 
 class TurnFinalizerProcessor(FrameProcessor):
     """Finalize persisted turns when Pipecat finishes bot playback."""
 
-    def __init__(self, runtime: VoiceRuntime, **kwargs: Any) -> None:
+    def __init__(
+        self,
+        runtime: VoiceRuntime,
+        *,
+        end_callback: Optional[Callable[[], Awaitable[None]]] = None,
+        **kwargs: Any,
+    ) -> None:
         super().__init__(**kwargs)
         self._runtime = runtime
+        self.end_callback = end_callback
 
     async def process_frame(self, frame: Frame, direction: FrameDirection) -> None:
         await super().process_frame(frame, direction)
         await self.push_frame(frame, direction)
         if isinstance(frame, BotStoppedSpeakingFrame):
             await asyncio.to_thread(self._runtime.finish_turn)
+            if self._runtime.end_requested and self.end_callback is not None:
+                await self.end_callback()
 
 
 def build_function_schemas(runtime: VoiceRuntime) -> list[FunctionSchema]:
@@ -247,6 +298,8 @@ def build_function_schemas(runtime: VoiceRuntime) -> list[FunctionSchema]:
                 params.arguments,
             )
             await params.result_callback(result.as_dict())
+            if result.data.get("should_end"):
+                await params.pipeline_worker.cancel()
 
         schemas.append(
             FunctionSchema(
