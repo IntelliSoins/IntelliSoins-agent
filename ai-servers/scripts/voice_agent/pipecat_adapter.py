@@ -25,6 +25,7 @@ from pipecat.frames.frames import (
     TTSSpeakFrame,
 )
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
+from pipecat.services.settings import STTSettings, TTSSettings
 from pipecat.services.stt_service import STTService
 from pipecat.services.tts_service import TTSService, TextAggregationMode
 from pipecat.utils.time import time_now_iso8601
@@ -81,6 +82,10 @@ class SparkWhisperSTTService(STTService):
             sample_rate=sample_rate,
             audio_passthrough=False,
             ttfs_p99_latency=config.whisper_timeout_s,
+            settings=STTSettings(
+                model="whisper-michael-ft",
+                language=config.whisper_language,
+            ),
             **kwargs,
         )
         self._config = config
@@ -126,6 +131,11 @@ class SparkVoxCPMTTSService(TTSService):
             sample_rate=sample_rate,
             text_aggregation_mode=TextAggregationMode.SENTENCE,
             push_text_frames=True,
+            settings=TTSSettings(
+                model=config.tts_model,
+                voice=config.tts_model,
+                language="fr",
+            ),
             **kwargs,
         )
         self._config = config
